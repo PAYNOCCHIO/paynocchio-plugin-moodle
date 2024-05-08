@@ -18,9 +18,10 @@
  * This class contains a list of webservice functions related to the Paynocchio payment gateway.
  *
  * @package    paygw_paynocchio
- * @copyright  Paynocchio2024 Paynocchio <ceo@paynocchio.com>
+ * @copyright  2024 Paynocchio <ceo@paynocchio.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 
 declare(strict_types=1);
 
@@ -70,7 +71,8 @@ class transaction_complete extends external_api {
         ]);
 
         $config = (object)helper::get_gateway_configuration($component, $paymentarea, $itemid, 'paynocchio');
-        $sandbox = $config->environment == 'sandbox';
+
+        $sandbox = $config->environment == 'test_mode';
 
         $payable = payment_helper::get_payable($component, $paymentarea, $itemid);
         $currency = $payable->get_currency();
@@ -79,7 +81,7 @@ class transaction_complete extends external_api {
         $surcharge = helper::get_gateway_surcharge('paynocchio');
         $amount = helper::get_rounded_cost($payable->get_amount(), $currency, $surcharge);
 
-        $paynocchiohelper = new paynocchio_helper($config->clientid, $config->secret, $sandbox);
+        $paynocchiohelper = new paynocchio_helper($config->clientid);
         $orderdetails = $paynocchiohelper->get_order_details($orderid);
 
         $success = false;
