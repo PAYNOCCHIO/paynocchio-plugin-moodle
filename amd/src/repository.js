@@ -1,4 +1,4 @@
-// This file is part of Moodle - http://moodle.org/
+// This file is part of the bank paymnts module for Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,39 +14,33 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Repository for payment subsystem.
+ * bank repository module to encapsulate all of the AJAX requests that can be sent for bank.
  *
- * @module     core_payment/repository
- * @copyright  2020 Shamim Rezaie <shamim@moodle.com>
+ * @module     paygw_bank/repository
+ * @copyright  UNESCO/IESALC
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 import Ajax from 'core/ajax';
 
 /**
- * @typedef {Object} PaymentGateway A Payment Gateway
- * @property {string} shortname
- * @property {string} name
- * @property {string} description
- */
-
-/**
- * Returns the list of gateways that can process payments in the given currency.
+ * Return the bank JavaScript SDK URL.
  *
- * @method getAvailableGateways
- * @param {string} component
- * @param {string} paymentArea
- * @param {number} itemId
- * @returns {Promise<PaymentGateway[]>}
+ * @param {string} component Name of the component that the itemId belongs to
+ * @param {string} paymentArea The area of the component that the itemId belongs to
+ * @param {number} itemId An internal identifier that is used by the component
+ * @returns {Promise<{clientid: string, brandname: string, cost: number, currency: string}>}
  */
-export const getAvailableGateways = (component, paymentArea, itemId) => {
+export const getConfigForJs = (component, paymentArea, itemId) => {
     const request = {
-        methodname: 'core_payment_get_available_gateways',
+        methodname: 'paygw_paynocchio_get_config_for_js',
         args: {
             component,
             paymentarea: paymentArea,
             itemid: itemId,
-        }
+        },
     };
+
     return Ajax.call([request])[0];
 };
+
