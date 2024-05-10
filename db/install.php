@@ -57,7 +57,7 @@ function xmldb_paygw_paynocchio_install() {
     if (!$DB->record_exists($fieldsTable, array('shortname' => 'paynocchio_wallet_uuid'))) {
         $wallet_uuid = new stdClass();
         $wallet_uuid->shortname = 'paynocchio_wallet_uuid';
-        $wallet_uuid->name = get_string('useruuid', 'paygw_paynocchio');
+        $wallet_uuid->name = get_string('walletuuid', 'paygw_paynocchio');
         $wallet_uuid->datatype = 'text';
         $wallet_uuid->categoryid = 1;
         $wallet_uuid->description = '';

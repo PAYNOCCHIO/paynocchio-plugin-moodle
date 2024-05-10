@@ -1,4 +1,4 @@
-// This file is part of the bank paymnts module for Moodle - http://moodle.org/
+// This file is part of the Paynocchio payments module for Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,9 +14,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * bank repository module to encapsulate all of the AJAX requests that can be sent for bank.
+ * Paynocchio repository module to encapsulate all of the AJAX requests that can be sent for bank.
  *
- * @module     paygw_bank/repository
+ * @module     paygw_paynocchio/repository
  * @copyright  2024 Paynocchio <ceo@paynocchio.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

@@ -9,3 +9,20 @@
     gap: 1rem;
     padding-top: 2rem;
 }
+
+.paynocchio-button-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.paynocchio-btn-primary {
+    padding: 10px 20px;
+    background: #0a78d1;
+    color: #fff;
+    font-size: 1.3rem;
+    font-weight: 600;
+    border: none;
+    outline: none;
+    border-radius: 10px;
+}

@@ -32,11 +32,21 @@ $functions = [
         'type'        => 'read',
         'ajax'        => true,
     ],
+
     'paygw_paynocchio_create_transaction_complete' => [
         'classname'   => 'paygw_paynocchio\external\transaction_complete',
         'classpath'   => '',
         'description' => 'Takes care of what needs to be done when a Paynocchio transaction comes back as complete.',
         'type'        => 'write',
+        'ajax'        => true,
+        'loginrequired' => false,
+    ],
+
+    'paygw_paynocchio_activate_wallet' => [
+        'classname'   => 'paygw_paynocchio\external\activate_wallet',
+        'classpath'   => '',
+        'description' => 'Generates UUID for user, registers Wallet UUID.',
+        'type'        => 'read',
         'ajax'        => true,
         'loginrequired' => false,
     ],
