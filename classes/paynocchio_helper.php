@@ -97,7 +97,6 @@ class paynocchio_helper {
         $this->simpleSignature = $this->createSimpleSignature();
     }
 
-
     private function sendRequest(string $method, string $url, string $body = "", bool $simple = false): array {
         $headers = [
             'X-API-KEY: X-API-KEY',
@@ -145,6 +144,12 @@ class paynocchio_helper {
     public function get_userId()
     {
         return $this->userId;
+    }
+
+    public static function get_user($userid)
+    {
+        global $DB;
+        return $DB->get_record('user', ['id' => $userid]);
     }
 
     public function get_secret()

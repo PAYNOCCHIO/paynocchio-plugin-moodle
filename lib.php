@@ -26,14 +26,16 @@ defined('MOODLE_INTERNAL') || die();
 
 function paygw_paynocchio_myprofile_navigation(core_user\output\myprofile\tree $tree, $user, $iscurrentuser, $course)
 {
-    $url = new moodle_url('/payment/gateway/paynocchio/my_pending_pay.php');
-    $category = new core_user\output\myprofile\category('payments', get_string('payments', 'paygw_paynocchio'), null);
+    $imageurl = new moodle_url('/payment/gateway/paynocchio/pix/img.svg');
+    $url = new moodle_url('/payment/gateway/paynocchio/my_paynocchio_wallet.php');
+    $category = new core_user\output\myprofile\category('paynocchio_wallet', get_string('paynocchio', 'paygw_paynocchio'), null);
     $node = new core_user\output\myprofile\node(
-        'payments',
-        'my_pending_payments',
-        get_string('my_pending_payments', 'paygw_paynocchio'),
+        'paynocchio_wallet',
+        'my_paynocchio_wallet',
+        get_string('my_paynocchio_wallet', 'paygw_paynocchio'),
         null,
-        $url
+        $url,
+        '<div class="paynocchio-payment-description"><img src="'.$imageurl.'" alt="'.get_string('paynocchio', 'paygw_paynocchio').'" />  '.get_string('paynocchiodescription', 'paygw_paynocchio').'</div>'
     );
     $tree->add_category($category);
     $tree->add_node($node);
