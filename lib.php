@@ -1,5 +1,5 @@
 <?php
-// This file is part of the bank paymnts module for Moodle - http://moodle.org/
+// This file is part of the Paynocchio paymnts module for Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,22 +17,21 @@
 /**
  * Plugin version and other meta-data are defined here.
  *
- * @package   paygw_bank
- * @copyright UNESCO/IESALC
- * @author    Carlos Vicente Corral <c.vicente@unesco.org>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    paygw_paynocchio
+ * @copyright  2024 Paynocchio <ceo@paynocchio.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-function paygw_bank_myprofile_navigation(core_user\output\myprofile\tree $tree, $user, $iscurrentuser, $course)
+function paygw_paynocchio_myprofile_navigation(core_user\output\myprofile\tree $tree, $user, $iscurrentuser, $course)
 {
-    $url = new moodle_url('/payment/gateway/bank/my_pending_pay.php');
-    $category = new core_user\output\myprofile\category('payments', get_string('payments', 'paygw_bank'), null);
+    $url = new moodle_url('/payment/gateway/paynocchio/my_pending_pay.php');
+    $category = new core_user\output\myprofile\category('payments', get_string('payments', 'paygw_paynocchio'), null);
     $node = new core_user\output\myprofile\node(
         'payments',
         'my_pending_payments',
-        get_string('my_pending_payments', 'paygw_bank'),
+        get_string('my_pending_payments', 'paygw_paynocchio'),
         null,
         $url
     );
@@ -40,7 +39,7 @@ function paygw_bank_myprofile_navigation(core_user\output\myprofile\tree $tree, 
     $tree->add_node($node);
 }
 
-function paygw_bank_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = array())
+function paygw_paynocchio_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = array())
 {
     if ($filearea !== 'transfer') {
         return false;
@@ -63,7 +62,7 @@ function paygw_bank_pluginfile($course, $cm, $context, $filearea, $args, $forced
 
     // Retrieve the file from the Files API.
     $fs = get_file_storage();
-    $file = $fs->get_file($context->id, 'paygw_bank', $filearea, $itemid, $filepath, $filename);
+    $file = $fs->get_file($context->id, 'paygw_paynocchio', $filearea, $itemid, $filepath, $filename);
     if (!$file) {
         return false; // The file does not exist.
     }

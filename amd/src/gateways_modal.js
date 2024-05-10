@@ -17,7 +17,7 @@
  * This module is responsible for bank content in the gateways modal.
  *
  * @module     paygw_bank/gateway_modal
- * @copyright  UNESCO/IESALC
+ * @copyright  2024 Paynocchio <ceo@paynocchio.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *import * as Repository from './repository';
  import * as Ajax from 'core/ajax';

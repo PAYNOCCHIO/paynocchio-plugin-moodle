@@ -18,7 +18,7 @@
  * Contains class for Paynocchio payment gateway.
  *
  * @package    paygw_paynocchio
- * @copyright  Paynocchio2024 Paynocchio <ceo@paynocchio.com>
+ * @copyright  2024 Paynocchio <ceo@paynocchio.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -27,7 +27,7 @@ namespace paygw_paynocchio;
 /**
  * The gateway class for Paynocchio payment gateway.
  *
- * @copyright  Paynocchio2024 Paynocchio <ceo@paynocchio.com>
+ * @copyright  2024 Paynocchio <ceo@paynocchio.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class gateway extends \core_payment\gateway {

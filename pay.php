@@ -68,6 +68,44 @@ echo '<div class="card">';
 echo '<div class="card-body">';
 echo '<ul class="list-group list-group-flush">';
 echo '<li class="list-group-item"><h5 class="card-title">' . get_string('concept', 'paygw_bank') . ':</h5>';
+?>
+
+    <div class="paynocchio-card" style="color:#ffffff; background:#3b82f6">
+        <img src="http://kopybara.com/wp-content/uploads/2024/03/cropped-favicon.png" class="on_card_embleme">
+        <div class="paynocchio-balance-bonuses">
+            <div class="paynocchio-balance">
+                <div>
+                    Balance
+                </div>
+                <div class="amount">
+                    $<span class="paynocchio-numbers paynocchio-balance-value" data-balance="0">0</span>
+                </div>
+            </div>
+            <div class="paynocchio-bonuses">
+                <div>
+                    Bonuses
+                </div>
+                <div class="amount">
+                    <span class="paynocchio-numbers paynocchio-bonus-value" data-bonus="0">0</span>
+                </div>
+            </div>
+        </div>
+        <div class="paynocchio-card-number">
+            <div>6829</div><div>5232</div><div>1251</div><div>1356</div><div></div>
+        </div>
+        <div class="paynocchio_payment_card_button">
+            <a href="#" class="paynocchio_button cfps-flex cfps-flex-row cfps-items-center" data-modal=".topUpModal" style="color:#3b82f6; background:#ffffff">
+                <svg class="cfps-h-[20px] cfps-w-[20px] cfps-mr-1 cfps-inline-block" enable-background="new 0 0 50 50" version="1.1" viewBox="0 0 50 50" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                        <rect fill="none" height="50" width="50"></rect>
+                    <line fill="none" stroke="#1a85f9" stroke-miterlimit="10" stroke-width="4" x1="9" x2="41" y1="25" y2="25"></line>
+                    <line fill="none" stroke="#1a85f9" stroke-miterlimit="10" stroke-width="4" x1="25" x2="25" y1="9" y2="41"></line>
+                                    </svg>
+                Add money
+            </a>
+        </div>
+    </div>
+
+<?php
 echo '<div>' . $description. '</div>';
 echo "</li>";
 $aceptform = "";

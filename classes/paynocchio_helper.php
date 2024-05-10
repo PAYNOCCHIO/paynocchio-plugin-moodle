@@ -18,7 +18,7 @@
  * Contains helper class to work with Paynocchio REST API.
  *
  * @package    core_payment
- * @copyright  Paynocchio2024 Paynocchio <ceo@paynocchio.com>
+ * @copyright  2024 Paynocchio <ceo@paynocchio.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

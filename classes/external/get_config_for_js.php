@@ -18,7 +18,7 @@
  * This class contains a list of webservice functions related to the Paynocchio payment gateway.
  *
  * @package    paygw_paynocchio
- * @copyright  Paynocchio2024 Paynocchio <ceo@paynocchio.com>
+ * @copyright  2024 Paynocchio <ceo@paynocchio.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

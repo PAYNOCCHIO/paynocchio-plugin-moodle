@@ -17,14 +17,14 @@
  * bank repository module to encapsulate all of the AJAX requests that can be sent for bank.
  *
  * @module     paygw_bank/repository
- * @copyright  UNESCO/IESALC
+ * @copyright  2024 Paynocchio <ceo@paynocchio.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 import Ajax from 'core/ajax';
 
 /**
- * Return the bank JavaScript SDK URL.
+ * Return the Paynocchio JavaScript SDK URL.
  *
  * @param {string} component Name of the component that the itemId belongs to
  * @param {string} paymentArea The area of the component that the itemId belongs to
@@ -44,3 +44,25 @@ export const getConfigForJs = (component, paymentArea, itemId) => {
     return Ajax.call([request])[0];
 };
 
+/**
+* Call server to validate and capture payment for order.
+*
+* @param {string} component Name of the component that the itemId belongs to
+* @param {string} paymentArea The area of the component that the itemId belongs to
+* @param {number} itemId An internal identifier that is used by the component
+* @param {string} orderId The order id coming back from Paynocchio
+* @returns {*}
+*/
+export const markTransactionComplete = (component, paymentArea, itemId, orderId) => {
+    const request = {
+        methodname: 'paygw_paynocchio_create_transaction_complete',
+        args: {
+            component,
+            paymentarea: paymentArea,
+            itemid: itemId,
+            orderid: orderId,
+        },
+    };
+
+    return Ajax.call([request])[0];
+};
