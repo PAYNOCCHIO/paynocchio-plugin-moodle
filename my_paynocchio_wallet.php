@@ -1,4 +1,6 @@
 <?php
+
+use core\uuid;
 use core_payment\helper;
 use paygw_paynocchio\paynocchio_helper;
 
@@ -22,10 +24,19 @@ $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_activation', 'init', ['use
 
 echo $OUTPUT->header();
 
+$user_uuid = uuid::generate();
 
+//$wallet = new paynocchio_helper($user_uuid);
 
-if(array_key_exists('paynocchio_user_uuid', $USER->profile) && $USER->profile['paynocchio_user_uuid']) {
-    echo 'user exist';
+$user = $DB->get_record('paygw_paynocchio_data', ['userid'  => $USER->id]);
+print_r($user);
+
+if($user && $user->useruuid && $user->walletuuid) {
+    $data = [
+        'user_uuid' => $user->useruuid,
+        'wallet_uuid' => $user->walletuuid,
+    ];
+    echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet', $data);
 } else {
     $data = [
         'user_id' => $USER->id,
@@ -33,17 +44,5 @@ if(array_key_exists('paynocchio_user_uuid', $USER->profile) && $USER->profile['p
 
     echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet_activation', $data);
 }
-
-/**
- *
- * $USER->paynocchio_wallet_uuid = '';
-
-profile_save_data($USER);
- */
-
-print_r($USER->profile);
-
-
-
 
 echo $OUTPUT->footer();

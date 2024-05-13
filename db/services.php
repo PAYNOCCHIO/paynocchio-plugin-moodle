@@ -50,4 +50,13 @@ $functions = [
         'ajax'        => true,
         'loginrequired' => false,
     ],
+
+    'paygw_paynocchio_topup_wallet' => [
+        'classname'   => 'paygw_paynocchio\external\topup_wallet',
+        'classpath'   => '',
+        'description' => 'Adds money to Paynocchio Wallet.',
+        'type'        => 'write',
+        'ajax'        => true,
+        'loginrequired' => false,
+    ],
 ];

@@ -39,12 +39,95 @@
     right: 0.5rem;
 }
 
+.paynocchio-spinner.active {
+    display: block;
+}
+
 .spinner-circle {
     opacity: 0.25;
 }
 
 .spinner-path {
     opacity: 0.75;
+}
+
+.paynocchio-profile-block {
+    margin-bottom: 2rem;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 64rem;
+    padding: 2rem;
+}
+
+.paynocchio-card-container {
+    display: flex;
+    justify-content: center;
+}
+
+.paynocchio-card {
+    aspect-ratio: 5 / 3;
+    border-radius: 1.5rem;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+    max-width: 400px;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    color: #fff;
+    background: #3b82f6;
+}
+
+.paynocchio-card .on_card_embleme {
+    height: 50px;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    right: 7%;
+    top: 10%;
+    width: 50px;
+}
+
+.paynocchio-balance-bonuses {
+    align-items: center;
+    -moz-column-gap: 2rem;
+    column-gap: 2rem;
+    display: flex;
+    flex-direction: row;
+    font-size: .875rem;
+    left: 7%;
+    line-height: 1.25rem;
+    position: absolute;
+    top: 27%;
+    z-index: 20;
+    --tw-text-opacity: 1;
+    color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
+.paynocchio-card .paynocchio-card-number {
+    bottom: 13%;
+    display: flex;
+    flex-direction: row;
+    font-size: 1rem;
+    gap: .5rem;
+    left: 7%;
+    line-height: 1.5rem;
+    position: absolute;
+    z-index: 20;
+}
+
+@media (min-width: 1024px) {
+    .paynocchio-card .paynocchio-card-number {
+        font-size: 1.25rem;
+        gap: .5rem;
+        line-height: 1.75rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .paynocchio-balance-bonuses {
+        font-size: 1.25rem;
+        line-height: 1.75rem;
+    }
 }
 
 @keyframes rotate {

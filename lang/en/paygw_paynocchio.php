@@ -22,13 +22,15 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+$string['baseurl'] = 'Paynocchio wallet API url';
+$string['modulename'] = 'Paynocchio';
 $string['amountmismatch'] = 'The amount you attempted to pay does not match the required fee. Your account has not been debited.';
 $string['authorising'] = 'Authorising the payment. Please wait...';
 $string['brandname'] = 'Brand name';
 $string['brandname_help'] = 'An optional label that overrides the business name for the Paynocchio account on the site.';
 $string['cannotfetchorderdatails'] = 'Could not fetch payment details from Paynocchio. Your account has not been debited.';
-$string['test_mode'] = 'Test mode';
-$string['test_mode_help'] = 'You can set this to Test mode if you are using test accounts (for testing purpose only).';
+$string['testmode'] = 'Test mode';
+$string['testmode_help'] = 'You can set this to Test mode if you are using test accounts (for testing purpose only).';
 $string['manage'] = 'Manage Transfers';
 $string['paynocchio:managepayments'] = 'Manage Transfers';
 $string['managepayments'] = 'Manage Transfers';
@@ -51,6 +53,7 @@ $string['paynocchio'] = 'Paynocchio';
 $string['paynocchiodescription'] = 'Paynocchio is the awesome way to pay and get rewarded';
 $string['paynocchio_wallet'] = 'Paynocchio Wallet';
 $string['secret_help'] = 'The secret that Paynocchio generated for your application.';
+$string['send_confirmation_mail'] = 'Send confirmation email';
 $string['email_notifications'] = 'Email internal notifications';
 $string['email_notifications_help'] = 'An external email address can be notified when a new payment is queued or their status change';
 $string['email_to_notify'] = 'Email to send notifications';
@@ -60,10 +63,5 @@ $string['email_notifications_subject_confirm'] = 'A payment entry has approved';
 $string['email_notifications_new_request'] = 'There is a new bank payment request. code: {$a->code}';
 $string['email_notifications_new_attachments'] = 'The bank payment entry with code {$a->code} has new attachments';
 $string['email_notifications_confirm'] = 'The bank payment entry with code {$a->code} is approved';
-$string['send_new_request_mail'] = 'Send email to every new request';
-$string['send_new_attachments_mail'] = 'Send email to new files in request';
-$string['send_confirm_mail_to_support'] = 'Send email when a payment is approved';
-$string['send_confirmation_mail'] = 'Send confirmation mail';
-$string['send_denied_mail'] = 'Send denied mail';
 $string['additional_currencies'] = 'Aditional Currencies';
 $string['additional_currencies_help'] = 'A comma separated list of currency codes. You can consult the codes in https://en.wikipedia.org/wiki/ISO_4217#Active_codes';

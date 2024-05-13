@@ -75,7 +75,16 @@ export const handleWalletActivationClick = async (user_id) => {
         },
     };
 
-    window.console.log(response);
+    return await Ajax.call([request])[0];
+};
+
+export const handleTopUpClick = async (amount) => {
+    const request = {
+        methodname: 'paygw_paynocchio_topup',
+        args: {
+            amount,
+        },
+    };
 
     return await Ajax.call([request])[0];
 };

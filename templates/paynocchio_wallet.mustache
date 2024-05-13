@@ -1,0 +1,82 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template paygw_paynocchio/paynocchio_wallet_activation
+
+    Classes required for JS:
+    * none
+
+    Data attributes required for JS:
+    * none
+
+    Context variables required for this template:
+    * none
+
+    Example context (json):
+    {}
+
+}}
+<div class="paynocchio-profile-block">
+    <div class="paynocchio-card-container">
+        <div class="paynocchio-card">
+            <img decoding="async" src="http://kopybara.com/wp-content/uploads/2024/03/cropped-favicon.png" class="on_card_embleme">
+            <div class="paynocchio-balance-bonuses">
+                <div class="paynocchio-balance">
+                    <div>
+                        Balance
+                    </div>
+                    <div class="amount">
+                        $<span class="paynocchio-numbers paynocchio-balance-value" data-balance="0">0</span>
+                    </div>
+                </div>
+                <div class="paynocchio-bonuses">
+                    <div>
+                        Bonuses
+                    </div>
+                    <div class="amount">
+                        <span class="paynocchio-numbers paynocchio-bonus-value" data-bonus="0">0</span>
+                    </div>
+                </div>
+            </div>
+            <div class="paynocchio-card-number">
+                <div>6346</div><div>0437</div><div>9427</div><div>1019</div><div></div>
+            </div>
+        </div>
+    </div>
+    <div class="paynocchio-actions-btns cfps-mt-8">
+        <div class="autodeposit cfps-flex cfps-flex-row cfps-items-center cfps-gap-x-2">
+            <!-- <img decoding="async" src=""
+                     class="cfps-h-[18px] cfps-w-[16px] cfps-mr-1 cfps-inline-block" />
+                Autodeposit
+                <div class="toggle-autodeposit">
+                    <p>ON</p>
+                    <div class="toggler"></div>
+                    <p>OFF</p>
+                </div>
+                <input type="hidden" value="0" name="autodeposit" id="autodeposit" />-->
+        </div>
+        <div class="paynocchio-actions-btns">
+            <button type="button" id="paynocchio_topup_button" class="paynocchio_button paynocchio_colored cfps-rounded-lg">
+                <img decoding="async" src="https://kopybara.com/wp-content/plugins/woocommerce-paynocchio/assets/img/plus.png" class="cfps-h-[24px] cfps-w-[24px] cfps-mr-1 cfps-inline-block">
+                Add money
+            </button>
+            <a href="#" class="paynocchio_button btn-gray cfps-rounded-lg" data-modal=".withdrawModal">
+                Withdraw
+            </a>
+        </div>
+    </div>
+</div>

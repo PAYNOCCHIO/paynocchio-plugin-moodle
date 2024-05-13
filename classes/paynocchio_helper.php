@@ -30,7 +30,19 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir . '/filelib.php');
 
+
 class paynocchio_helper {
+
+    /**
+     * @var string Paynocchio settings strings.
+     */
+    public const PAYNOCCHIO_USER_UUID_KEY = 'user_uuid';
+    public const PAYNOCCHIO_ENV_KEY = 'environment_uuid';
+    public const PAYNOCCHIO_CURRENCY_KEY = 'currency_uuid';
+    public const PAYNOCCHIO_WALLET_KEY = 'wallet_uuid';
+    public const PAYNOCCHIO_TYPE_KEY = 'type_uuid';
+    public const PAYNOCCHIO_STATUS_KEY = 'status_uuid';
+    public const PAYNOCCHIO_SECRET_KEY = 'secret_uuid';
 
     /**
      * @var string The payment was authorized or the authorized payment was captured for the order.
@@ -82,6 +94,11 @@ class paynocchio_helper {
      */
     private $walletId;
 
+    /**
+     * @var string Base url
+     */
+    private string $baseUrl;
+
 
     /**
      * helper constructor.
@@ -89,9 +106,9 @@ class paynocchio_helper {
      * @param string $userId The user uuid.
      */
     public function __construct($userId) {
-        $this->baseUrl = 'https://wallet.stage.paynocchio.com';
-        $this->secret = get_option( 'woocommerce_paynocchio_settings')[PAYNOCCHIO_SECRET_KEY];
-        $this->envId = get_option( 'woocommerce_paynocchio_settings')[PAYNOCCHIO_ENV_KEY];
+        $this->baseUrl = get_config('paygw_paynocchio', 'baseurl');
+        $this->secret = get_config('paygw_paynocchio', 'paynocchiosecret');
+        $this->envId = get_config('paygw_paynocchio', 'environmentuuid');
         $this->userId = $userId;
         $this->signature = $this->createSignature();
         $this->simpleSignature = $this->createSimpleSignature();
@@ -103,8 +120,7 @@ class paynocchio_helper {
             'Content-Type: application/json'
         ];
 
-        $WPPPG = new Woocommerce_Paynocchio_Payment_Gateway;
-        $test_mode = $WPPPG->get_test_mode() ? 'on' : 'off';
+        $test_mode = get_config('paygw_paynocchio', 'testmode') ? 'on' : 'off';
 
         $headers[] = 'X-TEST-MODE-SWITCH:'. $test_mode;
 
@@ -117,7 +133,7 @@ class paynocchio_helper {
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => $this->base_url . $url,
+            CURLOPT_URL => $this->baseUrl . $url,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -205,11 +221,11 @@ class paynocchio_helper {
      */
     public function createWallet() {
         $data = [
-            PAYNOCCHIO_ENV_KEY => $this->envId,
-            PAYNOCCHIO_USER_UUID_KEY => $this->userId,
-            PAYNOCCHIO_CURRENCY_KEY => get_option( 'woocommerce_paynocchio_settings')[PAYNOCCHIO_CURRENCY_KEY],
-            PAYNOCCHIO_TYPE_KEY => get_option( 'woocommerce_paynocchio_settings')[PAYNOCCHIO_TYPE_KEY],
-            PAYNOCCHIO_STATUS_KEY => get_option( 'woocommerce_paynocchio_settings')[PAYNOCCHIO_STATUS_KEY],
+            self::PAYNOCCHIO_ENV_KEY => $this->envId,
+            self::PAYNOCCHIO_USER_UUID_KEY => $this->userId,
+            self::PAYNOCCHIO_CURRENCY_KEY => '970d83de-1dce-47bd-a45b-bb92bf6df964',
+            self::PAYNOCCHIO_TYPE_KEY => '93ac9017-4960-41bf-be6d-aa123884451d',
+            self::PAYNOCCHIO_STATUS_KEY => 'ef8da49e-a9e3-4726-8c26-f8d2bfd6a093',
         ];
 
         $response = $this->sendRequest('POST', '/wallet/', json_encode($data, JSON_UNESCAPED_SLASHES));
@@ -226,18 +242,16 @@ class paynocchio_helper {
     /**
      *  TopUp Wallet
      */
-    public function topUpWallet(string $walletId, float $amount): array {
+    public function topUpWallet(string $walletId, float $amount) {
         $data = [
-            PAYNOCCHIO_ENV_KEY => $this->envId,
-            PAYNOCCHIO_USER_UUID_KEY => $this->userId,
-            PAYNOCCHIO_WALLET_KEY => $walletId,
+            self::PAYNOCCHIO_ENV_KEY => $this->envId,
+            self::PAYNOCCHIO_USER_UUID_KEY => $this->userId,
+            self::PAYNOCCHIO_WALLET_KEY => $walletId,
             "currency" => "USD",
             'amount' => $amount,
         ];
 
-        $response = $this->sendRequest('POST', '/operation/topup', json_encode($data));
-
-        return $response;
+        return $this->sendRequest('POST', '/operation/topup', json_encode($data));
     }
 
     /**

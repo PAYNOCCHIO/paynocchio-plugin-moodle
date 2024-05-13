@@ -26,8 +26,8 @@ declare(strict_types=1);
 
 namespace paygw_paynocchio\external;
 
-use core\uuid;
 use core_payment\helper;
+use core_reportbuilder\local\filters\number;
 use paygw_paynocchio\paynocchio_helper;
 use core_external\external_api;
 use core_external\external_function_parameters;
@@ -35,7 +35,7 @@ use core_external\external_value;
 use core_external\external_single_structure;
 use stdClass;
 
-class activate_wallet extends external_api {
+class topup_wallet extends external_api {
 
     /**
      * Returns description of method parameters.
@@ -44,7 +44,7 @@ class activate_wallet extends external_api {
      */
     public static function execute_parameters(): external_function_parameters {
         return new external_function_parameters([
-            'userId' => new external_value(PARAM_INT, 'An identifier for User'),
+            'amount' => new external_value(PARAM_FLOAT, 'Amount to topup'),
         ]);
     }
 
@@ -53,32 +53,28 @@ class activate_wallet extends external_api {
      * @param int $userId
      * @return string[]
      */
-    public static function execute(int $userId): array
+    public static function execute(float $amount): array
     {
-        global $DB;
+        global $DB, $USER;
         self::validate_parameters(self::execute_parameters(), [
-            'userId' => $userId,
+            'amount' => $amount,
         ]);
 
-        $user_uuid = uuid::generate();
+        $paynocchio_data = $DB->get_record('paygw_paynocchio_data', ['userid'  => $USER->id]);
+        $user_uuid = $paynocchio_data->useruuid;
+        $wallet_uuid = $paynocchio_data->walletuuid;
 
-        if($user_uuid) {
+        if($wallet_uuid) {
             $wallet = new paynocchio_helper($user_uuid);
-            $wallet_response = $wallet->createWallet();
-            $json_response = json_decode($wallet_response);
-            if($json_response->status === 'success') {
-                $record = new stdClass();
-                $record->userid = $userId;
-                $record->useruuid = $user_uuid;
-                $record->walletuuid = $json_response->wallet;
-                $DB->insert_record('paygw_paynocchio_data', $record);
+            $wallet_response = $wallet->topUpWallet($wallet_uuid, $amount);
+            if($wallet_response->status === 'success') {
                 return [
-                    'wallet_uuid' => $json_response->wallet,
+                    'response' => $wallet_response,
                     'success' => true,
                 ];
             } else {
                 return [
-                    'wallet_uuid' => 'error',
+                    'response' => $wallet_response,
                     'success' => false,
                 ];
             }
@@ -93,7 +89,7 @@ class activate_wallet extends external_api {
      */
     public static function execute_returns(): external_single_structure {
         return new external_single_structure([
-            'wallet_uuid' => new external_value(PARAM_TEXT, 'Paynocchio client ID'),
+            'response' => new external_value(PARAM_TEXT, 'Paynocchio client ID'),
             'success' => new external_value(PARAM_BOOL, 'Paynocchio success status'),
         ]);
     }

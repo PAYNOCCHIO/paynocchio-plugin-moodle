@@ -52,10 +52,6 @@ class gateway extends \core_payment\gateway {
         $mform->addElement('text', 'brandname', get_string('brandname', 'paygw_paynocchio'));
         $mform->setType('brandname', PARAM_TEXT);
         $mform->addHelpButton('brandname', 'brandname', 'paygw_paynocchio');
-
-        $mform->addElement('checkbox', 'test_mode', get_string('test_mode', 'paygw_paynocchio'));
-        $mform->setType('test_mode', PARAM_TEXT);
-        $mform->addHelpButton('test_mode', 'test_mode', 'paygw_paynocchio');
     }
 
     /**
