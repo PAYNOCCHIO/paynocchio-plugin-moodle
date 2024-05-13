@@ -24,12 +24,11 @@ echo $OUTPUT->header();
 
 
 
-if($USER->paynocchio_user_uuid) {
+if(array_key_exists('paynocchio_user_uuid', $USER->profile) && $USER->profile['paynocchio_user_uuid']) {
     echo 'user exist';
 } else {
     $data = [
         'user_id' => $USER->id,
-        'description' => 'test',
     ];
 
     echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet_activation', $data);
@@ -42,7 +41,7 @@ if($USER->paynocchio_user_uuid) {
 profile_save_data($USER);
  */
 
-print_r($USER);
+print_r($USER->profile);
 
 
 

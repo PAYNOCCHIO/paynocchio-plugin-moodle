@@ -17,7 +17,8 @@
 }
 
 .paynocchio-btn-primary {
-    padding: 10px 20px;
+    position: relative;
+    padding: 10px 40px;
     background: #0a78d1;
     color: #fff;
     font-size: 1.3rem;
@@ -25,4 +26,29 @@
     border: none;
     outline: none;
     border-radius: 10px;
+}
+
+.paynocchio-spinner {
+    display: none;
+    position: absolute;
+    width: 1.25rem;
+    height: 1.25rem;
+    color: #fff;
+    animation: rotate 1s linear infinite;
+    top: 1rem;
+    right: 0.5rem;
+}
+
+.spinner-circle {
+    opacity: 0.25;
+}
+
+.spinner-path {
+    opacity: 0.75;
+}
+
+@keyframes rotate {
+    to {
+        transform: rotate(1turn);
+    }
 }

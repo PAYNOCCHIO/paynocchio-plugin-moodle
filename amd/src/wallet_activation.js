@@ -21,22 +21,11 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-import Ajax from 'core/ajax';
+import {handleWalletActivationClick} from "./repository";
 
 export const init = (user_id) => {
     const paynocchio_activation_button = document.getElementById('paynocchio_activation_button');
+    const spinner = paynocchio_activation_button.querySelector('.spinner');
 
-    const handleWalletActivationClick = async () => {
-        const request = {
-            methodname: 'paygw_paynocchio_activate_wallet',
-            args: {
-                userId: user_id,
-            },
-        };
-
-        const response = await Ajax.call([request])[0];
-        window.console.log(response);
-    };
-
-    paynocchio_activation_button.addEventListener('click', handleWalletActivationClick);
+    paynocchio_activation_button.addEventListener('click', () => handleWalletActivationClick(user_id));
 };

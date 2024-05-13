@@ -21,5 +21,17 @@
         <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
+    <TABLE NAME="paygw_paynocchio_data" COMMENT="Stores Paynocchio UUID information">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="useruuid" TYPE="char" LENGTH="36" NOTNULL="true" SEQUENCE="false" DECIMALS="36"/>
+        <FIELD NAME="walletuuid" TYPE="char" LENGTH="36" NOTNULL="true" SEQUENCE="false" DECIMALS="36"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
   </TABLES>
 </XMLDB>

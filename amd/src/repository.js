@@ -66,3 +66,16 @@ export const markTransactionComplete = (component, paymentArea, itemId, orderId)
 
     return Ajax.call([request])[0];
 };
+
+export const handleWalletActivationClick = async (user_id) => {
+    const request = {
+        methodname: 'paygw_paynocchio_activate_wallet',
+        args: {
+            userId: user_id,
+        },
+    };
+
+    window.console.log(response);
+
+    return await Ajax.call([request])[0];
+};

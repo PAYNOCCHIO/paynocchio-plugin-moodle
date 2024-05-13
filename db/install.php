@@ -29,10 +29,10 @@ function xmldb_paygw_paynocchio_install() {
     $order = (!empty($CFG->paygw_plugins_sortorder)) ? explode(',', $CFG->paygw_plugins_sortorder) : [];
     set_config('paygw_plugins_sortorder', join(',', array_merge($order, ['paynocchio'])));
 
-    $fieldsTable = 'user_info_field';
+    //$fieldsTable = 'user_info_field';
 
     // USER UUID
-    if (!$DB->record_exists($fieldsTable, array('shortname' => 'paynocchio_user_uuid'))) {
+    /*if (!$DB->record_exists($fieldsTable, array('shortname' => 'paynocchio_user_uuid'))) {
         $user_uuid = new stdClass();
         $user_uuid->shortname = 'paynocchio_user_uuid';
         $user_uuid->name = get_string('useruuid', 'paygw_paynocchio');
@@ -51,10 +51,10 @@ function xmldb_paygw_paynocchio_install() {
         $user_uuid->param4 = null;
         $user_uuid->param5 = null;
         $DB->insert_record($fieldsTable, $user_uuid, false);
-    }
+    }*/
 
     // WALLET UUID
-    if (!$DB->record_exists($fieldsTable, array('shortname' => 'paynocchio_wallet_uuid'))) {
+    /*if (!$DB->record_exists($fieldsTable, array('shortname' => 'paynocchio_wallet_uuid'))) {
         $wallet_uuid = new stdClass();
         $wallet_uuid->shortname = 'paynocchio_wallet_uuid';
         $wallet_uuid->name = get_string('walletuuid', 'paygw_paynocchio');
@@ -73,5 +73,5 @@ function xmldb_paygw_paynocchio_install() {
         $wallet_uuid->param4 = null;
         $wallet_uuid->param5 = null;
         $DB->insert_record($fieldsTable, $wallet_uuid, false);
-    }
+    }*/
 }
