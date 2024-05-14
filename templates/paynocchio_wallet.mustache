@@ -40,7 +40,7 @@
                         Balance
                     </div>
                     <div class="amount">
-                        $<span class="paynocchio-numbers paynocchio-balance-value" data-balance="0">0</span>
+                        $<span class="paynocchio-numbers paynocchio-balance-value" data-balance="0">{{wallet_balance}}</span>
                     </div>
                 </div>
                 <div class="paynocchio-bonuses">
@@ -48,35 +48,22 @@
                         Bonuses
                     </div>
                     <div class="amount">
-                        <span class="paynocchio-numbers paynocchio-bonus-value" data-bonus="0">0</span>
+                        <span class="paynocchio-numbers paynocchio-bonus-value" data-bonus="0">{{wallet_bonuses}}</span>
                     </div>
                 </div>
             </div>
             <div class="paynocchio-card-number">
-                <div>6346</div><div>0437</div><div>9427</div><div>1019</div><div></div>
+                {{wallet_card}}
             </div>
         </div>
     </div>
-    <div class="paynocchio-actions-btns cfps-mt-8">
-        <div class="autodeposit cfps-flex cfps-flex-row cfps-items-center cfps-gap-x-2">
-            <!-- <img decoding="async" src=""
-                     class="cfps-h-[18px] cfps-w-[16px] cfps-mr-1 cfps-inline-block" />
-                Autodeposit
-                <div class="toggle-autodeposit">
-                    <p>ON</p>
-                    <div class="toggler"></div>
-                    <p>OFF</p>
-                </div>
-                <input type="hidden" value="0" name="autodeposit" id="autodeposit" />-->
-        </div>
-        <div class="paynocchio-actions-btns">
-            <button type="button" id="paynocchio_topup_button" class="paynocchio_button paynocchio_colored cfps-rounded-lg">
-                <img decoding="async" src="https://kopybara.com/wp-content/plugins/woocommerce-paynocchio/assets/img/plus.png" class="cfps-h-[24px] cfps-w-[24px] cfps-mr-1 cfps-inline-block">
-                Add money
-            </button>
-            <a href="#" class="paynocchio_button btn-gray cfps-rounded-lg" data-modal=".withdrawModal">
-                Withdraw
-            </a>
-        </div>
+    <div class="paynocchio-actions-btns">
+        <button type="button" id="paynocchio_topup_button" class="paynocchio_button paynocchio_colored cfps-rounded-lg">
+            <img decoding="async" src="https://kopybara.com/wp-content/plugins/woocommerce-paynocchio/assets/img/plus.png" class="cfps-h-[24px] cfps-w-[24px] cfps-mr-1 cfps-inline-block">
+            Add money
+        </button>
+        <a href="#" class="paynocchio_button btn-gray cfps-rounded-lg" data-modal=".withdrawModal">
+            Withdraw
+        </a>
     </div>
 </div>

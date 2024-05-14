@@ -26,6 +26,7 @@ declare(strict_types=1);
 
 namespace paygw_paynocchio\external;
 
+use core\uuid;
 use core_payment\helper;
 use core_reportbuilder\local\filters\number;
 use paygw_paynocchio\paynocchio_helper;
@@ -35,7 +36,7 @@ use core_external\external_value;
 use core_external\external_single_structure;
 use stdClass;
 
-class topup_wallet extends external_api {
+class make_payment extends external_api {
 
     /**
      * Returns description of method parameters.
@@ -44,7 +45,12 @@ class topup_wallet extends external_api {
      */
     public static function execute_parameters(): external_function_parameters {
         return new external_function_parameters([
-            'amount' => new external_value(PARAM_FLOAT, 'Amount to topup'),
+            'component' => new external_value(PARAM_COMPONENT, 'The component name'),
+            'paymentarea' => new external_value(PARAM_AREA, 'Payment area in the component'),
+            'itemid' => new external_value(PARAM_INT, 'The item id in the context of the component area'),
+            'orderid' => new external_value(PARAM_TEXT, 'The order id coming back from Paynocchio'),
+            'fullAmount' => new external_value(PARAM_FLOAT, 'Full order amount'),
+            'bonuses' => new external_value(PARAM_FLOAT, 'Bonuses used to pay for the Order'),
         ]);
     }
 
@@ -53,11 +59,16 @@ class topup_wallet extends external_api {
      * @param int $userId
      * @return string[]
      */
-    public static function execute(float $amount): array
+    public static function execute(string $component, string $paymentarea, int $itemid, string $orderid, float $fullAmount, float $bonuses): array
     {
         global $DB, $USER;
         self::validate_parameters(self::execute_parameters(), [
-            'amount' => $amount,
+            'component' => $component,
+            'paymentarea' => $paymentarea,
+            'itemid' => $itemid,
+            'orderid' => $orderid,
+            'fullAmount' => $fullAmount,
+            'bonuses' => $bonuses,
         ]);
 
         $paynocchio_data = $DB->get_record('paygw_paynocchio_data', ['userid'  => $USER->id]);
@@ -66,7 +77,22 @@ class topup_wallet extends external_api {
 
         if($wallet_uuid) {
             $wallet = new paynocchio_helper($user_uuid);
-            $wallet_response = $wallet->topUpWallet($wallet_uuid, $amount);
+
+            $amount = null;
+
+            $bonusAmount = $bonuses ?: null;
+
+            if(!$bonusAmount) {
+                $fullAmount = null;
+            } else {
+                $amount = $fullAmount - $bonusAmount;
+            }
+
+
+            $orderid = uuid::generate();
+
+            $wallet_response = $wallet->makePayment($wallet_uuid, $fullAmount, $amount, $orderid, $bonuses);
+
             $imploded = intval(implode('', $wallet_response));
 
             if($imploded === 200) {

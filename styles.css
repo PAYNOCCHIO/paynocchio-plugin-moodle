@@ -104,15 +104,114 @@
 }
 
 .paynocchio-card .paynocchio-card-number {
-    bottom: 13%;
     display: flex;
-    flex-direction: row;
-    font-size: 1rem;
-    gap: .5rem;
+    bottom: 13%;
     left: 7%;
     line-height: 1.5rem;
     position: absolute;
     z-index: 20;
+}
+
+.paynocchio-description-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 2rem;
+    margin-bottom: 2.5rem;
+    column-gap: 1.5rem;
+    row-gap: 3rem;
+}
+
+.paynocchio-grid-row {
+    display: grid;
+    grid-template-columns: 50px 1fr;
+    gap: 2rem;
+    align-items: flex-start;
+}
+
+.paynocchio-grid-row img {
+    max-width: 100%;
+}
+
+.paynocchio-grid-row h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.75rem;
+    margin-bottom: 0;
+}
+
+.paynocchio_payment_card_button {
+    bottom: 12%;
+    position: absolute;
+    right: 7%;
+    z-index: 20;
+    padding: .5rem 1rem;
+    text-decoration-line: none;
+    white-space: nowrap;
+}
+
+.paynocchio-actions-btns {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+    padding-top: 2rem;
+}
+
+.paynocchio_button {
+    display: flex;
+    align-items: center;
+    border-radius: .5rem;
+    padding: 0.5rem 1rem;
+    border: none;
+    outline: none;
+    background: #fff;
+    color: #3b82f6;
+}
+
+.paynocchio_colored {
+    color: #fff;
+    background: #3b82f6;
+}
+
+.paynocchio_payment_card_button svg {
+    width: 20px;
+    height: 20px;
+}
+
+.paynocchio-conversion-rate {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.paynocchio-conversion-rate h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 2rem;
+}
+
+.paynocchio-conversion-rate form {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.paynocchio_pay_form #bonuses-value {
+    background-color: transparent;
+    border: none;
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 2rem;
+    padding: 0;
+    width: 100px;
+}
+
+input[type=range].styled-slider.slider-progress {
+    --range: calc(var(--max) - var(--min));
+    --ratio: calc((var(--value) - var(--min)) / var(--range));
+    --sx: calc(10px + var(--ratio) * (100% - 20px));
 }
 
 @media (min-width: 1024px) {
@@ -121,9 +220,6 @@
         gap: .5rem;
         line-height: 1.75rem;
     }
-}
-
-@media (min-width: 1024px) {
     .paynocchio-balance-bonuses {
         font-size: 1.25rem;
         line-height: 1.75rem;

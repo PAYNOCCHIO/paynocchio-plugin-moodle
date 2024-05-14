@@ -1,0 +1,88 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template paygw_paynocchio/paynocchio_wallet_activation
+
+    Classes required for JS:
+    * none
+
+    Data attributes required for JS:
+    * none
+
+    Context variables required for this template:
+    * none
+
+    Example context (json):
+    {}
+
+}}
+<div class="paynocchio-profile-block">
+    <div class="paynocchio-card-container">
+        <div class="paynocchio-card">
+            <img src="http://kopybara.com/wp-content/uploads/2024/03/cropped-favicon.png" class="on_card_embleme">
+            <div class="paynocchio-balance-bonuses">
+                <div class="paynocchio-balance">
+                    <div>
+                        Balance
+                    </div>
+                    <div class="amount">
+                        $<span class="paynocchio-numbers paynocchio-balance-value">{{wallet_balance}}</span>
+                    </div>
+                </div>
+                <div class="paynocchio-bonuses">
+                    <div>
+                        Bonuses
+                    </div>
+                    <div class="amount">
+                        <span class="paynocchio-numbers paynocchio-bonus-value">{{wallet_bonuses}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="paynocchio-card-number">
+                {{wallet_card}}
+            </div>
+            <div class="paynocchio_payment_card_button">
+                <button type="button" class="paynocchio_button" id="paynocchio_topup_button">
+                    <svg enable-background="new 0 0 50 50" version="1.1" viewBox="0 0 50 50" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                        <rect fill="none" height="50" width="50"></rect>
+                        <line fill="none" stroke="#1a85f9" stroke-miterlimit="10" stroke-width="4" x1="9" x2="41" y1="25" y2="25"></line>
+                        <line fill="none" stroke="#1a85f9" stroke-miterlimit="10" stroke-width="4" x1="25" x2="25" y1="9" y2="41"></line>
+                                    </svg>
+                    Add money
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="paynocchio-conversion-rate">
+        <div>
+            <h3>
+                {{#str}}applybonuses, paygw_paynocchio{{/str}}
+            </h3>
+            <div>{{#str}}applybonuses_help, paygw_paynocchio{{/str}}</div>
+        </div>
+        <form class="paynocchio_pay_form">
+            <input id="fullamount-input" type="hidden" value="{{full_amount}}">
+            <input id="bonuses-range" type="range" min="0" max="{{max_bonus}}" step="1" value="0" class="styled-slider slider-progress">
+            <input id="bonuses-value" type="number" value="">
+        </form>
+    </div>
+    <div class="paynocchio-actions-btns">
+        <button type="button" id="paynocchio_pay_button" class="paynocchio_button paynocchio_colored btn-lg">
+            {{#str}} pay, paygw_paynocchio {{/str}}
+        </button>
+    </div>
+</div>

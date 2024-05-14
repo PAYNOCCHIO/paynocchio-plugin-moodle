@@ -1,7 +1,5 @@
 <?php
 
-use core\uuid;
-use core_payment\helper;
 use paygw_paynocchio\paynocchio_helper;
 
 require_once __DIR__ . '/../../../config.php';
@@ -19,25 +17,30 @@ $PAGE->set_title(get_string('my_paynocchio_wallet', 'paygw_paynocchio'));
 $PAGE->navbar->add(get_string('profile'), new moodle_url('/user/profile.php', array('id' => $USER->id)));
 $PAGE->navbar->add(get_string('my_paynocchio_wallet', 'paygw_paynocchio'));
 
-$PAGE->requires->js_call_amd('paygw_paynocchio/wallet_activation', 'init', ['user_id' => $USER->id]);
-
-
 echo $OUTPUT->header();
-
-$user_uuid = uuid::generate();
 
 //$wallet = new paynocchio_helper($user_uuid);
 
 $user = $DB->get_record('paygw_paynocchio_data', ['userid'  => $USER->id]);
-print_r($user);
 
 if($user && $user->useruuid && $user->walletuuid) {
+    $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_topup', 'init');
+
+    $wallet = new paynocchio_helper($user->useruuid);
+    $wallet_balance_response = $wallet->getWalletBalance($user->walletuuid);
+
     $data = [
-        'user_uuid' => $user->useruuid,
-        'wallet_uuid' => $user->walletuuid,
+        'wallet_balance' => $wallet_balance_response['balance'],
+        'wallet_bonuses' => $wallet_balance_response['bonuses'],
+        'wallet_card' => $wallet_balance_response['number'],
+        'wallet_status' => $wallet_balance_response['status'],
+        'wallet_code' => $wallet_balance_response['code'],
     ];
+
     echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet', $data);
 } else {
+    $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_activation', 'init', ['user_id' => $USER->id]);
+
     $data = [
         'user_id' => $USER->id,
     ];

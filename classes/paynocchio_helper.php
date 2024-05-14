@@ -17,7 +17,7 @@
 /**
  * Contains helper class to work with Paynocchio REST API.
  *
- * @package    core_payment
+ * @package    paygw_paynocchio
  * @copyright  2024 Paynocchio <ceo@paynocchio.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -43,26 +43,6 @@ class paynocchio_helper {
     public const PAYNOCCHIO_TYPE_KEY = 'type_uuid';
     public const PAYNOCCHIO_STATUS_KEY = 'status_uuid';
     public const PAYNOCCHIO_SECRET_KEY = 'secret_uuid';
-
-    /**
-     * @var string The payment was authorized or the authorized payment was captured for the order.
-     */
-    public const CAPTURE_STATUS_COMPLETED = 'COMPLETED';
-
-    /**
-     * @var string The merchant intends to capture payment immediately after the customer makes a payment.
-     */
-    public const ORDER_INTENT_CAPTURE = 'CAPTURE';
-
-    /**
-     * @var string The customer approved the payment.
-     */
-    public const ORDER_STATUS_APPROVED = 'APPROVED';
-
-    /**
-     * @var string The base API URL
-     */
-    private $baseurl;
 
     /**
      * @var string Environment UUID
@@ -277,9 +257,9 @@ class paynocchio_helper {
      */
     public function makePayment(string $walletId, $fullAmount, $amount, string $orderId, $bonusAmount = null): array {
         $data = [
-            PAYNOCCHIO_ENV_KEY => $this->envId,
-            PAYNOCCHIO_USER_UUID_KEY => $this->userId,
-            PAYNOCCHIO_WALLET_KEY => $walletId,
+            self::PAYNOCCHIO_ENV_KEY => $this->envId,
+            self::PAYNOCCHIO_USER_UUID_KEY => $this->userId,
+            self::PAYNOCCHIO_WALLET_KEY => $walletId,
             "currency" => "USD",
             'full_amount' => $fullAmount,
             'amount' => $amount,
@@ -289,9 +269,7 @@ class paynocchio_helper {
         if ($bonusAmount !== null) {
             $data['bonus_amount'] = $bonusAmount;
         }
-        $response = $this->sendRequest('POST', '/operation/payment', json_encode($data));
-
-        return $response;
+        return $this->sendRequest('POST', '/operation/payment', json_encode($data));
     }
 
     /**

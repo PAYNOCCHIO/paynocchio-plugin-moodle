@@ -59,4 +59,31 @@ $functions = [
         'ajax'        => true,
         'loginrequired' => false,
     ],
+
+    'paygw_paynocchio_withdraw_from_wallet' => [
+        'classname'   => 'paygw_paynocchio\external\withdraw_from_wallet',
+        'classpath'   => '',
+        'description' => 'Withdraws money to Paynocchio Wallet.',
+        'type'        => 'write',
+        'ajax'        => true,
+        'loginrequired' => false,
+    ],
+
+    'paygw_paynocchio_make_payment' => [
+        'classname'   => 'paygw_paynocchio\external\make_payment',
+        'classpath'   => '',
+        'description' => 'Make payment with Paynocchio Wallet.',
+        'type'        => 'write',
+        'ajax'        => true,
+        'loginrequired' => false,
+    ],
+
+    'paygw_paynocchio_update_wallet_status' => [
+        'classname'   => 'paygw_paynocchio\external\update_wallet_status',
+        'classpath'   => '',
+        'description' => 'Update Paynocchio Wallet status.',
+        'type'        => 'write',
+        'ajax'        => true,
+        'loginrequired' => false,
+    ],
 ];

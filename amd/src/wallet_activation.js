@@ -21,20 +21,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-import {handleTopUpClick, handleWalletActivationClick} from "./repository";
-import Templates from 'core/templates';
-import Modal from 'core/modal';
-
-/**
- * Creates and shows a modal that contains a placeholder.
- *
- * @returns {Promise<Modal>}
- */
-const showModalWithTopup = async() => await Modal.create({
-    body: await Templates.render('paygw_paynocchio/topup_modal', {}),
-    show: true,
-    removeOnClose: true,
-});
+import {handleWalletActivationClick} from "./repository";
 
 export const init = (user_id) => {
     const paynocchio_activation_button = document.getElementById('paynocchio_activation_button');
@@ -47,28 +34,9 @@ export const init = (user_id) => {
             response.then(data => {
                 if(data.success) {
                     spinner.classList.remove('active');
+                    window.location.reload();
                 }
             });
         });
     }
-
-    const paynocchio_wallet_topup_button = document.getElementById('paynocchio_topup_button');
-
-    if(paynocchio_wallet_topup_button) {
-        paynocchio_wallet_topup_button.addEventListener('click', () => {
-            showModalWithTopup()
-                .then(modal => {
-                    const input = modal.body.find('#top_up_amount');
-                    const button = modal.body.find('#topup_button');
-                    button.click(()=> {
-                        if(input.val()) {
-                            handleTopUpClick(input.val())
-                                .then(data => window.console.log(data));
-                        }
-                    });
-                });
-        });
-
-    }
-
 };

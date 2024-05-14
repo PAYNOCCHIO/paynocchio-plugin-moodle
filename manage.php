@@ -1,9 +1,7 @@
 <?php
 
 use core_payment\helper;
-use gwpayiments\bank_helper as GwpayimentsBank_helper;
-use paygw_paynocchio\bank_helper as paygw_paynocchioBank_helper;
-use paygw_paynocchio\bank_helper;
+use paygw_paynocchio\paynocchio_helper;
 
 require_once __DIR__ . '/../../../config.php';
 require_once './lib.php';
@@ -40,7 +38,7 @@ if ($confirm == 1 && $id > 0) {
     }
 }
 $post_url= new moodle_url($PAGE->url, array('sesskey'=>sesskey()));
-$bank_entries = bank_helper::get_pending();
+$bank_entries = paynocchio_helper::get_pending();
 if (!$bank_entries) {
     $match = array();
     echo $OUTPUT->heading(get_string('noentriesfound', 'paygw_paynocchio'));
@@ -81,7 +79,7 @@ if (!$bank_entries) {
         $files = "-";
         $hasfiles = get_string('no');
         $fs = get_file_storage();
-        $files = bank_helper::files($bank_entry->id);
+        $files = paynocchio_helper::files($bank_entry->id);
         if ($bank_entry->hasfiles > 0 || count($files)>0) {
             $hasfiles = get_string('yes');
             $hasfiles = '<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#staticBackdrop' . $bank_entry->id . '" id="launchmodal' . $bank_entry->id . '">

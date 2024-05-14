@@ -17,8 +17,8 @@
 /**
  * Settings for the Paynocchio payment gateway
  *
- * @package    paygw_paypal
- * @copyright  2019 Shamim Rezaie <shamim@moodle.com>
+ * @package    paygw_paynocchio
+ * @copyright  2024 Paynocchio <ceo@paynocchio.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

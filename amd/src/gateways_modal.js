@@ -28,20 +28,7 @@
  //import {get_string as getString} from 'core/str';
  */
 
-import Templates from 'core/templates';
-import ModalFactory from 'core/modal_factory';
-/**
- * Creates and shows a modal that contains a placeholder.
- *
- * @returns {Promise<Modal>}
- */
-const showModalWithPlaceholder = async() => {
-    const modal = await ModalFactory.create({
-        body: await Templates.render('paygw_bank/bank_button_placeholder', {})
-    });
-    modal.show();
-};
-
+import {showModalWithPlaceholder} from "./repository";
 
 /**
  * Process the payment.
@@ -53,6 +40,14 @@ const showModalWithPlaceholder = async() => {
  * @returns {Promise<string>}
  */
 export const process = (component, paymentArea, itemId, description) => {
+    /*return showModalWallet()
+        .then(() =>{
+            window.console.log(component);
+            window.console.log(paymentArea);
+            window.console.log(itemId);
+            window.console.log(description);
+            return new Promise(() => null);
+        });*/
     return showModalWithPlaceholder()
         .then(() => {
             location.href = M.cfg.wwwroot + '/payment/gateway/paynocchio/pay.php?' +

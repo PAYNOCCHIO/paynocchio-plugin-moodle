@@ -22,6 +22,8 @@
  */
 
 import Ajax from 'core/ajax';
+import Templates from 'core/templates';
+import Modal from 'core/modal';
 
 /**
  * Return the Paynocchio JavaScript SDK URL.
@@ -80,11 +82,73 @@ export const handleWalletActivationClick = async (user_id) => {
 
 export const handleTopUpClick = async (amount) => {
     const request = {
-        methodname: 'paygw_paynocchio_topup',
+        methodname: 'paygw_paynocchio_topup_wallet',
         args: {
             amount,
         },
     };
 
     return await Ajax.call([request])[0];
+};
+
+/**
+ * Creates and shows a modal that contains a placeholder.
+ *
+ * @returns {Promise<Modal>}
+ */
+export const showModalWithTopup = async() => await Modal.create({
+    body: await Templates.render('paygw_paynocchio/topup_modal', {}),
+    show: true,
+    removeOnClose: true,
+});
+
+/**
+ * Creates and shows a modal that contains a placeholder.
+ *
+ * @returns {Promise<Modal>}
+ */
+export const showModalWallet = async() => await Modal.create({
+    body: await Templates.render('paygw_paynocchio/paynocchio_wallet', {}),
+    show: true,
+    removeOnClose: true,
+});
+
+/**
+ * Creates and shows a modal that contains a placeholder.
+ *
+ * @returns {Promise<Modal>}
+ */
+export const showModalWithPlaceholder = async() => {
+    const modal = await Modal.create({
+        body: await Templates.render('paygw_bank/bank_button_placeholder', {})
+    });
+    modal.show();
+};
+
+/**
+ * Call server to validate and capture payment for order.
+ *
+ * @param {string} component Name of the component that the itemId belongs to
+ * @param {string} paymentArea The area of the component that the itemId belongs to
+ * @param {number} itemId An internal identifier that is used by the component
+ * @param {string} orderId The order id coming back from Paynocchio
+ * @param {number} fullAmount Full amount of the order
+ * @param {number} amount Amount with bonuses to pay for the order
+ * @param {number} bonuses Boneses used to pay Paynocchio
+ * @returns {*}
+ */
+export const makePayment = (component, paymentArea, itemId, orderId, fullAmount, bonuses) => {
+    const request = {
+        methodname: 'paygw_paynocchio_make_payment',
+        args: {
+            component,
+            paymentarea: paymentArea,
+            itemid: itemId,
+            orderid: orderId,
+            fullAmount,
+            bonuses
+        },
+    };
+
+    return Ajax.call([request])[0];
 };
