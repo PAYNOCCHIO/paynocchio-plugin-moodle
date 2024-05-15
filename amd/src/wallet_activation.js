@@ -28,12 +28,14 @@ export const init = (user_id) => {
 
     if(paynocchio_activation_button) {
         const spinner = paynocchio_activation_button.querySelector('.paynocchio-spinner');
+        const message = document.querySelector('.topup-description');
         paynocchio_activation_button.addEventListener('click', () => {
             const response = handleWalletActivationClick(user_id);
             spinner.classList.add('active');
             response.then(data => {
                 if(data.success) {
                     spinner.classList.remove('active');
+                    message.classList.remove('hidden');
                     window.location.reload();
                 }
             });

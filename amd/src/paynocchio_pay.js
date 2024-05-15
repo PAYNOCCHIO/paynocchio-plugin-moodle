@@ -14,6 +14,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 import {makePayment} from "./repository";
+import {exception as displayException} from 'core/notification';
+import Templates from 'core/templates';
 
 /**
  * Paynocchio repository module to encapsulate all of the AJAX requests that can be sent for bank.
@@ -44,10 +46,24 @@ export const init = (component, paymentArea, itemid, fullAmount) => {
 
         paynocchio_pay_button.addEventListener('click', () => {
             paynocchio_pay_button.classList.add('disabled');
-            const bonuses = parseFloat(document.getElementById('bonuses-value').value);
 
+            const bonuses = parseFloat(document.getElementById('bonuses-value').value);
+            const spinner = document.querySelector('.paynocchio-spinner');
+            const topup_message = document.getElementById('topup_message');
+
+            spinner.classList.add('active');
             makePayment(component, paymentArea, itemid, fullAmount, bonuses)
-                .then(data => window.console.log(data));
+                .then(data => {
+                    if(data.success) {
+                        spinner.classList.remove('active');
+                        topup_message.innerText = 'Success';
+                        Templates.renderForPromise('paygw_paynocchio/enrolled_already', [])
+                            .then(({html, js}) => {
+                                Templates.replaceNodeContents('.paynocchio-profile-block', html, js);
+                            })
+                            .catch((error) => displayException(error));
+                    }
+                });
         });
     }
 };

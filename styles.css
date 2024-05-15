@@ -208,10 +208,41 @@
     width: 100px;
 }
 
-input[type=range].styled-slider.slider-progress {
-    --range: calc(var(--max) - var(--min));
-    --ratio: calc((var(--value) - var(--min)) / var(--range));
-    --sx: calc(10px + var(--ratio) * (100% - 20px));
+.topup-description {
+    padding-top: 2rem;
+    font-weight: 500;
+    text-align: center;
+}
+
+.topup-form {
+    display: flex;
+    gap: 1rem;
+}
+
+.topup-form input {
+    border-radius: 10px;
+    font-size: 1.3rem;
+}
+
+.spinner {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.spinner .paynocchio-spinner {
+    position: relative;
+    display: none;
+    width: 1.25rem;
+    height: 1.25rem;
+    color: blue;
+    animation: rotate 1s linear infinite;
+    top: auto;
+    right: auto;
+}
+
+.spinner .paynocchio-spinner.active {
+    display: block;
 }
 
 @media (min-width: 1024px) {

@@ -22,8 +22,10 @@
  */
 
 import {handleTopUpClick, showModalWithTopup} from "./repository";
+//import {exception as displayException} from 'core/notification';
+//import Templates from 'core/templates';
 
-export const init = () => {
+export const init = (pay) => {
     const paynocchio_wallet_topup_button = document.getElementById('paynocchio_topup_button');
 
     if (paynocchio_wallet_topup_button) {
@@ -31,19 +33,37 @@ export const init = () => {
         paynocchio_wallet_topup_button.addEventListener('click', () => {
             showModalWithTopup()
                 .then(modal => {
+                    modal.setTitle('Topup Paynocchio Wallet');
                     const input = modal.body.find('#top_up_amount');
                     const button = modal.body.find('#topup_button');
                     button.click(() => {
                         if (input.val()) {
+                            modal.body.find('.paynocchio-spinner').toggleClass('active');
                             handleTopUpClick(input.val())
                                 .then(data => {
                                     if (data.success) {
-                                        window.console.log(data);
-                                        modal.setBody('Success!');
+                                        //window.console.log(data);
+                                        if(pay) {
+                                            window.location.reload();
+                                        }
+                                        modal.body.find('.paynocchio-spinner').toggleClass('active');
+                                        modal.body.find('#topup_message').text('Success!');
                                         setBalance(data.balance);
                                         setBonus(data.bonuses);
                                         setTimeout(() => {
+                                            modal.hide();
                                             modal.destroy();
+
+                                            /*if(pay) {
+                                                Templates.renderForPromise('paygw_paynocchio/test', [])
+                                                    // It returns a promise that needs to be resoved.
+                                                    .then(({html, js}) => {
+                                                        Templates.appendNodeContents('.paynocchio-profile-block', html, js);
+                                                    })
+
+                                                    .catch((error) => displayException(error));
+                                            }*/
+
                                         }, 1000);
                                     }
                                 });

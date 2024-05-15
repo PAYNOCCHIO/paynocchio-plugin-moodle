@@ -75,7 +75,9 @@ if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
 
     if($user && $user->useruuid && $user->walletuuid) {
 
-        $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_topup', 'init');
+        $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_topup', 'init', [
+            'pay' => true
+        ]);
         $PAGE->requires->js_call_amd('paygw_paynocchio/paynocchio_pay', 'init', [
             'component' => $component,
             'paymentarea' => $paymentarea,
@@ -104,6 +106,7 @@ if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
             'user_uuid' => $user->useruuid,
             'max_bonus' => $max_bonus ?? 0,
             'full_amount' => $amount,
+            'can_pay' => $wallet_balance_response['balance'] + $wallet_balance_response['bonuses'] >= $amount,
         ];
 
         echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_payment_wallet', $data);
