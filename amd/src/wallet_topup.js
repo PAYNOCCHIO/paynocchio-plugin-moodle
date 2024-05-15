@@ -38,6 +38,7 @@ export const init = () => {
                             handleTopUpClick(input.val())
                                 .then(data => {
                                     if (data.success) {
+                                        window.console.log(data);
                                         modal.setBody('Success!');
                                         setBalance(data.balance);
                                         setBonus(data.bonuses);

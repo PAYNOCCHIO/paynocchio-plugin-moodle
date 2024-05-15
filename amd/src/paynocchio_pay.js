@@ -23,7 +23,8 @@ import {makePayment} from "./repository";
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-export const init = (component, paymentArea, itemId, orderId, fullAmount) => {
+export const init = (component, paymentArea, itemid, fullAmount) => {
+
     const paynocchio_pay_button = document.getElementById('paynocchio_pay_button');
 
     if (paynocchio_pay_button) {
@@ -43,8 +44,9 @@ export const init = (component, paymentArea, itemId, orderId, fullAmount) => {
 
         paynocchio_pay_button.addEventListener('click', () => {
             paynocchio_pay_button.classList.add('disabled');
-            const bonuses = document.getElementById('bonuses-value').value;
-            makePayment(component, paymentArea, itemId, orderId, fullAmount, bonuses)
+            const bonuses = parseFloat(document.getElementById('bonuses-value').value);
+
+            makePayment(component, paymentArea, itemid, fullAmount, bonuses)
                 .then(data => window.console.log(data));
         });
     }

@@ -46,29 +46,6 @@ export const getConfigForJs = (component, paymentArea, itemId) => {
     return Ajax.call([request])[0];
 };
 
-/**
-* Call server to validate and capture payment for order.
-*
-* @param {string} component Name of the component that the itemId belongs to
-* @param {string} paymentArea The area of the component that the itemId belongs to
-* @param {number} itemId An internal identifier that is used by the component
-* @param {string} orderId The order id coming back from Paynocchio
-* @returns {*}
-*/
-export const markTransactionComplete = (component, paymentArea, itemId, orderId) => {
-    const request = {
-        methodname: 'paygw_paynocchio_create_transaction_complete',
-        args: {
-            component,
-            paymentarea: paymentArea,
-            itemid: itemId,
-            orderid: orderId,
-        },
-    };
-
-    return Ajax.call([request])[0];
-};
-
 export const handleWalletActivationClick = async (user_id) => {
     const request = {
         methodname: 'paygw_paynocchio_activate_wallet',
@@ -130,21 +107,18 @@ export const showModalWithPlaceholder = async() => {
  *
  * @param {string} component Name of the component that the itemId belongs to
  * @param {string} paymentArea The area of the component that the itemId belongs to
- * @param {number} itemId An internal identifier that is used by the component
- * @param {string} orderId The order id coming back from Paynocchio
+ * @param {number} itemid An internal identifier that is used by the component
  * @param {number} fullAmount Full amount of the order
- * @param {number} amount Amount with bonuses to pay for the order
  * @param {number} bonuses Boneses used to pay Paynocchio
  * @returns {*}
  */
-export const makePayment = (component, paymentArea, itemId, orderId, fullAmount, bonuses) => {
+export const makePayment = (component, paymentArea, itemid, fullAmount, bonuses) => {
     const request = {
         methodname: 'paygw_paynocchio_make_payment',
         args: {
             component,
             paymentarea: paymentArea,
-            itemid: itemId,
-            orderid: orderId,
+            itemid,
             fullAmount,
             bonuses
         },

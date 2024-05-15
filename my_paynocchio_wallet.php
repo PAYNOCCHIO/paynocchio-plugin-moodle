@@ -19,8 +19,6 @@ $PAGE->navbar->add(get_string('my_paynocchio_wallet', 'paygw_paynocchio'));
 
 echo $OUTPUT->header();
 
-//$wallet = new paynocchio_helper($user_uuid);
-
 $user = $DB->get_record('paygw_paynocchio_data', ['userid'  => $USER->id]);
 
 if($user && $user->useruuid && $user->walletuuid) {
@@ -38,6 +36,16 @@ if($user && $user->useruuid && $user->walletuuid) {
     ];
 
     echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet', $data);
+
+    echo 'user_uuid: '. $user->useruuid. '<br/>';
+    echo 'wallet_uuid: '. $user->walletuuid. '<br/>';
+    echo 'secret: '. $wallet->get_secret(). '<br/>';
+    echo 'env_uuid: '. $wallet->get_env(). '<br/>';
+    echo 'wallet signature: '. $wallet->getSignature(). '<br/>';
+    echo 'company signature: '. $wallet->getSignature(true). '<br/>';
+    echo 'generated signature: '. hash("sha256", $wallet->get_secret() . "|" . $wallet->get_env() . "|" . $user->useruuid). '<br/>';
+
+
 } else {
     $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_activation', 'init', ['user_id' => $USER->id]);
 

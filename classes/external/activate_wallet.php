@@ -71,6 +71,7 @@ class activate_wallet extends external_api {
                 $record->userid = $userId;
                 $record->useruuid = $user_uuid;
                 $record->walletuuid = $json_response->wallet;
+                $record->timecreated = time();
                 $DB->insert_record('paygw_paynocchio_data', $record);
                 return [
                     'wallet_uuid' => $json_response->wallet,

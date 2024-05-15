@@ -70,6 +70,14 @@ class topup_wallet extends external_api {
             $imploded = intval(implode('', $wallet_response));
 
             if($imploded === 200) {
+
+                $record = new stdClass();
+                $record->userid = $USER->id;
+                $record->type = 'topup';
+                $record->amount = $amount;
+                $record->timecreated = time();
+                $DB->insert_record('paygw_paynocchio_transactions', $record);
+
                 $wallet_balance_response = $wallet->getWalletBalance($wallet_uuid);
                 if($wallet_balance_response) {
                     return [

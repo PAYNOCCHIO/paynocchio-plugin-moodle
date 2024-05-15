@@ -65,6 +65,7 @@ if ($surcharge && $surcharge > 0) {
     echo '</li>';
 }
 echo "</ul>";
+
 $user = $DB->get_record('paygw_paynocchio_data', ['userid'  => $USER->id]);
 
 if($user && $user->useruuid && $user->walletuuid) {
@@ -74,8 +75,8 @@ if($user && $user->useruuid && $user->walletuuid) {
         'component' => $component,
         'paymentarea' => $paymentarea,
         'itemid' => $itemid,
-        'description' => $description,
-        'full_amount' => $amount,
+        'fullAmount' => $amount,
+        'bonuses' => 0,
         ]);
 
     $wallet = new paynocchio_helper($user->useruuid);

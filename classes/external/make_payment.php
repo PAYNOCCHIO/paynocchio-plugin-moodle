@@ -28,7 +28,9 @@ namespace paygw_paynocchio\external;
 
 use core\uuid;
 use core_payment\helper;
+use core_payment\helper as payment_helper;
 use core_reportbuilder\local\filters\number;
+use mod_lti\local\ltiservice\response;
 use paygw_paynocchio\paynocchio_helper;
 use core_external\external_api;
 use core_external\external_function_parameters;
@@ -48,7 +50,6 @@ class make_payment extends external_api {
             'component' => new external_value(PARAM_COMPONENT, 'The component name'),
             'paymentarea' => new external_value(PARAM_AREA, 'Payment area in the component'),
             'itemid' => new external_value(PARAM_INT, 'The item id in the context of the component area'),
-            'orderid' => new external_value(PARAM_TEXT, 'The order id coming back from Paynocchio'),
             'fullAmount' => new external_value(PARAM_FLOAT, 'Full order amount'),
             'bonuses' => new external_value(PARAM_FLOAT, 'Bonuses used to pay for the Order'),
         ]);
@@ -56,20 +57,25 @@ class make_payment extends external_api {
 
     /**
      * Returns the config values required by the Paynocchio JavaScript SDK.
-     * @param int $userId
+     *
      * @return string[]
+     * @throws \dml_exception
+     * @throws \invalid_parameter_exception
      */
-    public static function execute(string $component, string $paymentarea, int $itemid, string $orderid, float $fullAmount, float $bonuses): array
+    public static function execute(string $component, string $paymentarea, int $itemid, float $fullAmount, float $bonuses): array
     {
         global $DB, $USER;
+
         self::validate_parameters(self::execute_parameters(), [
             'component' => $component,
             'paymentarea' => $paymentarea,
             'itemid' => $itemid,
-            'orderid' => $orderid,
             'fullAmount' => $fullAmount,
             'bonuses' => $bonuses,
         ]);
+
+        $payable = payment_helper::get_payable($component, $paymentarea, $itemid);
+        $currency = $payable->get_currency();
 
         $paynocchio_data = $DB->get_record('paygw_paynocchio_data', ['userid'  => $USER->id]);
         $user_uuid = $paynocchio_data->useruuid;
@@ -78,8 +84,8 @@ class make_payment extends external_api {
         if($wallet_uuid) {
             $wallet = new paynocchio_helper($user_uuid);
 
-            $amount = null;
-
+            $originalAmount = $fullAmount;
+            $amount = $fullAmount;
             $bonusAmount = $bonuses ?: null;
 
             if(!$bonusAmount) {
@@ -88,14 +94,19 @@ class make_payment extends external_api {
                 $amount = $fullAmount - $bonusAmount;
             }
 
-
             $orderid = uuid::generate();
 
             $wallet_response = $wallet->makePayment($wallet_uuid, $fullAmount, $amount, $orderid, $bonuses);
 
-            $imploded = intval(implode('', $wallet_response));
+            if($wallet_response['status_code'] === 200) {
 
-            if($imploded === 200) {
+                paynocchio_helper::registerTransaction((int) $USER->id, 'payment', $amount, $bonuses);
+
+                $paymentid = payment_helper::save_payment($payable->get_account_id(), $component, $paymentarea,
+                    $itemid, (int) $USER->id, $originalAmount, $currency, 'paynocchio');
+
+                payment_helper::deliver_order($component, $paymentarea, $itemid, $paymentid, (int) $USER->id);
+
                 $wallet_balance_response = $wallet->getWalletBalance($wallet_uuid);
                 if($wallet_balance_response) {
                     return [

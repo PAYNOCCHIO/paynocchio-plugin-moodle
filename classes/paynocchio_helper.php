@@ -24,7 +24,9 @@
 
 namespace paygw_paynocchio;
 
+use core_reportbuilder\local\filters\number;
 use curl;
+use stdClass;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -393,6 +395,36 @@ class paynocchio_helper {
         $url = '/wallet/environment-structure/?user_uuid=' . $this->userId . '&environment_uuid=' . $this->envId;
 
         return $this->sendRequest('GET', $url);
+    }
+
+    /**
+     * Check if enrolled already
+     */
+    public static function has_enrolled($itemid, $userid): bool
+    {
+        global $DB;
+        if ($DB->count_records('paygw_paynocchio', ['itemid' => $itemid, 'userid' => $userid, 'status' => 'P']) > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Register Transaction
+     */
+    public static function registerTransaction(int $user_id, string $type, float $amount, float $bonusAmount)
+    {
+        global $DB;
+
+        $record = new stdClass();
+        $record->userid = $user_id;
+        $record->type = $type;
+        $record->amount = $amount;
+        $record->bonuses = $bonusAmount ?? 0;
+        $record->timecreated = time();
+
+        $DB->insert_record('paygw_paynocchio_transactions', $record);
     }
 
 }
