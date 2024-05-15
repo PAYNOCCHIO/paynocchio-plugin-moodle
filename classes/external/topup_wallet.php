@@ -60,25 +60,20 @@ class topup_wallet extends external_api {
             'amount' => $amount,
         ]);
 
-        $paynocchio_data = $DB->get_record('paygw_paynocchio_data', ['userid'  => $USER->id]);
+        $paynocchio_data = $DB->get_record('paygw_paynocchio_wallets', ['userid'  => $USER->id]);
         $user_uuid = $paynocchio_data->useruuid;
         $wallet_uuid = $paynocchio_data->walletuuid;
 
         if($wallet_uuid) {
             $wallet = new paynocchio_helper($user_uuid);
             $wallet_response = $wallet->topUpWallet($wallet_uuid, $amount);
-            $imploded = intval(implode('', $wallet_response));
 
-            if($imploded === 200) {
+            if($wallet_response['status_code'] === 200) {
 
-                $record = new stdClass();
-                $record->userid = $USER->id;
-                $record->type = 'topup';
-                $record->amount = $amount;
-                $record->timecreated = time();
-                $DB->insert_record('paygw_paynocchio_transactions', $record);
+                paynocchio_helper::registerTransaction((int) $USER->id, 'topup', $amount, 0, null);
 
                 $wallet_balance_response = $wallet->getWalletBalance($wallet_uuid);
+
                 if($wallet_balance_response) {
                     return [
                         'success' => true,

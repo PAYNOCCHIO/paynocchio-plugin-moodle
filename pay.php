@@ -43,76 +43,83 @@ $amount = helper::get_rounded_cost($payable->get_amount(), $currency, $surcharge
 
 echo $OUTPUT->header();
 
-echo '<div class="card">';
-echo '<div class="card-body">';
-echo '<ul class="list-group list-group-flush">';
-if ($surcharge && $surcharge > 0) {
-
-    echo '<li class="list-group-item"><h4 class="card-title">' . get_string('cost', 'paygw_bank') . ':</h4>';
-    echo '<div id="price">' . helper::get_cost_as_string($payable->get_amount(), $currency) . '</div>';
-    echo '</li>';
-    echo '<li class="list-group-item"><h4 class="card-title">' . get_string('surcharge', 'core_payment') . ':</h4>';
-    echo '<div id="price">' . $surcharge. '%</div>';
-    echo '<div id="explanation">' . get_string('surcharge_desc', 'core_payment') . '</div>';
-    echo '</li>';
-
-    echo '<li class="list-group-item"><h4 class="card-title">' . get_string('total_cost', 'paygw_bank') . ':</h4>';
-    echo '<div id="price">' . helper::get_cost_as_string($amount, $currency). ' ' . $currency . '</div>';
-    echo '</li>';
+if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
+    $record = $DB->get_record('paygw_paynocchio_payments', ['userid'  => $USER->id, 'itemid' => $itemid]);
+    print_r($record);
+    echo $OUTPUT->render_from_template('paygw_paynocchio/enrolled_already', ['record' => $record]);
 } else {
-    echo '<li class="list-group-item"><h4 class="card-title">' . get_string('total_cost', 'paygw_bank') . ':</h4>';
-    echo '<div id="price">' . helper::get_cost_as_string($amount, $currency). ' ' . $currency . '</div>';
-    echo '</li>';
-}
-echo "</ul>";
+    echo '<div class="card">';
+    echo '<div class="card-body">';
+    echo '<ul class="list-group list-group-flush">';
+    if ($surcharge && $surcharge > 0) {
 
-$user = $DB->get_record('paygw_paynocchio_data', ['userid'  => $USER->id]);
+        echo '<li class="list-group-item"><h4 class="card-title">' . get_string('cost', 'paygw_bank') . ':</h4>';
+        echo '<div id="price">' . helper::get_cost_as_string($payable->get_amount(), $currency) . '</div>';
+        echo '</li>';
+        echo '<li class="list-group-item"><h4 class="card-title">' . get_string('surcharge', 'core_payment') . ':</h4>';
+        echo '<div id="price">' . $surcharge. '%</div>';
+        echo '<div id="explanation">' . get_string('surcharge_desc', 'core_payment') . '</div>';
+        echo '</li>';
 
-if($user && $user->useruuid && $user->walletuuid) {
+        echo '<li class="list-group-item"><h4 class="card-title">' . get_string('total_cost', 'paygw_bank') . ':</h4>';
+        echo '<div id="price">' . helper::get_cost_as_string($amount, $currency). ' ' . $currency . '</div>';
+        echo '</li>';
+    } else {
+        echo '<li class="list-group-item"><h4 class="card-title">' . get_string('total_cost', 'paygw_bank') . ':</h4>';
+        echo '<div id="price">' . helper::get_cost_as_string($amount, $currency). ' ' . $currency . '</div>';
+        echo '</li>';
+    }
+    echo "</ul>";
 
-    $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_topup', 'init');
-    $PAGE->requires->js_call_amd('paygw_paynocchio/paynocchio_pay', 'init', [
-        'component' => $component,
-        'paymentarea' => $paymentarea,
-        'itemid' => $itemid,
-        'fullAmount' => $amount,
-        'bonuses' => 0,
+    $user = $DB->get_record('paygw_paynocchio_wallets', ['userid'  => $USER->id]);
+
+    if($user && $user->useruuid && $user->walletuuid) {
+
+        $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_topup', 'init');
+        $PAGE->requires->js_call_amd('paygw_paynocchio/paynocchio_pay', 'init', [
+            'component' => $component,
+            'paymentarea' => $paymentarea,
+            'itemid' => $itemid,
+            'fullAmount' => $amount,
+            'bonuses' => 0,
         ]);
 
-    $wallet = new paynocchio_helper($user->useruuid);
+        $wallet = new paynocchio_helper($user->useruuid);
 
-    $wallet_balance_response = $wallet->getWalletBalance($user->walletuuid);
+        $wallet_balance_response = $wallet->getWalletBalance($user->walletuuid);
 
-    if($wallet_balance_response['bonuses'] && $wallet_balance_response['bonuses'] < $amount) {
-        $max_bonus = $wallet_balance_response['bonuses'];
+        if($wallet_balance_response['bonuses'] && $wallet_balance_response['bonuses'] < $amount) {
+            $max_bonus = $wallet_balance_response['bonuses'];
+        } else {
+            $max_bonus = $amount;
+        }
+
+        $data = [
+            'wallet_balance' => $wallet_balance_response['balance'],
+            'wallet_bonuses' => $wallet_balance_response['bonuses'],
+            'wallet_card' => $wallet_balance_response['number'],
+            'wallet_status' => $wallet_balance_response['status'],
+            'wallet_code' => $wallet_balance_response['code'],
+            'wallet_uuid' => $user->walletuuid,
+            'user_uuid' => $user->useruuid,
+            'max_bonus' => $max_bonus ?? 0,
+            'full_amount' => $amount,
+        ];
+
+        echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_payment_wallet', $data);
+
     } else {
-        $max_bonus = $amount;
+        $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_activation', 'init', ['user_id' => $USER->id]);
+
+        $data = [
+            'user_id' => $USER->id,
+        ];
+
+        echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet_activation', $data);
     }
 
-    $data = [
-        'wallet_balance' => $wallet_balance_response['balance'],
-        'wallet_bonuses' => $wallet_balance_response['bonuses'],
-        'wallet_card' => $wallet_balance_response['number'],
-        'wallet_status' => $wallet_balance_response['status'],
-        'wallet_code' => $wallet_balance_response['code'],
-        'wallet_uuid' => $user->walletuuid,
-        'user_uuid' => $user->useruuid,
-        'max_bonus' => $max_bonus ?? 0,
-        'full_amount' => $amount,
-    ];
-
-    echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_payment_wallet', $data);
-
-} else {
-    $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_activation', 'init', ['user_id' => $USER->id]);
-
-    $data = [
-        'user_id' => $USER->id,
-    ];
-
-    echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet_activation', $data);
+    echo "</div>";
+    echo "</div>";
 }
 
-echo "</div>";
-echo "</div>";
 echo $OUTPUT->footer();

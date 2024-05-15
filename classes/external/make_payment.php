@@ -66,6 +66,8 @@ class make_payment extends external_api {
     {
         global $DB, $USER;
 
+        $userid = (int) $USER->id;
+
         self::validate_parameters(self::execute_parameters(), [
             'component' => $component,
             'paymentarea' => $paymentarea,
@@ -77,7 +79,7 @@ class make_payment extends external_api {
         $payable = payment_helper::get_payable($component, $paymentarea, $itemid);
         $currency = $payable->get_currency();
 
-        $paynocchio_data = $DB->get_record('paygw_paynocchio_data', ['userid'  => $USER->id]);
+        $paynocchio_data = $DB->get_record('paygw_paynocchio_wallets', ['userid'  => $userid]);
         $user_uuid = $paynocchio_data->useruuid;
         $wallet_uuid = $paynocchio_data->walletuuid;
 
@@ -94,18 +96,18 @@ class make_payment extends external_api {
                 $amount = $fullAmount - $bonusAmount;
             }
 
-            $orderid = uuid::generate();
+            $orderuuid = uuid::generate();
 
-            $wallet_response = $wallet->makePayment($wallet_uuid, $fullAmount, $amount, $orderid, $bonuses);
+            $wallet_response = $wallet->makePayment($wallet_uuid, $fullAmount, $amount, $orderuuid, $bonuses);
 
             if($wallet_response['status_code'] === 200) {
 
-                paynocchio_helper::registerTransaction((int) $USER->id, 'payment', $amount, $bonuses);
-
                 $paymentid = payment_helper::save_payment($payable->get_account_id(), $component, $paymentarea,
-                    $itemid, (int) $USER->id, $originalAmount, $currency, 'paynocchio');
+                    $itemid, $userid, $originalAmount, $currency, 'paynocchio');
 
-                payment_helper::deliver_order($component, $paymentarea, $itemid, $paymentid, (int) $USER->id);
+                payment_helper::deliver_order($component, $paymentarea, $itemid, $paymentid, $userid);
+                paynocchio_helper::registerTransaction($userid, 'payment', $amount, $bonuses, $paymentid);
+                paynocchio_helper::registerPayment($paymentid, $component, $paymentarea, $itemid, $orderuuid, $userid, $originalAmount, 'P');
 
                 $wallet_balance_response = $wallet->getWalletBalance($wallet_uuid);
                 if($wallet_balance_response) {

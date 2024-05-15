@@ -398,12 +398,30 @@ class paynocchio_helper {
     }
 
     /**
+     * Register Transaction
+     */
+    public static function registerTransaction(int $user_id, string $type, float $totalamount, float $bonusAmount, int $paymentid = null)
+    {
+        global $DB;
+
+        $record = new stdClass();
+        $record->userid = $user_id;
+        $record->paymentid = $paymentid;
+        $record->type = $type;
+        $record->totalamount = $totalamount;
+        $record->bonuses = $bonusAmount ?? 0;
+        $record->timecreated = time();
+
+        $DB->insert_record('paygw_paynocchio_transactions', $record);
+    }
+
+    /**
      * Check if enrolled already
      */
     public static function has_enrolled($itemid, $userid): bool
     {
         global $DB;
-        if ($DB->count_records('paygw_paynocchio', ['itemid' => $itemid, 'userid' => $userid, 'status' => 'P']) > 0) {
+        if ($DB->count_records('paygw_paynocchio_payments', ['itemid' => $itemid, 'userid' => $userid]) > 0) {
             return true;
         } else {
             return false;
@@ -411,20 +429,37 @@ class paynocchio_helper {
     }
 
     /**
-     * Register Transaction
+     * Register Payment
      */
-    public static function registerTransaction(int $user_id, string $type, float $amount, float $bonusAmount)
+    public static function registerPayment(
+        int $paymentid,
+        string $component,
+        string $paymentarea,
+        int $itemid,
+        string $orderuuid,
+        int $user_id,
+        float $totalamount,
+        string $status)
     {
         global $DB;
 
+        if (paynocchio_helper::has_enrolled($itemid, $user_id)) {
+            return null;
+        }
+
         $record = new stdClass();
+        $record->paymentid = $paymentid;
+        $record->component = $component;
+        $record->paymentarea = $paymentarea;
+        $record->itemid = $itemid;
+        $record->orderuuid = $orderuuid;
         $record->userid = $user_id;
-        $record->type = $type;
-        $record->amount = $amount;
-        $record->bonuses = $bonusAmount ?? 0;
+        $record->paymentid = $paymentid;
+        $record->totalamount = $totalamount;
+        $record->status = $status;
         $record->timecreated = time();
 
-        $DB->insert_record('paygw_paynocchio_transactions', $record);
+        $DB->insert_record('paygw_paynocchio_payments', $record);
     }
 
 }

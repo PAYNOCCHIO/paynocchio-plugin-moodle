@@ -19,7 +19,7 @@ $PAGE->navbar->add(get_string('my_paynocchio_wallet', 'paygw_paynocchio'));
 
 echo $OUTPUT->header();
 
-$user = $DB->get_record('paygw_paynocchio_data', ['userid'  => $USER->id]);
+$user = $DB->get_record('paygw_paynocchio_wallets', ['userid'  => $USER->id]);
 
 if($user && $user->useruuid && $user->walletuuid) {
     $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_topup', 'init');
