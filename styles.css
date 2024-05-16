@@ -214,12 +214,12 @@
     text-align: center;
 }
 
-.topup-form {
+.paynocchio-inline-form {
     display: flex;
     gap: 1rem;
 }
 
-.topup-form input {
+.paynocchio-inline-form input {
     border-radius: 10px;
     font-size: 1.3rem;
 }

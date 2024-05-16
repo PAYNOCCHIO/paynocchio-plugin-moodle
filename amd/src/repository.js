@@ -68,6 +68,17 @@ export const handleTopUpClick = async (amount) => {
     return await Ajax.call([request])[0];
 };
 
+export const handleWithdrawClick = async (amount) => {
+    const request = {
+        methodname: 'paygw_paynocchio_withdraw_from_wallet',
+        args: {
+            amount,
+        },
+    };
+
+    return await Ajax.call([request])[0];
+};
+
 /**
  * Creates and shows a modal that contains a placeholder.
  *
@@ -75,6 +86,17 @@ export const handleTopUpClick = async (amount) => {
  */
 export const showModalWithTopup = async() => await Modal.create({
     body: await Templates.render('paygw_paynocchio/topup_modal', {}),
+    show: true,
+    removeOnClose: true,
+});
+
+/**
+ * Creates and shows a modal that contains a withdrawal form.
+ *
+ * @returns {Promise<Modal>}
+ */
+export const showModalWithWithdraw = async() => await Modal.create({
+    body: await Templates.render('paygw_paynocchio/withdraw_modal', {}),
     show: true,
     removeOnClose: true,
 });

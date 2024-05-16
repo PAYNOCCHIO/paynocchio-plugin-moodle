@@ -241,17 +241,15 @@ class paynocchio_helper {
      */
     public function withdrawFromWallet(string $walletId, float $amount): array {
         $data = [
-            PAYNOCCHIO_ENV_KEY => $this->envId,
-            PAYNOCCHIO_USER_UUID_KEY => $this->userId,
-            PAYNOCCHIO_WALLET_KEY => $walletId,
+            self::PAYNOCCHIO_ENV_KEY => $this->envId,
+            self::PAYNOCCHIO_USER_UUID_KEY => $this->userId,
+            self::PAYNOCCHIO_WALLET_KEY => $walletId,
             "currency" => "USD",
             'amount' => $amount,
             'status_type' => 'ae1b841f-2e56-4fb9-a935-2064304f8639', // TODO Check if in't needed
         ];
 
-        $response = $this->sendRequest('POST', '/operation/withdraw', json_encode($data));
-
-        return $response;
+        return $this->sendRequest('POST', '/operation/withdraw', json_encode($data));
     }
 
     /**

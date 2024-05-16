@@ -21,26 +21,26 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-import {handleTopUpClick, showModalWithTopup} from "./repository";
+import {handleWithdrawClick, showModalWithWithdraw} from "./repository";
 import {exception as displayException} from 'core/notification';
 import Templates from 'core/templates';
 
 export const init = (pay) => {
-    const paynocchio_wallet_topup_button = document.getElementById('paynocchio_topup_button');
+    const paynocchio_wallet_withdraw_button = document.getElementById('paynocchio_withdraw_button');
 
-    if (paynocchio_wallet_topup_button) {
+    if (paynocchio_wallet_withdraw_button) {
 
-        paynocchio_wallet_topup_button.addEventListener('click', () => {
-            showModalWithTopup()
+        paynocchio_wallet_withdraw_button.addEventListener('click', () => {
+            showModalWithWithdraw()
                 .then(modal => {
-                    modal.setTitle('Topup Paynocchio Wallet');
-                    const input = modal.body.find('#top_up_amount');
-                    const button = modal.body.find('#topup_button');
+                    modal.setTitle('Withdraw from Paynocchio Wallet');
+                    const input = modal.body.find('#withdraw_amount');
+                    const button = modal.body.find('#withdraw_button');
                     button.click(() => {
                         if (input.val()) {
                             button.addClass('disabled');
                             modal.body.find('.paynocchio-spinner').toggleClass('active');
-                            handleTopUpClick(input.val())
+                            handleWithdrawClick(input.val())
                                 .then(data => {
                                     if (data.success) {
                                         //window.console.log(data);
