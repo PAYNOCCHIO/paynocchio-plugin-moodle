@@ -1,0 +1,17 @@
+{{#hastransactions}}
+    <div class="paynocchio-transactions">
+        <h3>Recent transactions</h3>
+        <div class="template-chunk">
+            <table class="paynocchio-transactions-table">
+                <tr><th>Date</th><th>Type</th><th>Total amount</th></tr>
+                {{#transactions}}
+                    <tr>
+                        <td>{{#userdate}} {{timecreated}}, {{#str}} strftimedatetime, core_langconfig {{/str}} {{/userdate}}</td>
+                        <td>{{type}}</td>
+                        <td>{{totalamount}}</td>
+                    </tr>
+                {{/transactions}}
+            </table>
+        </div>
+    </div>
+{{/hastransactions}}

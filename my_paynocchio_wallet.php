@@ -26,7 +26,6 @@ if($user && $user->useruuid && $user->walletuuid) {
 
     $wallet = new paynocchio_helper($user->useruuid);
     $wallet_balance_response = $wallet->getWalletBalance($user->walletuuid);
-
     $data = [
         'wallet_balance' => $wallet_balance_response['balance'],
         'wallet_bonuses' => $wallet_balance_response['bonuses'],
@@ -36,6 +35,14 @@ if($user && $user->useruuid && $user->walletuuid) {
     ];
 
     echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet', $data);
+
+    $transactions = $DB->get_records('paygw_paynocchio_transactions', ['userid'  => $USER->id], 'timecreated DESC', 'id,timecreated,type,totalamount');
+    $count_transactions = $DB->count_records('paygw_paynocchio_transactions', ['userid'  => $USER->id]);
+    $wallet_transactions_data = [
+        'transactions' => array_values($transactions),
+        'hastransactions' => $count_transactions > 0,
+    ];
+    echo $OUTPUT->render_from_template('paygw_paynocchio/wallet_transactions', $wallet_transactions_data);
 
 /*
     echo 'user_uuid: '. $user->useruuid. '<br/>';

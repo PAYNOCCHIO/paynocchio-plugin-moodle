@@ -75,6 +75,8 @@ class topup_wallet extends external_api {
                 $wallet_balance_response = $wallet->getWalletBalance($wallet_uuid);
 
                 if($wallet_balance_response) {
+                    $transactions = $DB->get_records('paygw_paynocchio_transactions', ['userid'  => $USER->id], 'timecreated DESC', 'id,timecreated,type,totalamount');
+                    $count_transactions = $DB->count_records('paygw_paynocchio_transactions', ['userid'  => $USER->id]);
                     return [
                         'success' => true,
                         'balance' => $wallet_balance_response['balance'],
@@ -82,6 +84,8 @@ class topup_wallet extends external_api {
                         'card_number' => $wallet_balance_response['number'],
                         'wallet_status' => $wallet_balance_response['status'],
                         'wallet_code' => $wallet_balance_response['code'],
+                        'transactions' => json_encode(array_values($transactions)),
+                        'hastransactions' => $count_transactions > 0,
                     ];
                 }
             } else {
@@ -92,6 +96,8 @@ class topup_wallet extends external_api {
                     'card_number' => 0,
                     'wallet_status' => 'ERROR',
                     'wallet_code' => 404,
+                    'transactions' => null,
+                    'hastransactions' => false,
                 ];
             }
         }
@@ -111,6 +117,8 @@ class topup_wallet extends external_api {
             'card_number' => new external_value(PARAM_INT, 'Paynocchio card number'),
             'wallet_status' => new external_value(PARAM_TEXT, 'Paynocchio wallet status'),
             'wallet_code' => new external_value(PARAM_TEXT, 'Paynocchio wallet code'),
+            'transactions' => new external_value(PARAM_RAW, 'Paynocchio wallet code'),
+            'hastransactions' => new external_value(PARAM_BOOL, 'Paynocchio wallet code'),
         ]);
     }
 }

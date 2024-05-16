@@ -22,8 +22,8 @@
  */
 
 import {handleTopUpClick, showModalWithTopup} from "./repository";
-//import {exception as displayException} from 'core/notification';
-//import Templates from 'core/templates';
+import {exception as displayException} from 'core/notification';
+import Templates from 'core/templates';
 
 export const init = (pay) => {
     const paynocchio_wallet_topup_button = document.getElementById('paynocchio_topup_button');
@@ -38,6 +38,7 @@ export const init = (pay) => {
                     const button = modal.body.find('#topup_button');
                     button.click(() => {
                         if (input.val()) {
+                            button.addClass('disabled');
                             modal.body.find('.paynocchio-spinner').toggleClass('active');
                             handleTopUpClick(input.val())
                                 .then(data => {
@@ -45,26 +46,26 @@ export const init = (pay) => {
                                         //window.console.log(data);
                                         if(pay) {
                                             window.location.reload();
-                                        }
-                                        modal.body.find('.paynocchio-spinner').toggleClass('active');
-                                        modal.body.find('#topup_message').text('Success!');
-                                        setBalance(data.balance);
-                                        setBonus(data.bonuses);
-                                        setTimeout(() => {
-                                            modal.hide();
-                                            modal.destroy();
-
-                                            /*if(pay) {
-                                                Templates.renderForPromise('paygw_paynocchio/test', [])
-                                                    // It returns a promise that needs to be resoved.
+                                        } else {
+                                            modal.body.find('.paynocchio-spinner').toggleClass('active');
+                                            modal.body.find('#topup_message').text('Success!');
+                                            setBalance(data.balance);
+                                            setBonus(data.bonuses);
+                                            setTimeout(() => {
+                                                modal.hide();
+                                                modal.destroy();
+                                                window.console.log(data.transactions);
+                                                Templates.renderForPromise('paygw_paynocchio/wallet_transactions', {
+                                                    transactions: JSON.parse(data.transactions),
+                                                    hastransactions: data.hastransactions,
+                                            })
                                                     .then(({html, js}) => {
-                                                        Templates.appendNodeContents('.paynocchio-profile-block', html, js);
+                                                        Templates.replaceNodeContents('.paynocchio-transactions', html, js);
                                                     })
-
                                                     .catch((error) => displayException(error));
-                                            }*/
 
-                                        }, 1000);
+                                            }, 1000);
+                                        }
                                     }
                                 });
                         }

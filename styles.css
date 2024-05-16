@@ -245,6 +245,23 @@
     display: block;
 }
 
+.paynocchio-transactions {
+    padding-top: 3rem;
+}
+
+.paynocchio-transactions-table {
+    width: 100%;
+}
+.paynocchio-transactions-table th,
+.paynocchio-transactions-table td {
+    padding: 0.5rem;
+}
+
+button.disabled {
+    pointer-events: none;
+    opacity: 0.75;
+}
+
 @media (min-width: 1024px) {
     .paynocchio-card .paynocchio-card-number {
         font-size: 1.25rem;
