@@ -414,6 +414,35 @@ class paynocchio_helper {
     }
 
     /**
+     * Update wallet Status
+     */
+    public static function updateWalletDBStatus(int $id, string $wallet_uuid, string $status)
+    {
+        global $DB;
+
+        $record = new stdClass();
+        $record->id = $id;
+        $record->wallet_uuid = $wallet_uuid;
+        $record->status = $status;
+
+        return $DB->update_record('paygw_paynocchio_wallets', $record);
+    }
+
+    /**
+     * Delete Wallet
+     */
+    public static function deleteWallet(string $wallet_uuid)
+    {
+        global $DB;
+
+        $wallet = $DB->get_record('paygw_paynocchio_wallets', ['walletuuid' => $wallet_uuid]);
+        $wallets = $DB->delete_records('paygw_paynocchio_wallets',['walletuuid' => $wallet_uuid]);
+        $transactions = $DB->delete_records('paygw_paynocchio_transactions',['userid' => $wallet->userid]);
+
+        return $wallets && $transactions;
+    }
+
+    /**
      * Check if enrolled already
      */
     public static function has_enrolled($itemid, $userid): bool

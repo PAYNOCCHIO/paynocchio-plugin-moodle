@@ -79,7 +79,6 @@ export const handleWithdrawClick = async (amount) => {
     return await Ajax.call([request])[0];
 };
 
-
 /**
  * Suspend wallet
  * @param {text} $status
@@ -90,6 +89,22 @@ export const handleStatusButtonClick = async ($status) => {
         methodname: 'paygw_paynocchio_update_wallet_status',
         args: {
             status: $status,
+        },
+    };
+
+    return await Ajax.call([request])[0];
+};
+
+/**
+ * Delete wallet
+ * @param {string} wallet_uuid
+ * @return {Promise<*>}
+ */
+export const handleDeleteButtonClick = async (wallet_uuid) => {
+    const request = {
+        methodname: 'paygw_paynocchio_delete_wallet',
+        args: {
+            wallet_uuid: wallet_uuid,
         },
     };
 
@@ -123,14 +138,36 @@ export const showModalWithWithdraw = async() => await Modal.create({
  *
  * @returns {Promise<Modal>}
  */
-export async function showSuspendModal(){
-    await Modal.create({
-        title: 'Suspend your Wallet',
-        body: await Templates.render('paygw_paynocchio/suspend_modal', {}),
-        show: true,
-        removeOnClose: true,
-    });
-}
+export const showSuspendModal = async() => await Modal.create({
+    title: 'Suspend your Wallet',
+    body: await Templates.render('paygw_paynocchio/suspend_modal', {}),
+    show: true,
+    removeOnClose: true,
+});
+
+/**
+ * Creates and shows a modal that contains a Suspension form.
+ *
+ * @returns {Promise<Modal>}
+ */
+export const showBlockModal = async() => await Modal.create({
+    title: 'Block your Wallet',
+    body: await Templates.render('paygw_paynocchio/block_modal', {}),
+    show: true,
+    removeOnClose: true,
+});
+
+/**
+ * Creates and shows a modal that contains a Suspension form.
+ *
+ * @returns {Promise<Modal>}
+ */
+export const showDeleteModal = async() => await Modal.create({
+    title: 'Delete your Wallet',
+    body: await Templates.render('paygw_paynocchio/delete_modal', {}),
+    show: true,
+    removeOnClose: true,
+});
 
 /**
  * Creates and shows a modal that contains a placeholder.

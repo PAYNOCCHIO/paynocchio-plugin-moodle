@@ -32,7 +32,7 @@ use core_external\external_function_parameters;
 use core_external\external_value;
 use core_external\external_single_structure;
 
-class update_wallet_status extends external_api {
+class delete_wallet extends external_api {
 
     /**
      * Returns description of method parameters.
@@ -41,54 +41,35 @@ class update_wallet_status extends external_api {
      */
     public static function execute_parameters(): external_function_parameters {
         return new external_function_parameters([
-            'status' => new external_value(PARAM_TEXT, 'Status'),
+            'wallet_uuid' => new external_value(PARAM_TEXT, 'Paynocchio Wallet UUID'),
         ]);
     }
 
     /**
      * Returns the config values required by the Paynocchio JavaScript SDK.
-     * @param int $userId
+     * @param string $wallet_uuid
      * @return string[]
      */
-    public static function execute(string $status): array
+    public static function execute(string $wallet_uuid): array
     {
-        global $DB, $USER;
+        global $DB;
         self::validate_parameters(self::execute_parameters(), [
-            'status' => $status,
+            'wallet_uuid' => $wallet_uuid,
         ]);
 
-        $paynocchio_data = $DB->get_record('paygw_paynocchio_wallets', ['userid'  => $USER->id]);
-        $user_uuid = $paynocchio_data->useruuid;
-        $wallet_uuid = $paynocchio_data->walletuuid;
-        $paynocchio_wallet = $DB->get_record('paygw_paynocchio_wallets', ['walletuuid'  => $paynocchio_data->walletuuid]);
+        $paynocchio_wallet = $DB->get_record('paygw_paynocchio_wallets', ['walletuuid'  => $wallet_uuid]);
 
+        if($paynocchio_wallet) {
+            $deleted = paynocchio_helper::deleteWallet($wallet_uuid);
 
-        if($wallet_uuid) {
-            $wallet = new paynocchio_helper($user_uuid);
-            $wallet_statuses = $wallet->getWalletStatuses();
-            $wallet_response = $wallet->updateWalletStatus($wallet_uuid, $wallet_statuses[$status]);
-
-            if($wallet_response['status_code'] === 200) {
-
-                $updated = paynocchio_helper::updateWalletDBStatus((int) $paynocchio_wallet->id, $paynocchio_data->walletuuid, $status);
-
-                $wallet_balance_response = $wallet->getWalletBalance($wallet_uuid);
-
-                if($wallet_balance_response && $updated) {
-                    return [
-                        'success' => true,
-                        'wallet_status' => $wallet_balance_response['status'],
-                        'wallet_code' => $wallet_balance_response['code'],
-                    ];
-                }
-            } else {
-                return [
-                    'success' => false,
-                    'wallet_status' => 'ERROR',
-                    'wallet_code' => 404,
-                ];
-            }
+            return [
+                'success' => $deleted
+            ];
         }
+
+        return [
+            'success' => false
+        ];
 
     }
 
@@ -100,8 +81,6 @@ class update_wallet_status extends external_api {
     public static function execute_returns(): external_single_structure {
         return new external_single_structure([
             'success' => new external_value(PARAM_BOOL, 'Paynocchio success status'),
-            'wallet_status' => new external_value(PARAM_TEXT, 'Paynocchio wallet status'),
-            'wallet_code' => new external_value(PARAM_TEXT, 'Paynocchio wallet code'),
         ]);
     }
 }

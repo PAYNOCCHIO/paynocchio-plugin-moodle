@@ -36,12 +36,14 @@ if($user && $user->useruuid && $user->walletuuid) {
         'wallet_card' => $wallet_balance_response['number'],
         'wallet_status' => $wallet_balance_response['status'],
         'wallet_code' => $wallet_balance_response['code'],
+        'wallet_blocked' => $wallet_balance_response['code'] === "BLOCKED",
+        'wallet_active' => $wallet_balance_response['code'] === "ACTIVE",
     ];
 
     echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet', $data);
     echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet_actions_buttons', $data);
 
-    //$PAGE->requires->js_call_amd('paygw_paynocchio/wallet_status_control', 'init');
+    $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_status_control', 'init', ['wallet_uuid' => $user->walletuuid]);
     echo $OUTPUT->render_from_template('paygw_paynocchio/wallet_status_control', $data);
 
     $transactions = $DB->get_records('paygw_paynocchio_transactions', ['userid'  => $USER->id], 'timecreated DESC', 'id,timecreated,type,totalamount');
@@ -53,7 +55,7 @@ if($user && $user->useruuid && $user->walletuuid) {
     echo $OUTPUT->render_from_template('paygw_paynocchio/wallet_transactions', $wallet_transactions_data);
 
 if(is_siteadmin($USER->id)) {
-    echo '<br/>';
+    echo '<!--';
     echo 'user_uuid: '. $user->useruuid. '<br/>';
     echo 'wallet_uuid: '. $user->walletuuid. '<br/>';
     echo 'secret: '. $wallet->get_secret(). '<br/>';
@@ -61,6 +63,7 @@ if(is_siteadmin($USER->id)) {
     echo 'wallet signature: '. $wallet->getSignature(). '<br/>';
     echo 'company signature: '. $wallet->getSignature(true). '<br/>';
     echo 'generated signature: '. hash("sha256", $wallet->get_secret() . "|" . $wallet->get_env() . "|" . $user->useruuid). '<br/>';
+    echo '-->';
 }
 
 } else {

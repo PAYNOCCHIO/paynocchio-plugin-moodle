@@ -176,6 +176,14 @@
     background: green;
 }
 
+#wallet_status.suspend:before {
+    background: #a6982b;
+}
+
+#wallet_status.blocked:before {
+    background: red;
+}
+
 .paynocchio-status-block .paynocchio-actions-btns {
     margin-top: 20px;
     padding: 10px;

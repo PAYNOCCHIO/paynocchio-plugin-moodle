@@ -86,4 +86,13 @@ $functions = [
         'ajax'        => true,
         'loginrequired' => false,
     ],
+
+    'paygw_paynocchio_delete_wallet' => [
+        'classname'   => 'paygw_paynocchio\external\delete_wallet',
+        'classpath'   => '',
+        'description' => 'Delete Paynocchio Wallet status.',
+        'type'        => 'write',
+        'ajax'        => true,
+        'loginrequired' => false,
+    ],
 ];

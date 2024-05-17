@@ -29,7 +29,7 @@
         <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="useruuid" TYPE="char" LENGTH="36" NOTNULL="true" SEQUENCE="false" />
         <FIELD NAME="walletuuid" TYPE="char" LENGTH="36" NOTNULL="true" SEQUENCE="false" />
-        <FIELD NAME="status" TYPE="char" LENGTH="10" NOTNULL="true" DEFAULT="Active" SEQUENCE="false" />
+        <FIELD NAME="status" TYPE="char" LENGTH="10" NOTNULL="true" DEFAULT="ACTIVE" SEQUENCE="false" />
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>

@@ -11,11 +11,3 @@
         {{/wallet_balance}}
     </div>
 </div>
-
-{{^element.frozen}}
-    {{#js}}
-        require(['paygw_paynocchio/wallet_status_control'], function(module) {
-        module.init();
-        });
-    {{/js}}
-{{/element.frozen}}

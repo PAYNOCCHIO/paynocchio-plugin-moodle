@@ -34,7 +34,8 @@
     <div class="paynocchio-status-actions">
         <div class="paynocchio-status">
             <div>Wallet Status:</div>
-            <span id="wallet_status" class="active">{{wallet_status}}</span>
+            <span id="wallet_status" class="{{#wallet_active}}active{{/wallet_active}} {{^wallet_active}}suspend{{/wallet_active}} {{#wallet_blocked}}blocked{{/wallet_blocked}}
+">{{wallet_status}}</span>
             <div class="spinner">
                 <svg class="paynocchio-spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle class="spinner-circle" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -43,8 +44,19 @@
             </div>
         </div>
         <div class="paynocchio-actions-btns">
-            <button id="presuspend_wallet_button" type="button" class="paynocchio_button btn-blue paynocchio_colored">Suspend wallet</button>
-            <button id="preblock_wallet_button"  class="paynocchio_button btn-gray">Block wallet</button>
+            {{#wallet_active}}
+                <button id="presuspend_wallet_button" type="button" class="paynocchio_button btn-blue paynocchio_colored">Suspend wallet</button>
+                <button id="preblock_wallet_button"  class="paynocchio_button btn-gray">Block wallet</button>
+            {{/wallet_active}}
+            {{^wallet_active}}
+                {{#wallet_blocked}}
+                    <button id="predelete_wallet_button" type="button" class="paynocchio_button btn-blue paynocchio_colored">Delete wallet</button>
+                {{/wallet_blocked}}
+                {{^wallet_blocked}}
+                    <button id="activate_wallet_button" type="button" class="paynocchio_button btn-blue paynocchio_colored">Activate wallet</button>
+                    <button id="preblock_wallet_button"  class="paynocchio_button btn-gray">Block wallet</button>
+                {{/wallet_blocked}}
+            {{/wallet_active}}
         </div>
     </div>
 </div>
