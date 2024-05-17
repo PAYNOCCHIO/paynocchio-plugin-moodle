@@ -157,6 +157,34 @@
     padding-top: 2rem;
 }
 
+#wallet_status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: bold;
+    font-size: 0.8rem;
+}
+
+#wallet_status:before {
+    display: block;
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-radius: 100%;
+}
+
+#wallet_status.active:before {
+    background: green;
+}
+
+.paynocchio-status-block .paynocchio-actions-btns {
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #eee;
+    justify-content: flex-start;
+}
+
 .paynocchio_button {
     display: flex;
     align-items: center;
@@ -260,6 +288,12 @@
 button.disabled {
     pointer-events: none;
     opacity: 0.75;
+}
+
+.paynocchio-status {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }
 
 @media (min-width: 1024px) {

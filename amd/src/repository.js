@@ -79,6 +79,23 @@ export const handleWithdrawClick = async (amount) => {
     return await Ajax.call([request])[0];
 };
 
+
+/**
+ * Suspend wallet
+ * @param {text} $status
+ * @return {Promise<*>}
+ */
+export const handleStatusButtonClick = async ($status) => {
+    const request = {
+        methodname: 'paygw_paynocchio_update_wallet_status',
+        args: {
+            status: $status,
+        },
+    };
+
+    return await Ajax.call([request])[0];
+};
+
 /**
  * Creates and shows a modal that contains a placeholder.
  *
@@ -100,6 +117,19 @@ export const showModalWithWithdraw = async() => await Modal.create({
     show: true,
     removeOnClose: true,
 });
+
+/**
+ * Creates and shows a modal that contains a Suspension form.
+ *
+ * @returns {Promise<Modal>}
+ */
+export async function showSuspendModal(){
+    await Modal.create({
+        body: await Templates.render('paygw_paynocchio/suspend_modal', {}),
+        show: true,
+        removeOnClose: true,
+    });
+}
 
 /**
  * Creates and shows a modal that contains a placeholder.
