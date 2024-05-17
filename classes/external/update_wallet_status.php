@@ -41,7 +41,7 @@ class topup_wallet extends external_api {
      */
     public static function execute_parameters(): external_function_parameters {
         return new external_function_parameters([
-            'amount' => new external_value(PARAM_FLOAT, 'Amount to topup'),
+            'status' => new external_value(PARAM_TEXT, 'Status'),
         ]);
     }
 
@@ -50,11 +50,11 @@ class topup_wallet extends external_api {
      * @param int $userId
      * @return string[]
      */
-    public static function execute(float $amount): array
+    public static function execute(string $status): array
     {
         global $DB, $USER;
         self::validate_parameters(self::execute_parameters(), [
-            'amount' => $amount,
+            'status' => $status,
         ]);
 
         $paynocchio_data = $DB->get_record('paygw_paynocchio_wallets', ['userid'  => $USER->id]);
@@ -63,7 +63,7 @@ class topup_wallet extends external_api {
 
         if($wallet_uuid) {
             $wallet = new paynocchio_helper($user_uuid);
-            $wallet_response = $wallet->topUpWallet($wallet_uuid, $amount);
+            $wallet_response = $wallet->updateWalletStatus($wallet_uuid, $status);
 
             if($wallet_response['status_code'] === 200) {
 

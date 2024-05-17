@@ -45,7 +45,6 @@ echo $OUTPUT->header();
 
 if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
     $record = $DB->get_record('paygw_paynocchio_payments', ['userid'  => $USER->id, 'itemid' => $itemid]);
-    print_r($record);
     echo $OUTPUT->render_from_template('paygw_paynocchio/enrolled_already', ['record' => $record]);
 } else {
     echo '<div class="card">';
