@@ -187,7 +187,8 @@ export const showModalWallet = async() => await Modal.create({
  */
 export const showModalWithPlaceholder = async() => {
     const modal = await Modal.create({
-        body: await Templates.render('paygw_bank/bank_button_placeholder', {})
+        title: 'Redirecting...',
+        body: await Templates.render('paygw_paynocchio/paynocchio_placeholder', {})
     });
     modal.show();
 };

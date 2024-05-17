@@ -25,7 +25,17 @@ import Templates from 'core/templates';
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-export const init = (component, paymentArea, itemid, fullAmount) => {
+const checkPayability = (value, fullAmount, balance, element) => {
+    if(parseFloat(value)+parseFloat(balance) < parseFloat(fullAmount)) {
+        element.classList.add('disabled');
+        document.getElementById('topup_message').innerText = 'Please top up or use your Bonuses.';
+    } else {
+        element.classList.remove('disabled');
+        document.getElementById('topup_message').innerText = '';
+    }
+};
+
+export const init = (component, paymentArea, itemid, fullAmount, balance) => {
 
     const paynocchio_pay_button = document.getElementById('paynocchio_pay_button');
 
@@ -34,22 +44,32 @@ export const init = (component, paymentArea, itemid, fullAmount) => {
         const range = document.getElementById('bonuses-range');
         const input = document.getElementById('bonuses-value');
 
+        checkPayability(input.value, fullAmount, balance, paynocchio_pay_button);
+
         input.addEventListener('change', () => {
             range.value = input.value;
         });
         range.addEventListener('change', () => {
             input.value = range.value;
+            checkPayability(input.value, fullAmount, balance, paynocchio_pay_button);
         });
         range.addEventListener('input', () => {
             input.value = range.value;
+            checkPayability(input.value, fullAmount, balance, paynocchio_pay_button);
         });
 
         paynocchio_pay_button.addEventListener('click', () => {
-            paynocchio_pay_button.classList.add('disabled');
 
-            const bonuses = parseFloat(document.getElementById('bonuses-value').value);
+            const bonuses = parseFloat(input.value);
             const spinner = document.querySelector('.paynocchio-spinner');
             const topup_message = document.getElementById('topup_message');
+
+            if(bonuses + balance < fullAmount) {
+                topup_message.innerText = 'Sorry, but no';
+                return;
+            }
+
+            paynocchio_pay_button.classList.add('disabled');
 
             spinner.classList.add('active');
             makePayment(component, paymentArea, itemid, fullAmount, bonuses)
