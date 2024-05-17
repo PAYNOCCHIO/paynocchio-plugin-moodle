@@ -51,6 +51,7 @@ export const init = (pay) => {
                                             modal.body.find('#topup_message').text('Success!');
                                             setBalance(data.balance);
                                             setBonus(data.bonuses);
+                                            window.location.reload();
                                             setTimeout(() => {
                                                 modal.hide();
                                                 modal.destroy();

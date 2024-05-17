@@ -1,0 +1,21 @@
+<div id="paynocchio_wallet_actions_buttons">
+    <div class="paynocchio-actions-btns">
+        <button type="button" id="paynocchio_topup_button" class="paynocchio_button paynocchio_colored cfps-rounded-lg">
+            <img decoding="async" src="https://kopybara.com/wp-content/plugins/woocommerce-paynocchio/assets/img/plus.png" class="cfps-h-[24px] cfps-w-[24px] cfps-mr-1 cfps-inline-block">
+            Add money
+        </button>
+        {{#wallet_balance}}
+            <button type="button" id="paynocchio_withdraw_button" class="paynocchio_button cfps-rounded-lg">
+                Withdraw
+            </button>
+        {{/wallet_balance}}
+    </div>
+</div>
+
+{{^element.frozen}}
+    {{#js}}
+        require(['paygw_paynocchio/wallet_status_control'], function(module) {
+        module.init();
+        });
+    {{/js}}
+{{/element.frozen}}

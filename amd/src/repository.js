@@ -125,6 +125,7 @@ export const showModalWithWithdraw = async() => await Modal.create({
  */
 export async function showSuspendModal(){
     await Modal.create({
+        title: 'Suspend your Wallet',
         body: await Templates.render('paygw_paynocchio/suspend_modal', {}),
         show: true,
         removeOnClose: true,

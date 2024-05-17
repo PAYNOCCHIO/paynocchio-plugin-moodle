@@ -39,8 +39,9 @@ if($user && $user->useruuid && $user->walletuuid) {
     ];
 
     echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet', $data);
+    echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet_actions_buttons', $data);
 
-    $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_status_control', 'init');
+    //$PAGE->requires->js_call_amd('paygw_paynocchio/wallet_status_control', 'init');
     echo $OUTPUT->render_from_template('paygw_paynocchio/wallet_status_control', $data);
 
     $transactions = $DB->get_records('paygw_paynocchio_transactions', ['userid'  => $USER->id], 'timecreated DESC', 'id,timecreated,type,totalamount');

@@ -25,7 +25,7 @@ import {handleWithdrawClick, showModalWithWithdraw} from "./repository";
 import {exception as displayException} from 'core/notification';
 import Templates from 'core/templates';
 
-export const init = (pay) => {
+export const init = () => {
     const paynocchio_wallet_withdraw_button = document.getElementById('paynocchio_withdraw_button');
 
     if (paynocchio_wallet_withdraw_button) {
@@ -34,37 +34,40 @@ export const init = (pay) => {
             showModalWithWithdraw()
                 .then(modal => {
                     modal.setTitle('Withdraw from Paynocchio Wallet');
-                    const input = modal.body.find('#withdraw_amount');
-                    const button = modal.body.find('#withdraw_button');
-                    button.click(() => {
-                        if (input.val()) {
-                            button.addClass('disabled');
+                    const input = document.getElementById('withdraw_amount');
+                    const button = document.getElementById('withdraw_button');
+                    button.addEventListener('click', () => {
+                        if (input.value) {
+                            button.classList.add('disabled');
                             modal.body.find('.paynocchio-spinner').toggleClass('active');
-                            handleWithdrawClick(input.val())
+                            handleWithdrawClick(input.value)
                                 .then(data => {
                                     if (data.success) {
-                                        //window.console.log(data);
-                                        if(pay) {
-                                            window.location.reload();
-                                        } else {
-                                            modal.body.find('.paynocchio-spinner').toggleClass('active');
-                                            modal.body.find('#topup_message').text('Success!');
-                                            setBalance(data.balance);
-                                            setBonus(data.bonuses);
-                                            setTimeout(() => {
-                                                modal.hide();
-                                                modal.destroy();
-                                                Templates.renderForPromise('paygw_paynocchio/wallet_transactions', {
-                                                    transactions: JSON.parse(data.transactions),
-                                                    hastransactions: data.hastransactions,
+                                        modal.body.find('.paynocchio-spinner').toggleClass('active');
+                                        modal.body.find('#topup_message').text('Success!');
+                                        setBalance(data.balance);
+                                        setBonus(data.bonuses);
+                                        modal.hide();
+                                        modal.destroy();
+                                        window.location.reload();
+                                        Templates.renderForPromise('paygw_paynocchio/wallet_transactions', {
+                                            transactions: JSON.parse(data.transactions),
+                                            hastransactions: data.hastransactions,
+                                        })
+                                            .then(({html, js}) => {
+                                                Templates.replaceNodeContents('.paynocchio-transactions', html, js);
                                             })
-                                                    .then(({html, js}) => {
-                                                        Templates.replaceNodeContents('.paynocchio-transactions', html, js);
-                                                    })
-                                                    .catch((error) => displayException(error));
+                                            .catch((error) => displayException(error));
 
-                                            }, 1000);
-                                        }
+                                        // Refresh Card
+                                        Templates.renderForPromise('paygw_paynocchio/paynocchio_wallet_actions_buttons', {
+                                            wallet_balance: data.balance,
+                                            wallet_bonuses: data.bonuses,
+                                        })
+                                            .then(({html, js}) => {
+                                                Templates.replaceNodeContents('#paynocchio_wallet_actions_buttons', html, js);
+                                            })
+                                            .catch((error) => displayException(error));
                                     }
                                 });
                         }

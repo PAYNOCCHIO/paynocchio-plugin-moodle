@@ -31,7 +31,6 @@ export const init = () => {
         paynocchio_presuspend_button.addEventListener('click', () => {
             showSuspendModal()
                 .then((modal) => {
-                    modal.setTitle('Suspend your Wallet');
                     const paynocchio_suspend_button = modal.body.getElementById('suspend_wallet_button');
                     const spinner = modal.body.querySelector('.paynocchio-spinner');
 
