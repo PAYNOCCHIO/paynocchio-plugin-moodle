@@ -31,8 +31,9 @@ export const init = () => {
         paynocchio_presuspend_button.addEventListener('click', () => {
             showSuspendModal()
                 .then((modal) => {
-                    const paynocchio_suspend_button = modal.body.getElementById('suspend_wallet_button');
-                    const spinner = modal.body.querySelector('.paynocchio-spinner');
+                    const paynocchio_suspend_button = document.getElementById('suspend_wallet_button');
+                    const modal_cancel_button = document.getElementById('modal_cancel_button');
+                    const spinner = document.querySelector('.paynocchio-spinner');
 
                     paynocchio_suspend_button.addEventListener('click', () => {
                         const response = handleStatusButtonClick('SUSPEND');
