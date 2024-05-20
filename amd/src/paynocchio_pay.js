@@ -72,8 +72,10 @@ export const init = (component, paymentArea, itemid, fullAmount, balance) => {
             paynocchio_pay_button.classList.add('disabled');
 
             spinner.classList.add('active');
+            window.console.log(typeof bonuses);
             makePayment(component, paymentArea, itemid, fullAmount, bonuses)
                 .then(data => {
+                    window.console.log(data);
                     if(data.success) {
                         spinner.classList.remove('active');
                         topup_message.innerText = 'Success';
@@ -82,6 +84,8 @@ export const init = (component, paymentArea, itemid, fullAmount, balance) => {
                                 Templates.replaceNodeContents('.paynocchio-profile-block', html, js);
                             })
                             .catch((error) => displayException(error));
+                    } else {
+                        window.console.log(data);
                     }
                 });
         });

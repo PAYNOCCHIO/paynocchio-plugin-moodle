@@ -166,6 +166,7 @@ export const showDeleteModal = async() => await Modal.create({
     title: 'Delete your Wallet',
     body: await Templates.render('paygw_paynocchio/delete_modal', {}),
     show: true,
+    type: 'Delete',
     removeOnClose: true,
 });
 

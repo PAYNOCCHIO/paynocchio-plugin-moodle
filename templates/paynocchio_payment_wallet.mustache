@@ -75,11 +75,11 @@
             </h3>
             <div>{{#str}}applybonuses_help, paygw_paynocchio{{/str}}</div>
         </div>
-        <form class="paynocchio_pay_form">
+        <div class="paynocchio_pay_form">
             <input id="fullamount-input" type="hidden" value="{{full_amount}}">
             <input id="bonuses-range" type="range" min="0" max="{{max_bonus}}" step="1" value="0" class="styled-slider slider-progress">
             <input id="bonuses-value" type="number" value="0">
-        </form>
+        </div>
     </div>
     {{/wallet_bonuses}}
     {{#can_pay}}
@@ -93,6 +93,7 @@
                 <path class="spinner-path" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
         </div>
+        <div id="status_message"></div>
     </div>
         <div class="text-center pt-2" id="topup_message"></div>
     {{/can_pay}}

@@ -489,4 +489,17 @@ class paynocchio_helper {
         $DB->insert_record('paygw_paynocchio_payments', $record);
     }
 
+    public static function files(): array
+    {
+        $fs = get_file_storage();
+        $files = $fs->get_area_files(\context_system::instance()->id, 'paygw_paynocchio', 'brandlogoimage');
+        $realfiles=array();
+        foreach ($files as $f) {
+            if($f->get_filename()!='.') {
+                array_push($realfiles, $f);
+            }
+        }
+        return $realfiles;
+    }
+
 }

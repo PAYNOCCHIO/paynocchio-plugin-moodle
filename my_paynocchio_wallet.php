@@ -9,13 +9,23 @@ require_login();
 
 $context = context_system::instance(); // Because we "have no scope".
 $PAGE->set_context(context_user::instance($USER->id));
-$canuploadfiles=get_config('paygw_paynocchio', 'usercanuploadfiles');
+$brandName = get_config('paygw_paynocchio', 'brandname');
 $PAGE->set_url('/payment/gateway/paynocchio/my_paynocchio_wallet.php');
 $PAGE->set_pagelayout('standard');
-$PAGE->set_title(get_string('my_paynocchio_wallet', 'paygw_paynocchio'));
-//$PAGE->navigation->extend_for_user($USER->id);
+$PAGE->set_title($brandName);
 $PAGE->navbar->add(get_string('profile'), new moodle_url('/user/profile.php', array('id' => $USER->id)));
-$PAGE->navbar->add(get_string('my_paynocchio_wallet', 'paygw_paynocchio'));
+$PAGE->navbar->add($brandName);
+
+$files = paynocchio_helper::files();
+$logo_url = moodle_url::make_pluginfile_url(
+    $files[0]->get_contextid(),
+    $files[0]->get_component(),
+    $files[0]->get_filearea(),
+    $files[0]->get_itemid(),
+    $files[0]->get_filepath(),
+    $files[0]->get_filename(),
+    false                     // Do not force download of the file.
+);
 
 echo $OUTPUT->header();
 
@@ -30,6 +40,7 @@ if($user && $user->useruuid && $user->walletuuid) {
 
     $wallet = new paynocchio_helper($user->useruuid);
     $wallet_balance_response = $wallet->getWalletBalance($user->walletuuid);
+
     $data = [
         'wallet_balance' => $wallet_balance_response['balance'],
         'wallet_bonuses' => $wallet_balance_response['bonuses'],
@@ -38,6 +49,7 @@ if($user && $user->useruuid && $user->walletuuid) {
         'wallet_code' => $wallet_balance_response['code'],
         'wallet_blocked' => $wallet_balance_response['code'] === "BLOCKED",
         'wallet_active' => $wallet_balance_response['code'] === "ACTIVE",
+        'logo' => $logo_url,
     ];
 
     echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet', $data);
@@ -54,8 +66,7 @@ if($user && $user->useruuid && $user->walletuuid) {
     ];
     echo $OUTPUT->render_from_template('paygw_paynocchio/wallet_transactions', $wallet_transactions_data);
 
-//if(is_siteadmin($USER->id)) {
-
+if(is_siteadmin($USER->id)) {
     echo 'user_uuid: '. $user->useruuid. '<br/>';
     echo 'wallet_uuid: '. $user->walletuuid. '<br/>';
     echo 'secret: '. $wallet->get_secret(). '<br/>';
@@ -63,14 +74,14 @@ if($user && $user->useruuid && $user->walletuuid) {
     echo 'wallet signature: '. $wallet->getSignature(). '<br/>';
     echo 'company signature: '. $wallet->getSignature(true). '<br/>';
     echo 'generated signature: '. hash("sha256", $wallet->get_secret() . "|" . $wallet->get_env() . "|" . $user->useruuid). '<br/>';
-
-//}
+}
 
 } else {
     $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_activation', 'init', ['user_id' => $USER->id]);
 
     $data = [
         'user_id' => $USER->id,
+        'logo' => $logo_url,
     ];
 
     echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet_activation', $data);

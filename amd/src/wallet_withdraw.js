@@ -33,22 +33,21 @@ export const init = () => {
         paynocchio_wallet_withdraw_button.addEventListener('click', () => {
             showModalWithWithdraw()
                 .then(modal => {
-                    modal.setTitle('Withdraw from Paynocchio Wallet');
+                    modal.setTitle('Withdraw from Wallet');
                     const input = document.getElementById('withdraw_amount');
                     const button = document.getElementById('withdraw_button');
                     button.addEventListener('click', () => {
                         if (input.value) {
                             button.classList.add('disabled');
                             modal.body.find('.paynocchio-spinner').toggleClass('active');
+                            modal.body.find('#withdraw_message').text('Working...');
                             handleWithdrawClick(input.value)
                                 .then(data => {
                                     if (data.success) {
                                         modal.body.find('.paynocchio-spinner').toggleClass('active');
-                                        modal.body.find('#topup_message').text('Success!');
+                                        modal.body.find('#withdraw_message').text('Success! Reloading...');
                                         setBalance(data.balance);
                                         setBonus(data.bonuses);
-                                        modal.hide();
-                                        modal.destroy();
                                         window.location.reload();
                                         Templates.renderForPromise('paygw_paynocchio/wallet_transactions', {
                                             transactions: JSON.parse(data.transactions),
@@ -68,6 +67,9 @@ export const init = () => {
                                                 Templates.replaceNodeContents('#paynocchio_wallet_actions_buttons', html, js);
                                             })
                                             .catch((error) => displayException(error));
+                                    } else {
+                                        modal.body.find('#withdraw_message')
+                                            .text('Something wrong. Please reload page and try again...');
                                     }
                                 });
                         }

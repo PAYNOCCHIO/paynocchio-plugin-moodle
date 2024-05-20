@@ -26,16 +26,25 @@ defined('MOODLE_INTERNAL') || die();
 
 function paygw_paynocchio_myprofile_navigation(core_user\output\myprofile\tree $tree, $user, $iscurrentuser, $course)
 {
-    $imageurl = new moodle_url('/payment/gateway/paynocchio/pix/img.svg');
+    $files = \paygw_paynocchio\paynocchio_helper::files();
+    $logo_url = moodle_url::make_pluginfile_url(
+        $files[0]->get_contextid(),
+        $files[0]->get_component(),
+        $files[0]->get_filearea(),
+        $files[0]->get_itemid(),
+        $files[0]->get_filepath(),
+        $files[0]->get_filename(),
+        false                     // Do not force download of the file.
+    );
     $url = new moodle_url('/payment/gateway/paynocchio/my_paynocchio_wallet.php');
-    $category = new core_user\output\myprofile\category('paynocchio_wallet', get_string('paynocchio', 'paygw_paynocchio'), null);
+    $category = new core_user\output\myprofile\category('paynocchio_wallet', get_config('paygw_paynocchio', 'brandname'), null);
     $node = new core_user\output\myprofile\node(
         'paynocchio_wallet',
         'my_paynocchio_wallet',
         get_string('my_paynocchio_wallet', 'paygw_paynocchio'),
         null,
         $url,
-        '<div class="paynocchio-payment-description"><img src="'.$imageurl.'" alt="'.get_string('paynocchio', 'paygw_paynocchio').'" />  '.get_string('paynocchiodescription', 'paygw_paynocchio').'</div>'
+        '<div class="paynocchio-payment-description"><img width="100" src="'.$logo_url.'" alt="'.get_string('paynocchio', 'paygw_paynocchio').'" />  '.get_string('paynocchiodescription', 'paygw_paynocchio'). ' ' . get_config('paygw_paynocchio', 'brandname').'</div>'
     );
     $tree->add_category($category);
     $tree->add_node($node);
@@ -43,7 +52,7 @@ function paygw_paynocchio_myprofile_navigation(core_user\output\myprofile\tree $
 
 function paygw_paynocchio_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = array())
 {
-    if ($filearea !== 'transfer') {
+    if ($filearea !== 'brandlogoimage') {
         return false;
     }
 

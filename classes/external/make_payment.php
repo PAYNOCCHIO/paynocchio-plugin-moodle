@@ -87,14 +87,14 @@ class make_payment extends external_api {
             $wallet = new paynocchio_helper($user_uuid);
             $wallet_balance_response = $wallet->getWalletBalance($wallet_uuid);
 
-            if($fullAmount < $wallet_balance_response['balance'] + $wallet_balance_response['bonuses']) {
+            if($fullAmount > floatval($wallet_balance_response['balance']) + floatval($wallet_balance_response['bonuses'])) {
                 return [
                     'success' => false,
                     'message' => 'Insufficient funds',
-                    'balance' => 'error',
-                    'bonuses' => 'error',
-                    'card_number' => 'error',
-                    'wallet_status' => 'error',
+                    'balance' => $wallet_balance_response['balance'],
+                    'bonuses' => $wallet_balance_response['bonuses'],
+                    'card_number' => 0,
+                    'wallet_status' => 'Insufficient funds',
                     'wallet_code' => 'error',
                 ];
             }
@@ -111,16 +111,16 @@ class make_payment extends external_api {
 
             $orderuuid = uuid::generate();
 
-            $wallet_response = $wallet->makePayment($wallet_uuid, $fullAmount, $amount, $orderuuid, $bonuses);
+            $wallet_response = $wallet->makePayment($wallet_uuid, $fullAmount, $amount, $orderuuid, (float) $bonuses);
 
             if($wallet_response['status_code'] === 200) {
 
                 $paymentid = payment_helper::save_payment($payable->get_account_id(), $component, $paymentarea,
                     $itemid, $userid, $originalAmount, $currency, 'paynocchio');
 
-                payment_helper::deliver_order($component, $paymentarea, $itemid, $paymentid, $userid);
-                paynocchio_helper::registerTransaction($userid, 'payment', $amount, $bonuses, $paymentid);
-                paynocchio_helper::registerPayment($paymentid, $component, $paymentarea, $itemid, $orderuuid, $userid, $originalAmount, 'P');
+                //payment_helper::deliver_order($component, $paymentarea, $itemid, $paymentid, $userid);
+                //paynocchio_helper::registerTransaction($userid, 'payment', $amount, $bonuses, $paymentid);
+                //paynocchio_helper::registerPayment($paymentid, $component, $paymentarea, $itemid, $orderuuid, $userid, $originalAmount, 'P');
 
                 if($wallet_balance_response) {
                     return [

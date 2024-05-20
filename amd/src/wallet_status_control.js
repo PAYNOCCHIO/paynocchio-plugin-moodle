@@ -24,7 +24,7 @@
 import {
     handleDeleteButtonClick,
     handleStatusButtonClick,
-    showBlockModal,
+    showBlockModal, showDeleteModal,
     showSuspendModal
 } from "./repository";
 //import {exception as displayException} from 'core/notification';
@@ -43,9 +43,11 @@ export const init = (wallet_uuid) => {
                     paynocchio_suspend_button.addEventListener('click', () => {
                         const response = handleStatusButtonClick('SUSPEND');
                         spinner.toggleClass('active');
+                        modal.body.find('#suspend_message').text('Working...');
                         response.then(data => {
                             if(data.success) {
                                 spinner.toggleClass('active');
+                                modal.body.find('#suspend_message').text('Success! Reloading...');
                                 /*Templates.renderForPromise('paygw_paynocchio/paynocchio_payment_wallet', {
                                     wallet_balance: 0,
                                     wallet_bonuses: 0,
@@ -55,6 +57,8 @@ export const init = (wallet_uuid) => {
                                     })
                                     .catch((error) => displayException(error));*/
                                 window.location.reload();
+                            } else {
+                                modal.body.find('#suspend_message').text('Something wrong. Please reload page and try again...');
                             }
                         });
                     });
@@ -80,6 +84,8 @@ export const init = (wallet_uuid) => {
                                 spinner.toggleClass('active');
                                 modal.body.find('#block_message').text('Success! Reloading...');
                                 window.location.reload();
+                            } else {
+                                modal.body.find('#suspend_message').text('Something wrong. Please reload page and try again...');
                             }
                         });
                     });
@@ -90,27 +96,46 @@ export const init = (wallet_uuid) => {
     const paynocchio_predelete_button = document.getElementById('predelete_wallet_button');
     if(paynocchio_predelete_button) {
         paynocchio_predelete_button.addEventListener('click', () => {
-            const spinner = document.querySelector('.paynocchio-spinner');
-            const response = handleDeleteButtonClick(wallet_uuid);
-            spinner.classList.add('active');
-            response.then(data => {
-                if(data.success) {
-                    spinner.classList.remove('active');
-                    window.location.reload();
-                }
-            });
+            showDeleteModal()
+                .then(modal => {
+                    const paynocchio_delete_button = document.getElementById('delete_wallet_button');
+                    const modal_cancel_button = modal.body.find('#modal_cancel_button');
+                    const spinner = modal.body.find('.paynocchio-spinner');
+
+                    paynocchio_delete_button.addEventListener('click', () => {
+                        const response = handleDeleteButtonClick(wallet_uuid);
+                        spinner.toggleClass('active');
+                        modal.body.find('#delete_message').text('Working...');
+                        response.then(data => {
+                            if(data.success) {
+                                spinner.toggleClass('active');
+                                modal.body.find('#delete_message').text('Success! Reloading...');
+                                window.location.reload();
+                            } else {
+                                modal.body.find('#suspend_message').text('Something wrong. Please reload page and try again...');
+                            }
+                        });
+                    });
+                    modal_cancel_button.addEventListener('click', () => modal.hide());
+                });
+
         });
     }
     const activate_wallet_button = document.getElementById('activate_wallet_button');
     if(activate_wallet_button) {
         activate_wallet_button.addEventListener('click', () => {
             const spinner = document.querySelector('.paynocchio-spinner');
+            const message = document.getElementById('wallet_status_message');
             const response = handleStatusButtonClick('ACTIVE');
             spinner.classList.add('active');
+            message.innerText = 'Working...';
             response.then(data => {
                 if(data.success) {
                     spinner.classList.remove('active');
+                    message.innerText = 'Success! Reloading...';
                     window.location.reload();
+                } else {
+                    message.innerText = 'Something wrong. Please reload page and try again...';
                 }
             });
         });
