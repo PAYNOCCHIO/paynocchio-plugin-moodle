@@ -21,7 +21,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-import {showModalWithPrivacy, showModalWithTerms} from "./repository";
+import {getConf, showModalWithPrivacy, showModalWithTerms} from "./repository";
 
 export const init = () => {
     const terms_button = document.getElementById('terms_trigger');
@@ -30,18 +30,27 @@ export const init = () => {
     if (terms_button) {
 
         terms_button.addEventListener('click', () => {
-            showModalWithTerms()
-                .then(modal => {
-                    modal.setTitle('Terms and conditions');
+            getConf('terms')
+                .then((data) => {
+                    showModalWithTerms()
+                        .then(modal => {
+                            modal.setTitle('Terms and conditions');
+                            modal.setBody(data.text);
+                        });
                 });
+
         });
     }
     if (privacy_button) {
 
         privacy_button.addEventListener('click', () => {
-            showModalWithPrivacy()
-                .then(modal => {
-                    modal.setTitle('Privacy Policy');
+            getConf('privacy')
+                .then((data) => {
+                    showModalWithPrivacy()
+                        .then(modal => {
+                            modal.setTitle('Privacy Policy');
+                            modal.setBody(data.text);
+                        });
                 });
         });
     }

@@ -98,10 +98,15 @@
         </div>
         <div id="status_message"></div>
     </div>
+        <div class="text-center pt-2">And get {{new_amount}} with bonuses!
+            <i class="fa-regular fa-circle-question" type="button" tabindex="0" data-trigger="click" data-container="body" data-toggle="popover" data-placement="top" data-title="How it works" data-content="Earn 10% for each payment! Keep earning rewards and pay with bonuses!"></i>
+
+        </div>
         <div class="text-center pt-2" id="topup_message"></div>
     {{/can_pay}}
     {{^can_pay}}
-        <div class="topup-description">Please topup first.</div>
+        <div class="topup-description">Please top up and get up to 10% with bonuses. <i class="fa-regular fa-circle-question" type="button" tabindex="0" data-trigger="click" data-container="body" data-toggle="popover" data-placement="top" data-title="How it works" data-content="Earn 10% for each top up! Keep earning rewards and pay with bonuses!"></i>
+        </div>
     {{/can_pay}}
     {{/wallet_active}}
 </div>

@@ -95,4 +95,13 @@ $functions = [
         'ajax'        => true,
         'loginrequired' => false,
     ],
+
+    'paygw_paynocchio_get_conf' => [
+        'classname'   => 'paygw_paynocchio\external\get_conf',
+        'classpath'   => '',
+        'description' => 'Get plugin conf.',
+        'type'        => 'read',
+        'ajax'        => true,
+        'loginrequired' => false,
+    ],
 ];

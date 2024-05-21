@@ -31,8 +31,17 @@
 
 }}
 <div>
-    <p>Congrats! You have enrolled this course.</p>
-
+    <p class="mb-4">Congrats! You have enrolled this course.</p>
+    <table class="table-success table-bordered mb-4">
+        <tr><th class="p-2">Date</th><th class="p-2">Paid</th><th class="p-2">Bonuses earned</th></tr>
+        {{#data}}
+            <tr>
+                <td class="p-2">{{#userdate}} {{timecreated}}, {{#str}} strftimedatetime, core_langconfig {{/str}} {{/userdate}}</td>
+                <td class="p-2">{{totalamount}}</td>
+                <td class="p-2">{{reward}}</td>
+            </tr>
+        {{/data}}
+    </table>
     <p><a href="/my/courses.php" >
         My Courses
     </a></p>

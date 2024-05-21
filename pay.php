@@ -31,6 +31,17 @@ $PAGE->set_title($pagetitle);
 
 $PAGE->set_heading($pagetitle);
 
+$files = paynocchio_helper::files();
+$logo_url = moodle_url::make_pluginfile_url(
+    $files[0]->get_contextid(),
+    $files[0]->get_component(),
+    $files[0]->get_filearea(),
+    $files[0]->get_itemid(),
+    $files[0]->get_filepath(),
+    $files[0]->get_filename(),
+    false                     // Do not force download of the file.
+);
+
 $config = (object) helper::get_gateway_configuration($component, $paymentarea, $itemid, 'paynocchio');
 $payable = helper::get_payable($component, $paymentarea, $itemid);
 
@@ -45,7 +56,13 @@ echo $OUTPUT->header();
 
 if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
     $record = $DB->get_record('paygw_paynocchio_payments', ['userid'  => $USER->id, 'itemid' => $itemid]);
-    echo $OUTPUT->render_from_template('paygw_paynocchio/enrolled_already', ['record' => $record]);
+    $data = [
+      'timecreated' => $record->timecreated,
+      'totalamount' => $record->totalamount,
+        'reward' => $record->totalamount * 0.1,
+    ];
+    echo $OUTPUT->render_from_template('paygw_paynocchio/enrolled_already', ['data' => $data]);
+
 } else {
     echo '<div class="card">';
     echo '<div class="card-body">';
@@ -105,8 +122,10 @@ if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
             'user_uuid' => $user->useruuid,
             'max_bonus' => $max_bonus ?? 0,
             'full_amount' => $amount,
+            'new_amount' => $amount * 0.1,
             'can_pay' => $wallet_balance_response['balance'] + $wallet_balance_response['bonuses'] >= $amount,
             'wallet_active' => $wallet_balance_response['code'] === "ACTIVE",
+            'logo' => $logo_url,
         ];
 
         echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_payment_wallet', $data);
@@ -119,6 +138,9 @@ if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
 
         $data = [
             'user_id' => $USER->id,
+            'logo' => $logo_url,
+            'full_amount' => $amount,
+            'new_amount' => $amount * 0.1,
         ];
 
         echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet_activation', $data);

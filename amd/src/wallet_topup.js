@@ -40,15 +40,16 @@ export const init = (pay) => {
                         if (input.val()) {
                             button.addClass('disabled');
                             modal.body.find('.paynocchio-spinner').toggleClass('active');
+                            modal.body.find('#topup_message').text('Working...');
                             handleTopUpClick(input.val())
                                 .then(data => {
                                     if (data.success) {
+                                        modal.body.find('#topup_message').text('Success! Reloading...');
                                         //window.console.log(data);
                                         if(pay) {
                                             window.location.reload();
                                         } else {
                                             modal.body.find('.paynocchio-spinner').toggleClass('active');
-                                            modal.body.find('#topup_message').text('Success!');
                                             setBalance(data.balance);
                                             setBonus(data.bonuses);
                                             window.location.reload();

@@ -65,9 +65,9 @@ class get_conf extends external_api {
             'conf_name' => $conf_name,
         ]);
 
-        return get_config('paygw_paynocchio', $conf_name);
-
-
+        return [
+            'text' => get_config('paygw_paynocchio', $conf_name),
+        ];
 
     }
 
@@ -78,7 +78,7 @@ class get_conf extends external_api {
      */
     public static function execute_returns(): external_single_structure {
         return new external_single_structure([
-            'conf_name' => new external_value(PARAM_TEXT, 'Conf data'),
+            'text' => new external_value(PARAM_TEXT, 'Conf data'),
         ]);
     }
 }

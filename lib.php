@@ -93,26 +93,25 @@ if (!function_exists('str_ends_with')) {
 
 function paygw_paynocchio_moove_additional_header() {
 
-    global $DB, $USER, $OUTPUT;
+    global $DB, $USER;
     $user = $DB->get_record('paygw_paynocchio_wallets', ['userid'  => $USER->id]);
+
+    $files = paynocchio_helper::files();
+    $logo_url = moodle_url::make_pluginfile_url(
+        $files[0]->get_contextid(),
+        $files[0]->get_component(),
+        $files[0]->get_filearea(),
+        $files[0]->get_itemid(),
+        $files[0]->get_filepath(),
+        $files[0]->get_filename(),
+        false                     // Do not force download of the file.
+    );
 
     if($user && $user->useruuid && $user->walletuuid) {
 
         $wallet = new paynocchio_helper($user->useruuid);
 
         $wallet_balance_response = $wallet->getWalletBalance($user->walletuuid);
-
-        $files = paynocchio_helper::files();
-        $logo_url = moodle_url::make_pluginfile_url(
-            $files[0]->get_contextid(),
-            $files[0]->get_component(),
-            $files[0]->get_filearea(),
-            $files[0]->get_itemid(),
-            $files[0]->get_filepath(),
-            $files[0]->get_filename(),
-            false                     // Do not force download of the file.
-        );
-
 
         return '<a class="paynocchio-mini-block status-'.$wallet_balance_response['status'].'" href="/payment/gateway/paynocchio/my_paynocchio_wallet.php" title="Rewarding wallet">
     <img decoding="async" src="'.$logo_url.'" class="on_card_embleme">
@@ -123,6 +122,14 @@ function paygw_paynocchio_moove_additional_header() {
         <div class="bonuses" tabindex="0" data-toggle="popover" data-trigger="hover" data-content="Rewarding balance">
             <i class="fa-solid fa-star"></i>
             <span class="numbers bonus-value">'.$wallet_balance_response['bonuses'].'</span>
+        </div>
+</a>';
+    } else {
+        return '<a class="paynocchio-mini-block" href="/payment/gateway/paynocchio/my_paynocchio_wallet.php" title="Rewarding wallet">
+    <img decoding="async" src="'.$logo_url.'" class="on_card_embleme">
+        <div class="bonuses">
+            <i class="fa-solid fa-star"></i>
+            Activate '.get_config('paygw_paynocchio', 'brandname').' wallet to start earning rewards!
         </div>
 </a>';
     }
