@@ -72,3 +72,5 @@ $string['additional_currencies'] = 'Aditional Currencies';
 $string['additional_currencies_help'] = 'A comma separated list of currency codes. You can consult the codes in https://en.wikipedia.org/wiki/ISO_4217#Active_codes';
 $string['terms'] = 'Wallet Terms';
 $string['privacy'] = 'Wallet Privacy Policy';
+$string['cost'] = 'Cost';
+$string['total_cost'] = 'Total cost';
