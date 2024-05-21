@@ -125,13 +125,16 @@ function paygw_paynocchio_moove_additional_header() {
         </div>
 </a>';
     } else {
-        return '<a class="paynocchio-mini-block" href="/payment/gateway/paynocchio/my_paynocchio_wallet.php" title="Rewarding wallet">
+        if($USER->id){
+            return '<a class="paynocchio-mini-block" href="/payment/gateway/paynocchio/my_paynocchio_wallet.php" title="Rewarding wallet">
     <img decoding="async" src="'.$logo_url.'" class="on_card_embleme">
         <div class="bonuses">
             <i class="fa-solid fa-star"></i>
             Activate '.get_config('paygw_paynocchio', 'brandname').' wallet to start earning rewards!
         </div>
 </a>';
+        }
     }
+
 }
 
