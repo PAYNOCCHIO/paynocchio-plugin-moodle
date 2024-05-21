@@ -47,7 +47,7 @@ class gateway extends \core_payment\gateway {
      * @param \core_payment\form\account_gateway $form
      */
     public static function add_configuration_to_gateway_form(\core_payment\form\account_gateway $form): void {
-        $mform = $form->get_mform();
+        //$mform = $form->get_mform();
     }
 
     /**
@@ -60,8 +60,8 @@ class gateway extends \core_payment\gateway {
      */
     public static function validate_gateway_form(\core_payment\form\account_gateway $form,
                                                  \stdClass $data, array $files, array &$errors): void {
-        if ($data->enabled) {
+        /*if ($data->enabled) {
             $errors['enabled'] = get_string('gatewaycannotbeenabled', 'payment');
-        }
+        }*/
     }
 }
