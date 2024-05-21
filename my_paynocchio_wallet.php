@@ -53,7 +53,9 @@ if($user && $user->useruuid && $user->walletuuid) {
     ];
 
     echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet', $data);
-    echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet_actions_buttons', $data);
+    if($wallet_balance_response['code'] === "ACTIVE") {
+        echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet_actions_buttons', $data);
+    }
 
     $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_status_control', 'init', ['wallet_uuid' => $user->walletuuid]);
     echo $OUTPUT->render_from_template('paygw_paynocchio/wallet_status_control', $data);

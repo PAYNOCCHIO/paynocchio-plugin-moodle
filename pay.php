@@ -106,9 +106,13 @@ if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
             'max_bonus' => $max_bonus ?? 0,
             'full_amount' => $amount,
             'can_pay' => $wallet_balance_response['balance'] + $wallet_balance_response['bonuses'] >= $amount,
+            'wallet_active' => $wallet_balance_response['code'] === "ACTIVE",
         ];
 
         echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_payment_wallet', $data);
+
+        $PAGE->requires->js_call_amd('paygw_paynocchio/terms_and_conditions', 'init');
+        echo $OUTPUT->render_from_template('paygw_paynocchio/terms_and_conditions', []);
 
     } else {
         $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_activation', 'init', ['user_id' => $USER->id]);

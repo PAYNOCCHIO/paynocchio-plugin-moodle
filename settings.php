@@ -34,6 +34,8 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_configtext('paygw_paynocchio/environmentuuid', get_string('environment_uuid', 'paygw_paynocchio'), get_string('environment_uuid_help', 'paygw_paynocchio'), '', PARAM_TEXT));
     $settings->add(new admin_setting_configtext('paygw_paynocchio/paynocchiosecret', get_string('paynocchio_secret', 'paygw_paynocchio'), get_string('secret_help', 'paygw_paynocchio'), '', PARAM_TEXT));
     $settings->add(new admin_setting_configcheckbox('paygw_paynocchio/sendconfmail', get_string('send_confirmation_mail', 'paygw_paynocchio'), '', 0));
+    $settings->add(new admin_setting_configtextarea('paygw_paynocchio/terms', get_string('terms', 'paygw_paynocchio'), '', ''));
+    $settings->add(new admin_setting_configtextarea('paygw_paynocchio/privacy', get_string('privacy', 'paygw_paynocchio'), '', ''));
 
 
     \core_payment\helper::add_common_gateway_settings($settings, 'paygw_paynocchio');

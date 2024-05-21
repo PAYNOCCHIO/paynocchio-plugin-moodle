@@ -184,6 +184,36 @@
     background: red;
 }
 
+.paynocchio-mini-block {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-right: 2rem;
+    opacity: 0.5;
+    color: inherit;
+
+}
+
+.paynocchio-mini-block:hover {
+    text-decoration: none;
+}
+
+.paynocchio-mini-block.status-ACTIVE {
+    opacity: 1;
+}
+
+.paynocchio-mini-block img {
+    max-width: 50px;
+}
+
+.paynocchio-profile-block .paynocchio-card {
+    opacity: 0.5;
+}
+
+.paynocchio-profile-block.status-ACTIVE .paynocchio-card {
+    opacity: 1;
+}
+
 .paynocchio-status-block .paynocchio-actions-btns {
     margin-top: 20px;
     padding: 10px;

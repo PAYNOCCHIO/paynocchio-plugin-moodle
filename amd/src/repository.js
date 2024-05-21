@@ -134,6 +134,26 @@ export const showModalWithWithdraw = async() => await Modal.create({
 });
 
 /**
+ * Creates and shows a modal that contains a withdrawal form.
+ * @returns {Promise<Modal>}
+ */
+export const showModalWithTerms = async() => await Modal.create({
+    show: true,
+    removeOnClose: true,
+    large: true,
+});
+
+/**
+ * Creates and shows a modal that contains a withdrawal form.
+ * @returns {Promise<Modal>}
+ */
+export const showModalWithPrivacy = async() => await Modal.create({
+    show: true,
+    removeOnClose: true,
+    large: true,
+});
+
+/**
  * Creates and shows a modal that contains a Suspension form.
  *
  * @returns {Promise<Modal>}
@@ -213,6 +233,23 @@ export const makePayment = (component, paymentArea, itemid, fullAmount, bonuses)
             itemid,
             fullAmount,
             bonuses
+        },
+    };
+
+    return Ajax.call([request])[0];
+};
+
+/**
+ * Call server to get conf.
+ *
+ * @param {string} conf_name Name of the conf
+ * @returns {*}
+ */
+export const getConf = (conf_name) => {
+    const request = {
+        methodname: 'paygw_paynocchio_get_conf',
+        args: {
+            conf_name,
         },
     };
 

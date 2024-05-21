@@ -22,11 +22,13 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use paygw_paynocchio\paynocchio_helper;
+
 defined('MOODLE_INTERNAL') || die();
 
 function paygw_paynocchio_myprofile_navigation(core_user\output\myprofile\tree $tree, $user, $iscurrentuser, $course)
 {
-    $files = \paygw_paynocchio\paynocchio_helper::files();
+    $files = paynocchio_helper::files();
     $logo_url = moodle_url::make_pluginfile_url(
         $files[0]->get_contextid(),
         $files[0]->get_component(),
@@ -88,3 +90,41 @@ if (!function_exists('str_ends_with')) {
         return (@substr_compare($str, $end, -strlen($end)) == 0);
     }
 }
+
+function paygw_paynocchio_moove_additional_header() {
+
+    global $DB, $USER, $OUTPUT;
+    $user = $DB->get_record('paygw_paynocchio_wallets', ['userid'  => $USER->id]);
+
+    if($user && $user->useruuid && $user->walletuuid) {
+
+        $wallet = new paynocchio_helper($user->useruuid);
+
+        $wallet_balance_response = $wallet->getWalletBalance($user->walletuuid);
+
+        $files = paynocchio_helper::files();
+        $logo_url = moodle_url::make_pluginfile_url(
+            $files[0]->get_contextid(),
+            $files[0]->get_component(),
+            $files[0]->get_filearea(),
+            $files[0]->get_itemid(),
+            $files[0]->get_filepath(),
+            $files[0]->get_filename(),
+            false                     // Do not force download of the file.
+        );
+
+
+        return '<a class="paynocchio-mini-block status-'.$wallet_balance_response['status'].'" href="/payment/gateway/paynocchio/my_paynocchio_wallet.php" title="Rewarding wallet">
+    <img decoding="async" src="'.$logo_url.'" class="on_card_embleme">
+     <div class="amount" tabindex="0" data-toggle="popover" data-trigger="hover" data-content="Wallet balance">
+                <i class="fa-solid fa-wallet"></i> 
+                $<span class="numbers alance-value" data-balance="0">'.$wallet_balance_response['balance'].'</span>
+            </div>
+        <div class="bonuses" tabindex="0" data-toggle="popover" data-trigger="hover" data-content="Rewarding balance">
+            <i class="fa-solid fa-star"></i>
+            <span class="numbers bonus-value">'.$wallet_balance_response['bonuses'].'</span>
+        </div>
+</a>';
+    }
+}
+
