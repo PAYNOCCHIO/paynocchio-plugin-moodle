@@ -26,6 +26,7 @@ declare(strict_types=1);
 
 namespace paygw_paynocchio\external;
 
+use core\notification;
 use paygw_paynocchio\paynocchio_helper;
 use core_external\external_api;
 use core_external\external_function_parameters;
@@ -61,6 +62,7 @@ class delete_wallet extends external_api {
 
         if($paynocchio_wallet) {
             $deleted = paynocchio_helper::deleteWallet($wallet_uuid);
+            notification::success('Your rewarding wallet has been deleted');
 
             return [
                 'success' => $deleted

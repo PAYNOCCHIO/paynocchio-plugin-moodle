@@ -26,6 +26,7 @@ declare(strict_types=1);
 
 namespace paygw_paynocchio\external;
 
+use core\notification;
 use paygw_paynocchio\paynocchio_helper;
 use core_external\external_api;
 use core_external\external_function_parameters;
@@ -75,6 +76,8 @@ class update_wallet_status extends external_api {
                 $wallet_balance_response = $wallet->getWalletBalance($wallet_uuid);
 
                 if($wallet_balance_response && $updated) {
+                    notification::success('Status has been successfully changed!');
+
                     return [
                         'success' => true,
                         'wallet_status' => $wallet_balance_response['status'],
@@ -82,6 +85,7 @@ class update_wallet_status extends external_api {
                     ];
                 }
             } else {
+                notification::error('Please reload and try again!');
                 return [
                     'success' => false,
                     'wallet_status' => 'ERROR',

@@ -26,6 +26,7 @@ declare(strict_types=1);
 
 namespace paygw_paynocchio\external;
 
+use core\notification;
 use core\uuid;
 use core_payment\helper;
 use core_payment\helper as payment_helper;
@@ -123,6 +124,8 @@ class make_payment extends external_api {
                 paynocchio_helper::registerPayment($paymentid, $component, $paymentarea, $itemid, $orderuuid, $userid, $originalAmount, 'P');
 
                 if($wallet_balance_response) {
+                    notification::success('Payment was successfully made!');
+
                     return [
                         'success' => true,
                         'balance' => $wallet_balance_response['balance'],

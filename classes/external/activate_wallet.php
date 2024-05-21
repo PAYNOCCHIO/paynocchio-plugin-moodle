@@ -26,6 +26,7 @@ declare(strict_types=1);
 
 namespace paygw_paynocchio\external;
 
+use core\notification;
 use core\uuid;
 use core_payment\helper;
 use paygw_paynocchio\paynocchio_helper;
@@ -74,6 +75,7 @@ class activate_wallet extends external_api {
                 $record->status = 'Active';
                 $record->timecreated = time();
                 $DB->insert_record('paygw_paynocchio_wallets', $record);
+                notification::success('Your rewarding wallet has been activated');
                 return [
                     'wallet_uuid' => $json_response->wallet,
                     'success' => true,

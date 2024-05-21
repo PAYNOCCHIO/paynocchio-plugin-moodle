@@ -26,6 +26,7 @@ declare(strict_types=1);
 
 namespace paygw_paynocchio\external;
 
+use core\notification;
 use paygw_paynocchio\paynocchio_helper;
 use core_external\external_api;
 use core_external\external_function_parameters;
@@ -74,6 +75,8 @@ class withdraw_from_wallet extends external_api {
                 if($wallet_balance_response) {
                     $transactions = $DB->get_records('paygw_paynocchio_transactions', ['userid'  => $USER->id], 'timecreated DESC', 'id,timecreated,type,totalamount');
                     $count_transactions = $DB->count_records('paygw_paynocchio_transactions', ['userid'  => $USER->id]);
+                    notification::success('Withdrawal has been successfully changed!');
+
                     return [
                         'success' => true,
                         'balance' => $wallet_balance_response['balance'],
