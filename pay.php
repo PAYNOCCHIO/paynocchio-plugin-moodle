@@ -32,7 +32,15 @@ $PAGE->set_title($pagetitle);
 $PAGE->set_heading($pagetitle);
 
 $files = paynocchio_helper::files();
-$logo_url = '';
+$logo_url = moodle_url::make_pluginfile_url(
+    $files[0]->get_contextid(),
+    $files[0]->get_component(),
+    $files[0]->get_filearea(),
+    $files[0]->get_itemid(),
+    $files[0]->get_filepath(),
+    $files[0]->get_filename(),
+    false                     // Do not force download of the file.
+);
 
 $config = (object) helper::get_gateway_configuration($component, $paymentarea, $itemid, 'paynocchio');
 $payable = helper::get_payable($component, $paymentarea, $itemid);

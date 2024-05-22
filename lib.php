@@ -29,7 +29,15 @@ defined('MOODLE_INTERNAL') || die();
 function paygw_paynocchio_myprofile_navigation(core_user\output\myprofile\tree $tree, $user, $iscurrentuser, $course)
 {
     $files = paynocchio_helper::files();
-    $logo_url = null;
+    $logo_url = moodle_url::make_pluginfile_url(
+        $files[0]->get_contextid(),
+        $files[0]->get_component(),
+        $files[0]->get_filearea(),
+        $files[0]->get_itemid(),
+        $files[0]->get_filepath(),
+        $files[0]->get_filename(),
+        false                     // Do not force download of the file.
+    );
     $url = new moodle_url('/payment/gateway/paynocchio/my_paynocchio_wallet.php');
     $category = new core_user\output\myprofile\category('paynocchio_wallet', get_config('paygw_paynocchio', 'brandname'), null);
     $node = new core_user\output\myprofile\node(
@@ -89,7 +97,15 @@ function paygw_paynocchio_moove_additional_header() {
     $user = $DB->get_record('paygw_paynocchio_wallets', ['userid'  => $USER->id]);
 
     $files = paynocchio_helper::files();
-    $logo_url = null;
+    $logo_url = moodle_url::make_pluginfile_url(
+        $files[0]->get_contextid(),
+        $files[0]->get_component(),
+        $files[0]->get_filearea(),
+        $files[0]->get_itemid(),
+        $files[0]->get_filepath(),
+        $files[0]->get_filename(),
+        false                     // Do not force download of the file.
+    );
 
     if($user && $user->useruuid && $user->walletuuid) {
 
