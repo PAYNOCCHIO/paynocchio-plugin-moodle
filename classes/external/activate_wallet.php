@@ -82,7 +82,7 @@ class activate_wallet extends external_api {
                 ];
             } else {
                 return [
-                    'wallet_uuid' => 'error',
+                    'wallet_uuid' => $json_response->status,
                     'success' => false,
                 ];
             }
