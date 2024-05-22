@@ -43,7 +43,6 @@
         {{/completed}}
     <table class="{{#completed}}table-success{{/completed}}{{^completed}}table-warning{{/completed}} table-bordered mb-4">
         <tr><th class="p-2">Date</th><th class="p-2">Paid</th><th class="p-2">Bonuses earned</th><th class="p-2">Status</th></tr>
-
             <tr>
                 <td class="p-2">{{#userdate}} {{timecreated}}, {{#str}} strftimedatetime, core_langconfig {{/str}} {{/userdate}}</td>
                 <td class="p-2">{{totalamount}}</td>

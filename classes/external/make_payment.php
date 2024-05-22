@@ -28,16 +28,13 @@ namespace paygw_paynocchio\external;
 
 use core\notification;
 use core\uuid;
-use core_payment\helper;
 use core_payment\helper as payment_helper;
-use core_reportbuilder\local\filters\number;
-use mod_lti\local\ltiservice\response;
+use core_user;
 use paygw_paynocchio\paynocchio_helper;
 use core_external\external_api;
 use core_external\external_function_parameters;
 use core_external\external_value;
 use core_external\external_single_structure;
-use stdClass;
 
 class make_payment extends external_api {
 
@@ -122,10 +119,10 @@ class make_payment extends external_api {
                 // TODO: Refactor to Webhooks!
                 payment_helper::deliver_order($component, $paymentarea, $itemid, $paymentid, $userid);
 
-                $paymentuser = $DB->get_record('user', ['id' => $userid]);
-                $supportuser = core_user::get_support_user();
+                //$paymentuser = $DB->get_record('user', ['id' => $userid]);
+                //$/supportuser = core_user::get_support_user();
 
-                email_to_user($paymentuser, $supportuser, 'Payment complete', 'Your order has been confirmed and you have been enrolled in the course');
+                //email_to_user($paymentuser, $supportuser, 'Payment complete', 'Your order has been confirmed and you have been enrolled in the course');
                 ///END
                 ///
                 paynocchio_helper::registerTransaction($userid, 'payment', $amount, $bonuses, $paymentid);
