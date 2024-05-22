@@ -77,13 +77,17 @@
 }
 
 .paynocchio-card .on_card_embleme {
-    height: 50px;
+    height: 66px;
     margin: 0;
     padding: 0;
     position: absolute;
     right: 7%;
     top: 10%;
     width: 50px;
+}
+
+.paynocchio-card .on_card_embleme img {
+    max-width: 100%;
 }
 
 .paynocchio-balance-bonuses {

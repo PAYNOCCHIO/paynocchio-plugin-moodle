@@ -16,9 +16,6 @@ $PAGE->set_title($brandName);
 $PAGE->navbar->add(get_string('profile'), new moodle_url('/user/profile.php', array('id' => $USER->id)));
 $PAGE->navbar->add($brandName);
 
-$files = paynocchio_helper::files();
-$logo_url = '';
-
 echo $OUTPUT->header();
 
 $user = $DB->get_record('paygw_paynocchio_wallets', ['userid'  => $USER->id]);
@@ -41,7 +38,7 @@ if($user && $user->useruuid && $user->walletuuid) {
         'wallet_code' => $wallet_balance_response['code'],
         'wallet_blocked' => $wallet_balance_response['code'] === "BLOCKED",
         'wallet_active' => $wallet_balance_response['code'] === "ACTIVE",
-        'logo' => $logo_url,
+        'logo' => paynocchio_helper::custom_logo(),
     ];
 
     echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet', $data);
@@ -75,7 +72,7 @@ if(is_siteadmin($USER->id)) {
 
     $data = [
         'user_id' => $USER->id,
-        'logo' => $logo_url,
+        'logo' => paynocchio_helper::custom_logo(),
     ];
 
     echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet_activation', $data);

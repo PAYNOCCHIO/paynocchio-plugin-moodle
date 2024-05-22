@@ -28,8 +28,7 @@ defined('MOODLE_INTERNAL') || die();
 
 function paygw_paynocchio_myprofile_navigation(core_user\output\myprofile\tree $tree, $user, $iscurrentuser, $course)
 {
-    $files = paynocchio_helper::files();
-    $logo_url = '';
+
     $url = new moodle_url('/payment/gateway/paynocchio/my_paynocchio_wallet.php');
     $category = new core_user\output\myprofile\category('paynocchio_wallet', get_config('paygw_paynocchio', 'brandname'), null);
     $node = new core_user\output\myprofile\node(
@@ -38,7 +37,7 @@ function paygw_paynocchio_myprofile_navigation(core_user\output\myprofile\tree $
         get_string('my_paynocchio_wallet', 'paygw_paynocchio'),
         null,
         $url,
-        '<div class="paynocchio-payment-description"><img width="100" src="'.$logo_url.'" alt="'.get_string('paynocchio', 'paygw_paynocchio').'" />  '.get_string('paynocchiodescription', 'paygw_paynocchio'). ' ' . get_config('paygw_paynocchio', 'brandname').'</div>'
+        '<div class="paynocchio-payment-description">' . paynocchio_helper::custom_logo() .get_string('paynocchiodescription', 'paygw_paynocchio'). ' ' . get_config('paygw_paynocchio', 'brandname').'</div>'
     );
     $tree->add_category($category);
     $tree->add_node($node);
@@ -88,9 +87,6 @@ function paygw_paynocchio_moove_additional_header() {
     global $DB, $USER;
     $user = $DB->get_record('paygw_paynocchio_wallets', ['userid'  => $USER->id]);
 
-    $files = paynocchio_helper::files();
-    $logo_url = '';
-
     if($user && $user->useruuid && $user->walletuuid) {
 
         $wallet = new paynocchio_helper($user->useruuid);
@@ -98,7 +94,7 @@ function paygw_paynocchio_moove_additional_header() {
         $wallet_balance_response = $wallet->getWalletBalance($user->walletuuid);
 
         return '<div class="paynocchio-mini-block status-'.$wallet_balance_response['status'].'">
-    <a href="/payment/gateway/paynocchio/my_paynocchio_wallet.php" title="Rewarding wallet"><img decoding="async" src="'.$logo_url.'" class="on_card_embleme" alt=""></a>
+    <a href="/payment/gateway/paynocchio/my_paynocchio_wallet.php" title="Rewarding wallet">'.paynocchio_helper::custom_logo().'</a>
      <div role="button" class="amount" tabindex="0" data-toggle="popover" data-trigger="click, hover, focus" data-content="Wallet balance">
                 <i class="fa-solid fa-wallet"></i> 
                 $<span class="numbers alance-value" data-balance="0">'.$wallet_balance_response['balance'].'</span>

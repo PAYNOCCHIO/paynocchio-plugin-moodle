@@ -31,9 +31,6 @@ $PAGE->set_title($pagetitle);
 
 $PAGE->set_heading($pagetitle);
 
-$files = paynocchio_helper::files();
-$logo_url = '';
-
 $config = (object) helper::get_gateway_configuration($component, $paymentarea, $itemid, 'paynocchio');
 $payable = helper::get_payable($component, $paymentarea, $itemid);
 
@@ -119,7 +116,7 @@ if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
             'new_amount' => $amount * 0.1,
             'can_pay' => $wallet_balance_response['balance'] + $wallet_balance_response['bonuses'] >= $amount,
             'wallet_active' => $wallet_balance_response['code'] === "ACTIVE",
-            'logo' => $logo_url,
+            'logo' => paynocchio_helper::custom_logo(),
         ];
 
         echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_payment_wallet', $data);
@@ -132,7 +129,7 @@ if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
 
         $data = [
             'user_id' => $USER->id,
-            'logo' => $logo_url,
+            'logo' => paynocchio_helper::custom_logo(),
             'full_amount' => $amount,
             'new_amount' => $amount * 0.1,
         ];

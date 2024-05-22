@@ -26,6 +26,7 @@ namespace paygw_paynocchio;
 
 use core_reportbuilder\local\filters\number;
 use curl;
+use moodle_url;
 use stdClass;
 
 defined('MOODLE_INTERNAL') || die();
@@ -500,6 +501,26 @@ class paynocchio_helper {
             }
         }
         return $realfiles;
+    }
+
+    public static function custom_logo()
+    {
+        $files = paynocchio_helper::files();
+        if($files) {
+            $logo_url = moodle_url::make_pluginfile_url(
+                $files[0]->get_contextid(),
+                $files[0]->get_component(),
+                $files[0]->get_filearea(),
+                $files[0]->get_itemid(),
+                $files[0]->get_filepath(),
+                $files[0]->get_filename(),
+                false                     // Do not force download of the file.
+            );
+            return '<img width="100" src="'.$logo_url.'" alt="'.get_string('paynocchio', 'paygw_paynocchio').'" />';
+        } else {
+            return null;
+        }
+
     }
 
 }
