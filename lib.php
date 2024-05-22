@@ -113,24 +113,23 @@ function paygw_paynocchio_moove_additional_header() {
 
         $wallet_balance_response = $wallet->getWalletBalance($user->walletuuid);
 
-        return '<a class="paynocchio-mini-block status-'.$wallet_balance_response['status'].'" href="/payment/gateway/paynocchio/my_paynocchio_wallet.php" title="Rewarding wallet">
-    <img decoding="async" src="'.$logo_url.'" class="on_card_embleme">
-     <div class="amount" tabindex="0" data-toggle="popover" data-trigger="hover" data-content="Wallet balance">
+        return '<div class="paynocchio-mini-block status-'.$wallet_balance_response['status'].'">
+    <a href="/payment/gateway/paynocchio/my_paynocchio_wallet.php" title="Rewarding wallet"><img decoding="async" src="'.$logo_url.'" class="on_card_embleme" alt=""></a>
+     <div role="button" class="amount" tabindex="0" data-toggle="popover" data-trigger="click, hover, focus" data-content="Wallet balance">
                 <i class="fa-solid fa-wallet"></i> 
                 $<span class="numbers alance-value" data-balance="0">'.$wallet_balance_response['balance'].'</span>
             </div>
-        <div class="bonuses" tabindex="0" data-toggle="popover" data-trigger="hover" data-content="Rewarding balance">
+        <div role="button" class="bonuses" tabindex="0" data-toggle="popover" data-trigger="click, hover, focus" data-content="Rewarding balance">
             <i class="fa-solid fa-star"></i>
             <span class="numbers bonus-value">'.$wallet_balance_response['bonuses'].'</span>
         </div>
-</a>';
+</div>';
     } else {
         if($USER->id){
             return '<a class="paynocchio-mini-block" href="/payment/gateway/paynocchio/my_paynocchio_wallet.php" title="Rewarding wallet">
-    <img decoding="async" src="'.$logo_url.'" class="on_card_embleme">
         <div class="bonuses">
             <i class="fa-solid fa-star"></i>
-            Activate '.get_config('paygw_paynocchio', 'brandname').' wallet to start earning rewards!
+            Start earning rewards with '.get_config('paygw_paynocchio', 'brandname').'!
         </div>
 </a>';
         }

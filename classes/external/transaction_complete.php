@@ -29,9 +29,8 @@ namespace paygw_paynocchio\external;
 use core_external\external_api;
 use core_external\external_value;
 use core_external\external_function_parameters;
-use core_payment\helper;
 use core_payment\helper as payment_helper;
-use paygw_paynocchio\paynocchio_helper;
+use core_user;
 
 class transaction_complete extends external_api {
 
@@ -42,10 +41,8 @@ class transaction_complete extends external_api {
      */
     public static function execute_parameters() {
         return new external_function_parameters([
-            'component' => new external_value(PARAM_COMPONENT, 'The component name'),
-            'paymentarea' => new external_value(PARAM_AREA, 'Payment area in the component'),
-            'itemid' => new external_value(PARAM_INT, 'The item id in the context of the component area'),
-            'orderid' => new external_value(PARAM_TEXT, 'The order id coming back from Paynocchio'),
+            'external_order_uuid' => new external_value(PARAM_TEXT, 'The order id coming back from Paynocchio'),
+            'status_type' => new external_value(PARAM_TEXT, 'The status type coming back from Paynocchio'),
         ]);
     }
 
@@ -53,27 +50,48 @@ class transaction_complete extends external_api {
      * Perform what needs to be done when a transaction is reported to be complete.
      * This function does not take cost as a parameter as we cannot rely on any provided value.
      *
-     * @param string $component Name of the component that the itemid belongs to
-     * @param string $paymentarea
-     * @param int $itemid An internal identifier that is used by the component
-     * @param string $orderid Paynocchio order ID
+     * @param string $external_order_uuid Paynocchio order ID
+     * @param string $status_type Paynocchio status type
      * @return array
      */
-    public static function execute(string $component, string $paymentarea, int $itemid, string $orderid): array {
-        global $USER, $DB;
+    public static function execute(string $external_order_uuid, string $status_type): array {
+        global $DB;
 
         self::validate_parameters(self::execute_parameters(), [
-            'component' => $component,
-            'paymentarea' => $paymentarea,
-            'itemid' => $itemid,
-            'orderid' => $orderid,
+            'external_order_uuid' => $external_order_uuid,
+            'status_type' => $status_type,
         ]);
 
+        $order = $DB->get_record('paygw_paynocchio_payments', ['orderuuid' => $external_order_uuid]);
 
+        if($order) {
+            if($status_type === 'completed') {
+                $order->status = 'C';
+                $order->timeupdated = time();
 
+                payment_helper::deliver_order($order->component, $order->paymentarea, (int) $order->itemid, (int) $order->paymentid, (int) $order->userid);
+
+                $DB->update_record('paygw_paynocchio_payments', $order);
+
+                $paymentuser = $DB->get_record('user', ['id' => $order->userid]);
+                $supportuser = core_user::get_support_user();
+
+                email_to_user($paymentuser, $supportuser, 'Payment complete', 'Your order has been confirmed and you have been enrolled in the course');
+
+                return [
+                    'success' => true,
+                    'message' => 'Order updated as completed',
+                ];
+            } else {
+                return [
+                    'success' => false,
+                    'message' => 'Some error',
+                ];
+            }
+        }
         return [
-            'success' => true,
-            'message' => 'hello',
+            'success' => false,
+            'message' => 'Order not found',
         ];
     }
 

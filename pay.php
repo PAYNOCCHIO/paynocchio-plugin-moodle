@@ -60,6 +60,8 @@ if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
       'timecreated' => $record->timecreated,
       'totalamount' => $record->totalamount,
         'reward' => $record->totalamount * 0.1,
+        'status' => $record->status,
+        'completed' => $record->status === 'C',
     ];
     echo $OUTPUT->render_from_template('paygw_paynocchio/enrolled_already', ['data' => $data]);
 
