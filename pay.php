@@ -124,7 +124,7 @@ if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
 
         echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_payment_wallet', $data);
 
-        $PAGE->requires->js_call_amd('paygw_paynocchio/terms_and_conditions', 'init');
+        $PAGE->requires->js_call_amd('paygw_paynocchio/terms_and_conditions', 'init', []);
         echo $OUTPUT->render_from_template('paygw_paynocchio/terms_and_conditions', []);
 
     } else {
