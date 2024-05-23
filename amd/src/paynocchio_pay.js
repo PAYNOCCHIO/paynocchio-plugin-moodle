@@ -43,9 +43,13 @@ export const init = (component, paymentArea, itemid, fullAmount, balance) => {
 
         const range = document.getElementById('bonuses-range');
         const input = document.getElementById('bonuses-value');
+        let bonuses = 0;
+        if(input) {
+            bonuses = parseFloat(input.value);
+        }
 
         if(range && input) {
-            checkPayability(input.value, fullAmount, balance, paynocchio_pay_button);
+            checkPayability(bonuses, fullAmount, balance, paynocchio_pay_button);
 
             input.addEventListener('change', () => {
                 range.value = input.value;
@@ -64,7 +68,6 @@ export const init = (component, paymentArea, itemid, fullAmount, balance) => {
 
         paynocchio_pay_button.addEventListener('click', () => {
 
-            const bonuses = parseFloat(input.value);
             const spinner = document.querySelector('.paynocchio-spinner');
             const topup_message = document.getElementById('topup_message');
 
