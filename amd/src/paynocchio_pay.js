@@ -56,10 +56,12 @@ export const init = (component, paymentArea, itemid, fullAmount, balance) => {
             });
             range.addEventListener('change', () => {
                 bonuses = range.value;
+                input.value = range.value;
                 checkPayability(bonuses, fullAmount, balance, paynocchio_pay_button);
             });
             range.addEventListener('input', () => {
                 bonuses = range.value;
+                input.value = range.value;
                 checkPayability(bonuses, fullAmount, balance, paynocchio_pay_button);
             });
         } else {
