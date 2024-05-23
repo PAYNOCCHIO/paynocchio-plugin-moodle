@@ -106,8 +106,8 @@ if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
         $need_to_topup = ceil(floor(($amount - floor(($wallet_balance_response['balance']) + floor($wallet_balance_response['bonuses'])))) - (floor(($amount - floor(($wallet_balance_response['balance']) + floor($wallet_balance_response['bonuses']))))) * 0.1);
 
         $data = [
-            'wallet_balance' => $wallet_balance_response['balance'],
-            'wallet_bonuses' => $wallet_balance_response['bonuses'],
+            'wallet_balance' => $wallet_balance_response['balance'] ?? 0,
+            'wallet_bonuses' => $wallet_balance_response['bonuses'] ?? 0,
             'wallet_card' => chunk_split($wallet_balance_response['number'], 4, ' '),
             'wallet_status' => $wallet_balance_response['status'],
             'wallet_code' => $wallet_balance_response['code'],

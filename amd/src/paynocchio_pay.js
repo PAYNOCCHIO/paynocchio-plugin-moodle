@@ -25,7 +25,7 @@ import Templates from 'core/templates';
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-const checkPayability = (value, fullAmount, balance, element) => {
+const checkPayability = (value, fullAmount, balance = '0', element) => {
     if(parseFloat(value)+parseFloat(balance) < parseFloat(fullAmount)) {
         element.classList.add('disabled');
         document.getElementById('topup_message').innerText = 'Please top up or use your Bonuses.';
@@ -44,19 +44,23 @@ export const init = (component, paymentArea, itemid, fullAmount, balance) => {
         const range = document.getElementById('bonuses-range');
         const input = document.getElementById('bonuses-value');
 
-        checkPayability(input.value, fullAmount, balance, paynocchio_pay_button);
+        if(range && input) {
+            checkPayability(input.value, fullAmount, balance, paynocchio_pay_button);
 
-        input.addEventListener('change', () => {
-            range.value = input.value;
-        });
-        range.addEventListener('change', () => {
-            input.value = range.value;
-            checkPayability(input.value, fullAmount, balance, paynocchio_pay_button);
-        });
-        range.addEventListener('input', () => {
-            input.value = range.value;
-            checkPayability(input.value, fullAmount, balance, paynocchio_pay_button);
-        });
+            input.addEventListener('change', () => {
+                range.value = input.value;
+            });
+            range.addEventListener('change', () => {
+                input.value = range.value;
+                checkPayability(input.value, fullAmount, balance, paynocchio_pay_button);
+            });
+            range.addEventListener('input', () => {
+                input.value = range.value;
+                checkPayability(input.value, fullAmount, balance, paynocchio_pay_button);
+            });
+        } else {
+            checkPayability(0, fullAmount, balance, paynocchio_pay_button);
+        }
 
         paynocchio_pay_button.addEventListener('click', () => {
 
