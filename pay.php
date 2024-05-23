@@ -60,19 +60,19 @@ if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
     echo '<ul class="list-group list-group-flush">';
     if ($surcharge && $surcharge > 0) {
 
-        echo '<li class="list-group-item"><h4 class="card-title">' . get_string('cost', 'paygw_paynocchio') . ':</h4>';
+        echo '<li class="list-group-item"><h4>' . get_string('cost', 'paygw_paynocchio') . ':</h4>';
         echo '<div id="price">' . helper::get_cost_as_string($payable->get_amount(), $currency) . '</div>';
         echo '</li>';
-        echo '<li class="list-group-item"><h4 class="card-title">' . get_string('surcharge', 'core_payment') . ':</h4>';
+        echo '<li class="list-group-item"><h4>' . get_string('surcharge', 'core_payment') . ':</h4>';
         echo '<div id="price">' . $surcharge. '%</div>';
         echo '<div id="explanation">' . get_string('surcharge_desc', 'core_payment') . '</div>';
         echo '</li>';
 
-        echo '<li class="list-group-item"><h4 class="card-title">' . get_string('total_cost', 'paygw_paynocchio') . ':</h4>';
+        echo '<li class="list-group-item"><h4>' . get_string('total_cost', 'paygw_paynocchio') . ':</h4>';
         echo '<div id="price">' . helper::get_cost_as_string($amount, $currency). ' ' . $currency . '</div>';
         echo '</li>';
     } else {
-        echo '<li class="list-group-item"><h4 class="card-title">' . get_string('total_cost', 'paygw_paynocchio') . ':</h4>';
+        echo '<li class="list-group-item"><h4>' . get_string('total_cost', 'paygw_paynocchio') . ':</h4>';
         echo '<div id="price">' . helper::get_cost_as_string($amount, $currency). ' ' . $currency . '</div>';
         echo '</li>';
     }

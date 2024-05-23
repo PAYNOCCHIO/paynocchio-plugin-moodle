@@ -70,6 +70,8 @@
         </div>
     </div>
     {{#wallet_active}}
+
+        {{#can_pay}}
     {{#wallet_bonuses}}
     <div class="paynocchio-conversion-rate">
         <div>
@@ -85,11 +87,12 @@
         </div>
     </div>
     {{/wallet_bonuses}}
-    {{#can_pay}}
     <div class="paynocchio-actions-btns">
         <button type="button" id="paynocchio_pay_button" class="paynocchio_button paynocchio_colored btn-lg">
             {{#str}} pay, paygw_paynocchio {{/str}}
         </button>
+    </div>
+    <div class="paynocchio-actions-btns">
         <div class="spinner">
             <svg class="paynocchio-spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <circle class="spinner-circle" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -98,7 +101,7 @@
         </div>
         <div id="status_message"></div>
     </div>
-        <div class="text-center pt-2">And get {{new_amount}} with bonuses!
+        <div class="text-center pt-2">And get {{new_amount}} bonuses!
             <i class="fa-regular fa-circle-question" type="button" tabindex="0" data-trigger="click" data-container="body" data-toggle="popover" data-placement="top" data-title="How it works" data-content="Earn 10% for each payment! Keep earning rewards and pay with bonuses!"></i>
 
         </div>
