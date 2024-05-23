@@ -52,15 +52,15 @@ export const init = (component, paymentArea, itemid, fullAmount, balance) => {
             checkPayability(bonuses, fullAmount, balance, paynocchio_pay_button);
 
             input.addEventListener('change', () => {
-                range.value = input.value;
+                range.value = bonuses;
             });
             range.addEventListener('change', () => {
-                input.value = range.value;
-                checkPayability(input.value, fullAmount, balance, paynocchio_pay_button);
+                bonuses = range.value;
+                checkPayability(bonuses, fullAmount, balance, paynocchio_pay_button);
             });
             range.addEventListener('input', () => {
-                input.value = range.value;
-                checkPayability(input.value, fullAmount, balance, paynocchio_pay_button);
+                bonuses = range.value;
+                checkPayability(bonuses, fullAmount, balance, paynocchio_pay_button);
             });
         } else {
             checkPayability(0, fullAmount, balance, paynocchio_pay_button);
