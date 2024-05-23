@@ -108,7 +108,9 @@
         <div class="text-center pt-2" id="topup_message"></div>
     {{/can_pay}}
     {{^can_pay}}
-        <div class="topup-description">Please top up and get up to 10% with bonuses. <i class="fa-regular fa-circle-question" type="button" tabindex="0" data-trigger="click" data-container="body" data-toggle="popover" data-placement="top" data-title="How it works" data-content="Earn 10% for each top up! Keep earning rewards and pay with bonuses!"></i>
+        <div class="topup-description">
+            <p>You only need to add ${{need_to_topup}} to your wallet! </p>
+            <p> <p>Then pay using bonuses and earn {{new_amount}} with bonuses extra <i class="fa-regular fa-circle-question" type="button" tabindex="0" data-trigger="click" data-container="body" data-toggle="popover" data-placement="top" data-title="How it works" data-content="Earn 10% for each top up! Earn 10% for each payment! Keep earning rewards and pay with bonuses!"></i></p></p>
         </div>
     {{/can_pay}}
     {{/wallet_active}}

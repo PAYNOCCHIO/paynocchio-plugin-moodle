@@ -60,8 +60,8 @@ if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
     echo '<ul class="list-group list-group-flush">';
     if ($surcharge && $surcharge > 0) {
 
-        echo '<li class="list-group-item"><h4>' . get_string('cost', 'paygw_paynocchio') . ':</h4>';
-        echo '<div id="price">' . helper::get_cost_as_string($payable->get_amount(), $currency) . '</div>';
+        echo '<li class="list-group-item">' . get_string('cost', 'paygw_paynocchio') . ':';
+        echo '<h4 id="price">' . helper::get_cost_as_string($payable->get_amount(), $currency) . '</h4>';
         echo '</li>';
         echo '<li class="list-group-item"><h4>' . get_string('surcharge', 'core_payment') . ':</h4>';
         echo '<div id="price">' . $surcharge. '%</div>';
@@ -72,8 +72,8 @@ if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
         echo '<div id="price">' . helper::get_cost_as_string($amount, $currency). ' ' . $currency . '</div>';
         echo '</li>';
     } else {
-        echo '<li class="list-group-item"><h4>' . get_string('total_cost', 'paygw_paynocchio') . ':</h4>';
-        echo '<div id="price">' . helper::get_cost_as_string($amount, $currency). ' ' . $currency . '</div>';
+        echo '<li class="list-group-item">' . get_string('total_cost', 'paygw_paynocchio') . ':';
+        echo '<h4 id="price">' . helper::get_cost_as_string($amount, $currency). ' ' . $currency . '</h4>';
         echo '</li>';
     }
     echo "</ul>";
@@ -103,6 +103,8 @@ if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
             $max_bonus = $amount;
         }
 
+        $need_to_topup = ceil(floor(($amount - floor(($wallet_balance_response['balance']) + floor($wallet_balance_response['bonuses'])))) - (floor(($amount - floor(($wallet_balance_response['balance']) + floor($wallet_balance_response['bonuses']))))) * 0.1);
+
         $data = [
             'wallet_balance' => $wallet_balance_response['balance'],
             'wallet_bonuses' => $wallet_balance_response['bonuses'],
@@ -114,6 +116,7 @@ if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
             'max_bonus' => $max_bonus ?? 0,
             'full_amount' => $amount,
             'new_amount' => $amount * 0.1,
+            'need_to_topup' => $need_to_topup,
             'can_pay' => $wallet_balance_response['balance'] + $wallet_balance_response['bonuses'] >= $amount,
             'wallet_active' => $wallet_balance_response['code'] === "ACTIVE",
             'logo' => paynocchio_helper::custom_logo(),

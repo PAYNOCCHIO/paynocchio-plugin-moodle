@@ -28,7 +28,6 @@ export const init = () => {
     const privacy_button = document.getElementById('privacy_trigger');
 
     if (terms_button) {
-
         terms_button.addEventListener('click', () => {
             getConf('terms')
                 .then((data) => {
@@ -42,7 +41,6 @@ export const init = () => {
         });
     }
     if (privacy_button) {
-
         privacy_button.addEventListener('click', () => {
             getConf('privacy')
                 .then((data) => {
