@@ -106,7 +106,7 @@ if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
         $data = [
             'wallet_balance' => $wallet_balance_response['balance'],
             'wallet_bonuses' => $wallet_balance_response['bonuses'],
-            'wallet_card' => $wallet_balance_response['number'],
+            'wallet_card' => chunk_split($wallet_balance_response['number'], 4, ' '),
             'wallet_status' => $wallet_balance_response['status'],
             'wallet_code' => $wallet_balance_response['code'],
             'wallet_uuid' => $user->walletuuid,
