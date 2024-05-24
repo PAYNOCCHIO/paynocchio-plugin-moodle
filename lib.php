@@ -106,7 +106,7 @@ function paygw_paynocchio_moove_additional_header() {
 </div>';
     } else {
         if($USER->id){
-            return '<a class="paynocchio-mini-block" href="/static/bonuses.html" title="Rewarding wallet">
+            return '<a class="paynocchio-mini-block" href="/payment/gateway/paynocchio/about.php" title="Rewarding wallet">
         <div class="bonuses">
             <i class="fa-solid fa-star"></i>
             Start earning rewards with '.get_config('paygw_paynocchio', 'brandname').'!
