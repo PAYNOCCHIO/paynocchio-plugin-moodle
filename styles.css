@@ -51,6 +51,10 @@
     opacity: 0.75;
 }
 
+#topup_message {
+    padding-top: 10px;
+}
+
 .paynocchio-profile-block {
     margin-left: auto;
     margin-right: auto;
@@ -64,6 +68,9 @@
 }
 
 .paynocchio-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     aspect-ratio: 5 / 3;
     border-radius: 1.5rem;
     margin-bottom: 1rem;
@@ -76,13 +83,21 @@
     background: #3b82f6;
 }
 
+.paynocchio-card-header,
+.paynocchio-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 20px;
+}
+
+.paynocchio-card-footer {
+    align-items: center;
+}
+
 .paynocchio-card .on_card_embleme {
     height: 66px;
-    margin: 0;
-    padding: 0;
-    position: absolute;
-    right: 7%;
-    top: 10%;
     width: 50px;
 }
 
@@ -91,16 +106,12 @@
 }
 
 .paynocchio-balance-bonuses {
-    align-items: center;
-    -moz-column-gap: 2rem;
-    column-gap: 2rem;
     display: flex;
-    flex-direction: row;
+    column-gap: 2rem;
+    align-items: center;
+    padding-top: 40px;
     font-size: .875rem;
-    left: 7%;
     line-height: 1.25rem;
-    position: absolute;
-    top: 27%;
     z-index: 20;
     --tw-text-opacity: 1;
     color: rgb(255 255 255 / var(--tw-text-opacity));
@@ -108,11 +119,7 @@
 
 .paynocchio-card .paynocchio-card-number {
     display: flex;
-    bottom: 13%;
-    left: 7%;
     line-height: 1.5rem;
-    position: absolute;
-    z-index: 20;
 }
 
 .paynocchio-description-grid {
@@ -144,11 +151,6 @@
 }
 
 .paynocchio_payment_card_button {
-    bottom: 12%;
-    position: absolute;
-    right: 7%;
-    z-index: 20;
-    padding: .5rem 1rem;
     text-decoration-line: none;
     white-space: nowrap;
 }

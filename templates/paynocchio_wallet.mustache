@@ -33,27 +33,31 @@
 <div class="paynocchio-profile-block status-{{wallet_status}}">
     <div class="paynocchio-card-container">
         <div class="paynocchio-card">
-            <div class="on_card_embleme">{{{logo}}}</div>
-            <div class="paynocchio-balance-bonuses">
-                <div class="paynocchio-balance">
-                    <div>
-                        Balance
+            <div class="paynocchio-card-header">
+                <div class="paynocchio-balance-bonuses">
+                    <div class="paynocchio-balance">
+                        <div>
+                            Balance
+                        </div>
+                        <div class="amount">
+                            $<span class="paynocchio-numbers paynocchio-balance-value" data-balance="0">{{wallet_balance}}</span>
+                        </div>
                     </div>
-                    <div class="amount">
-                        $<span class="paynocchio-numbers paynocchio-balance-value" data-balance="0">{{wallet_balance}}</span>
+                    <div class="paynocchio-bonuses">
+                        <div>
+                            Bonuses
+                        </div>
+                        <div class="amount">
+                            <span class="paynocchio-numbers paynocchio-bonus-value" data-bonus="0">{{wallet_bonuses}}</span>
+                        </div>
                     </div>
                 </div>
-                <div class="paynocchio-bonuses">
-                    <div>
-                        Bonuses
-                    </div>
-                    <div class="amount">
-                        <span class="paynocchio-numbers paynocchio-bonus-value" data-bonus="0">{{wallet_bonuses}}</span>
-                    </div>
-                </div>
+                <div class="on_card_embleme">{{{logo}}}</div>
             </div>
-            <div class="paynocchio-card-number">
-                {{wallet_card}}
+            <div class="paynocchio-card-footer">
+                <div class="paynocchio-card-number">
+                    {{wallet_card}}
+                </div>
             </div>
         </div>
     </div>

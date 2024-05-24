@@ -33,40 +33,44 @@
 <div class="paynocchio-profile-block status-{{wallet_status}}">
     <div class="paynocchio-card-container">
         <div class="paynocchio-card">
-            <div class="on_card_embleme">{{{logo}}}</div>
-            <div class="paynocchio-balance-bonuses">
-                <div class="paynocchio-balance">
-                    <div>
-                        Balance
+            <div class="paynocchio-card-header">
+                <div class="paynocchio-balance-bonuses">
+                    <div class="paynocchio-balance">
+                        <div>
+                            Balance
+                        </div>
+                        <div class="amount">
+                            $<span class="paynocchio-numbers paynocchio-balance-value">{{wallet_balance}}</span>
+                        </div>
                     </div>
-                    <div class="amount">
-                        $<span class="paynocchio-numbers paynocchio-balance-value">{{wallet_balance}}</span>
+                    <div class="paynocchio-bonuses">
+                        <div>
+                            Bonuses
+                        </div>
+                        <div class="amount">
+                            <span class="paynocchio-numbers paynocchio-bonus-value">{{wallet_bonuses}}</span>
+                        </div>
                     </div>
                 </div>
-                <div class="paynocchio-bonuses">
-                    <div>
-                        Bonuses
-                    </div>
-                    <div class="amount">
-                        <span class="paynocchio-numbers paynocchio-bonus-value">{{wallet_bonuses}}</span>
-                    </div>
+                <div class="on_card_embleme">{{{logo}}}</div>
+            </div>
+            <div class="paynocchio-card-footer">
+                <div class="paynocchio-card-number">
+                    {{wallet_card}}
                 </div>
-            </div>
-            <div class="paynocchio-card-number">
-                {{wallet_card}}
-            </div>
-            {{#wallet_active}}
-                <div class="paynocchio_payment_card_button">
-                    <button type="button" class="paynocchio_button" id="paynocchio_topup_button">
-                        <svg enable-background="new 0 0 50 50" version="1.1" viewBox="0 0 50 50" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                {{#wallet_active}}
+                    <div class="paynocchio_payment_card_button">
+                        <button type="button" class="paynocchio_button" id="paynocchio_topup_button">
+                            <svg enable-background="new 0 0 50 50" version="1.1" viewBox="0 0 50 50" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                         <rect fill="none" height="50" width="50"></rect>
-                            <line fill="none" stroke="#1a85f9" stroke-miterlimit="10" stroke-width="4" x1="9" x2="41" y1="25" y2="25"></line>
-                            <line fill="none" stroke="#1a85f9" stroke-miterlimit="10" stroke-width="4" x1="25" x2="25" y1="9" y2="41"></line>
+                                <line fill="none" stroke="#1a85f9" stroke-miterlimit="10" stroke-width="4" x1="9" x2="41" y1="25" y2="25"></line>
+                                <line fill="none" stroke="#1a85f9" stroke-miterlimit="10" stroke-width="4" x1="25" x2="25" y1="9" y2="41"></line>
                                     </svg>
-                        Add money
-                    </button>
-                </div>
-            {{/wallet_active}}
+                            Add money
+                        </button>
+                    </div>
+                {{/wallet_active}}
+            </div>
         </div>
     </div>
     {{#wallet_active}}
@@ -109,7 +113,7 @@
     {{/can_pay}}
     {{^can_pay}}
         <div class="topup-description">
-            <p>You only need to add ${{need_to_topup}} to your wallet!</p>
+            <p>You only need to add $<span id="need_to_top_up">{{need_to_topup}}</span> to your wallet!</p>
             <p>Then pay using bonuses and earn {{new_amount}} bonuses extra <i class="fa-regular fa-circle-question" type="button" tabindex="0" data-trigger="click" data-container="body" data-toggle="popover" data-placement="top" data-title="How it works" data-content="Earn 10% for each top up! Earn 10% for each payment! Keep earning rewards and pay with bonuses!"></i></p>
         </div>
     {{/can_pay}}
