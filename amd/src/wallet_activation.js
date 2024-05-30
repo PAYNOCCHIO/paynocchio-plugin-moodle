@@ -47,6 +47,8 @@ export const init = (user_id) => {
                         })
                         .catch((error) => displayException(error));*/
                     window.location.reload();
+                } else {
+                    window.alert('There is an Error occurred. Please try again later.');
                 }
             });
         });

@@ -80,6 +80,10 @@ export const init = (pay) => {
 
                                             }, 1000);
                                         }
+                                    } else {
+                                        modal.body.find('.paynocchio-spinner').toggleClass('active');
+                                        modal.body.find('#topup_message')
+                                            .text('There is an Error occurred. Please try again later.');
                                     }
                                 });
                         }
