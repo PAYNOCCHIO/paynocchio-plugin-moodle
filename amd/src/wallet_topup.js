@@ -22,8 +22,6 @@
  */
 
 import {handleTopUpClick, showModalWithTopup} from "./repository";
-import {exception as displayException} from 'core/notification';
-import Templates from 'core/templates';
 
 export const init = (pay) => {
     const paynocchio_wallet_topup_button = document.getElementById('paynocchio_topup_button');
@@ -54,32 +52,11 @@ export const init = (pay) => {
                             button.addClass('disabled');
                             modal.body.find('.paynocchio-spinner').toggleClass('active');
                             modal.body.find('#topup_message').text('Working...');
-                            handleTopUpClick(input.val())
+                            handleTopUpClick(input.val(), window.location.href)
                                 .then(data => {
                                     if (data.success) {
-                                        modal.body.find('#topup_message').text('Success! Reloading...');
-                                        //window.console.log(data);
-                                        if(pay) {
-                                            window.location.reload();
-                                        } else {
-                                            modal.body.find('.paynocchio-spinner').toggleClass('active');
-                                            setBalance(data.balance);
-                                            setBonus(data.bonuses);
-                                            window.location.reload();
-                                            setTimeout(() => {
-                                                modal.hide();
-                                                modal.destroy();
-                                                Templates.renderForPromise('paygw_paynocchio/wallet_transactions', {
-                                                    transactions: JSON.parse(data.transactions),
-                                                    hastransactions: data.hastransactions,
-                                            })
-                                                    .then(({html, js}) => {
-                                                        Templates.replaceNodeContents('.paynocchio-transactions', html, js);
-                                                    })
-                                                    .catch((error) => displayException(error));
-
-                                            }, 1000);
-                                        }
+                                        modal.body.find('#topup_message').text('OK... Sending to Stripe...');
+                                        window.location.replace(data.url);
                                     } else {
                                         modal.body.find('.paynocchio-spinner').toggleClass('active');
                                         modal.body.find('#topup_message')
@@ -90,23 +67,5 @@ export const init = (pay) => {
                     });
                 });
         });
-    }
-
-    /**
-     * Setting the Card balance value
-     * @param {number} value
-     */
-    function setBalance(value) {
-        const paynocchio_card_balance_value = document.querySelector('.paynocchio-balance-value');
-        paynocchio_card_balance_value.innerText = value;
-    }
-
-    /**
-     * Setting the Card bonuses value
-     * @param {number} value
-     */
-    function setBonus(value) {
-        const paynocchio_card_bonus_value = document.querySelector('.paynocchio-bonus-value');
-        paynocchio_card_bonus_value.innerText = value;
     }
 };

@@ -225,13 +225,14 @@ class paynocchio_helper {
     /**
      *  TopUp Wallet
      */
-    public function topUpWallet(string $walletId, float $amount) {
+    public function topUpWallet(string $walletId, float $amount, string $redirect_url) {
         $data = [
             self::PAYNOCCHIO_ENV_KEY => $this->envId,
             self::PAYNOCCHIO_USER_UUID_KEY => $this->userId,
             self::PAYNOCCHIO_WALLET_KEY => $walletId,
             "currency" => "USD",
             'amount' => $amount,
+            'redirect_url' => $redirect_url,
         ];
 
         return $this->sendRequest('POST', '/operation/topup', json_encode($data));
