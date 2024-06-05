@@ -31,6 +31,7 @@ use core_external\external_value;
 use core_external\external_function_parameters;
 use core_payment\helper as payment_helper;
 use core_user;
+use paygw_paynocchio\paynocchio_helper;
 
 class transaction_complete extends external_api {
 
@@ -107,6 +108,7 @@ class transaction_complete extends external_api {
                 $order->status = 'C';
                 $order->timeupdated = time();
 
+                paynocchio_helper::registerTransaction($order->userid, 'payment', (float)$amount, 0, $order->paymentid);
                 payment_helper::deliver_order($order->component, $order->paymentarea, (int) $order->itemid, (int) $order->paymentid, (int) $order->userid);
 
                 $DB->update_record('paygw_paynocchio_payments', $order);

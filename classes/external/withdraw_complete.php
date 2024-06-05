@@ -33,7 +33,7 @@ use core_payment\helper as payment_helper;
 use core_user;
 use paygw_paynocchio\paynocchio_helper;
 
-class topup_complete extends external_api {
+class withdraw_complete extends external_api {
 
     /**
      * Returns description of method parameters.
@@ -51,7 +51,6 @@ class topup_complete extends external_api {
             'currency_id' => new external_value(PARAM_TEXT, 'The currency_id coming back from Paynocchio'),
             'wallet_uuid' => new external_value(PARAM_TEXT, 'The wallet_uuid coming back from Paynocchio'),
             'user_uuid' => new external_value(PARAM_TEXT, 'The user_uuid coming back from Paynocchio'),
-            'external_order_uuid' => new external_value(PARAM_TEXT, 'The order id coming back from Paynocchio'),
             'status_type' => new external_value(PARAM_TEXT, 'The status type coming back from Paynocchio'),
         ]);
     }
@@ -69,7 +68,6 @@ class topup_complete extends external_api {
      * @param string $currency_id Paynocchio currency_id
      * @param string $wallet_uuid Paynocchio wallet_uuid
      * @param string $user_uuid Paynocchio user_uuid
-     * @param string $external_order_uuid Paynocchio order ID
      * @param string $status_type Paynocchio status type
      * @return array
      */
@@ -83,7 +81,8 @@ class topup_complete extends external_api {
         string $currency_id,
         string $wallet_uuid,
         string $user_uuid,
-        string $external_order_uuid, string $status_type): array {
+        string $status_type
+    ): array {
         global $DB;
 
         self::validate_parameters(self::execute_parameters(), [
@@ -96,18 +95,24 @@ class topup_complete extends external_api {
             'currency_id' => $currency_id,
             'wallet_uuid' => $wallet_uuid,
             'user_uuid' => $user_uuid,
-            'external_order_uuid' => $external_order_uuid,
             'status_type' => $status_type,
         ]);
 
         $user = $DB->get_record('paygw_paynocchio_wallets', ['useruuid' => $user_uuid]);
 
         if($user) {
-            paynocchio_helper::registerTransaction((int) $user->id, 'topup', (float)$amount, 0, null);
-                return [
-                    'success' => true,
-                    'message' => 'Order updated as completed',
-                ];
+            paynocchio_helper::registerTransaction((int) $user->id, 'withdrawn', (float)$amount, 0, null);
+
+            $paymentuser = $DB->get_record('user', ['id' => $user->userid]);
+            $supportuser = core_user::get_support_user();
+
+            email_to_user($paymentuser, $supportuser, 'Withdrawal complete', 'You have withdrawn money from your wallet successfully!');
+
+
+            return [
+                'success' => true,
+                'message' => 'Order updated as completed',
+            ];
             } else {
                 return [
                     'success' => false,

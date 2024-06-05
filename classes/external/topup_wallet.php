@@ -71,7 +71,6 @@ class topup_wallet extends external_api {
             if($wallet_response['status_code'] === 200) {
 
                 $json_response = json_decode($wallet_response['response']);
-                paynocchio_helper::registerTransaction((int) $USER->id, 'topup', $amount, 0, null);
 
                 return [
                     'success' => true,

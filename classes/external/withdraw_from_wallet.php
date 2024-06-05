@@ -68,8 +68,6 @@ class withdraw_from_wallet extends external_api {
 
             if($wallet_response['status_code'] === 200) {
 
-                paynocchio_helper::registerTransaction((int) $USER->id, 'withdrawn', $amount, 0, null);
-
                 $wallet_balance_response = $wallet->getWalletBalance($wallet_uuid);
 
                 if($wallet_balance_response) {
