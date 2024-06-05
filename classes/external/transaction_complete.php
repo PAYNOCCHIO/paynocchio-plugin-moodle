@@ -103,7 +103,7 @@ class transaction_complete extends external_api {
         $order = $DB->get_record('paygw_paynocchio_payments', ['orderuuid' => $external_order_uuid]);
 
         if($order) {
-            if($status_type === 'completed') {
+            if($status_type === 'complete') {
                 $order->status = 'C';
                 $order->timeupdated = time();
 
