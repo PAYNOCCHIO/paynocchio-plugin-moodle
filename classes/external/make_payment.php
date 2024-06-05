@@ -117,7 +117,7 @@ class make_payment extends external_api {
                     $itemid, $userid, $originalAmount, $currency, 'paynocchio');
 
                 // TODO: Refactor to Webhooks!
-                payment_helper::deliver_order($component, $paymentarea, $itemid, $paymentid, $userid);
+                //payment_helper::deliver_order($component, $paymentarea, $itemid, $paymentid, $userid);
 
                 //$paymentuser = $DB->get_record('user', ['id' => $userid]);
                 //$/supportuser = core_user::get_support_user();
@@ -125,13 +125,11 @@ class make_payment extends external_api {
                 //email_to_user($paymentuser, $supportuser, 'Payment complete', 'Your order has been confirmed and you have been enrolled in the course');
                 ///END
                 ///
-                paynocchio_helper::registerTransaction($userid, 'payment', $amount, $bonuses, $paymentid);
+                //paynocchio_helper::registerTransaction($userid, 'payment', $amount, $bonuses, $paymentid);
                 // TODO: Refactor to Webhooks! Change to P
-                paynocchio_helper::registerPayment($paymentid, $component, $paymentarea, $itemid, $orderuuid, $userid, $originalAmount, 'C');
+                paynocchio_helper::registerPayment($paymentid, $component, $paymentarea, $itemid, $orderuuid, $userid, $originalAmount, 'P');
 
                 if($wallet_balance_response) {
-                    notification::success('Payment was successfully made!');
-
                     return [
                         'success' => true,
                         'balance' => $wallet_balance_response['balance'],
