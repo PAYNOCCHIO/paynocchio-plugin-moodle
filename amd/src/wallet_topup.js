@@ -36,7 +36,7 @@ export const init = (pay) => {
         paynocchio_wallet_topup_button.addEventListener('click', () => {
             showModalWithTopup()
                 .then(modal => {
-                    modal.setTitle('Topup Paynocchio Wallet');
+                    modal.setTitle('Topup your Wallet');
                     const input = modal.body.find('#top_up_amount');
                     const message = modal.body.find('#topup_message');
                     if(pay && need_to_top_up) {
