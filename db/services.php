@@ -104,4 +104,22 @@ $functions = [
         'ajax'        => true,
         'loginrequired' => false,
     ],
+
+    'paygw_paynocchio_create_topup_complete' => [
+        'classname'   => 'paygw_paynocchio\external\topup_complete',
+        'classpath'   => '',
+        'description' => 'Takes care of what needs to be done when a Paynocchio topup comes back as complete.',
+        'type'        => 'write',
+        'ajax'        => true,
+        'loginrequired' => false,
+    ],
+
+    'paygw_paynocchio_create_withdraw_complete' => [
+        'classname'   => 'paygw_paynocchio\external\withdraw_complete',
+        'classpath'   => '',
+        'description' => 'Takes care of what needs to be done when a Paynocchio withdraw comes back as complete.',
+        'type'        => 'write',
+        'ajax'        => true,
+        'loginrequired' => false,
+    ],
 ];
