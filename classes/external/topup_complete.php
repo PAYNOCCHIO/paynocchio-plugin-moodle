@@ -69,6 +69,7 @@ class topup_complete extends external_api {
      * @param string $wallet_uuid Paynocchio wallet_uuid
      * @param string $user_uuid Paynocchio user_uuid
      * @param string $status_type Paynocchio status type
+     * @param string $external_order_uuid Paynocchio status type
      * @return array
      */
     public static function execute(
@@ -81,7 +82,9 @@ class topup_complete extends external_api {
         string $currency_id,
         string $wallet_uuid,
         string $user_uuid,
-        string $status_type
+        string $status_type,
+        string $external_order_uuid,
+
     ): array {
         global $DB;
 
@@ -96,6 +99,7 @@ class topup_complete extends external_api {
             'wallet_uuid' => $wallet_uuid,
             'user_uuid' => $user_uuid,
             'status_type' => $status_type,
+            'external_order_uuid' => $external_order_uuid,
         ]);
 
         $user = $DB->get_record('paygw_paynocchio_wallets', ['useruuid' => $user_uuid]);
