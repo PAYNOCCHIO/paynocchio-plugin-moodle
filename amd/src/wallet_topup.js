@@ -41,10 +41,10 @@ export const init = (pay) => {
                     const message = modal.body.find('#topup_message');
                     if(pay && need_to_top_up) {
                         input.val(need_to_top_up);
-                        message.text(`You will get ${(need_to_top_up * 0.1).toFixed(1)} bonuses`);
+                        message.text(`You will get ${(need_to_top_up * 0.1).toFixed(3)} bonuses`);
                     }
                     input.on('keyup change', (evt) => {
-                        message.text(`You will get ${(parseFloat(evt.target.value) * 0.1).toFixed(1)} bonuses`);
+                        message.text(`You will get ${(parseFloat(evt.target.value) * 0.1).toFixed(3)} bonuses`);
                     });
                     const button = modal.body.find('#topup_button');
                     button.click(() => {
