@@ -94,6 +94,8 @@ export const init = (component, paymentArea, itemid, fullAmount, balance) => {
                             .catch((error) => displayException(error));
                     } else {
                         window.console.log(data);
+                        topup_message.innerText = 'There is an Error occurred. Please try again later.';
+                        paynocchio_pay_button.classList.remove('disabled');
                     }
                 });
         });

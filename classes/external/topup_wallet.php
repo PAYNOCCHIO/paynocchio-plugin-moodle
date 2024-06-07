@@ -80,7 +80,7 @@ class topup_wallet extends external_api {
             } else {
                 return [
                     'success' => false,
-                    'url' => 'ERROR',
+                    'url' => 'ERROR: ' . $wallet_response['status_code'],
                 ];
             }
         }

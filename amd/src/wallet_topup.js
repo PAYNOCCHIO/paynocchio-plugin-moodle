@@ -41,10 +41,10 @@ export const init = (pay) => {
                     const message = modal.body.find('#topup_message');
                     if(pay && need_to_top_up) {
                         input.val(need_to_top_up);
-                        message.text(`You will get ${(parseFloat(need_to_top_up * 0.1)).toFixed(2)} bonuses`);
+                        message.text(`You will get ${(need_to_top_up * 0.1).toFixed(3).slice(0, -1)} bonuses`);
                     }
                     input.on('keyup change', (evt) => {
-                        message.text(`You will get ${(parseFloat(evt.target.value) * 0.1).toFixed(2)} bonuses`);
+                        message.text(`You will get ${(parseFloat(evt.target.value) * 0.1).toFixed(3).slice(0, -1)} bonuses`);
                     });
                     const button = modal.body.find('#topup_button');
                     button.click(() => {
@@ -61,6 +61,7 @@ export const init = (pay) => {
                                         modal.body.find('.paynocchio-spinner').toggleClass('active');
                                         modal.body.find('#topup_message')
                                             .text('There is an Error occurred. Please try again later.');
+                                        button.toggleClass('disabled');
                                     }
                                 });
                         }

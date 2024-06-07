@@ -71,6 +71,7 @@ export const init = () => {
                                         modal.body.find('.paynocchio-spinner').toggleClass('active');
                                         modal.body.find('#withdraw_message')
                                             .text('Something wrong. Please reload page and try again...');
+                                        button.toggleClass('disabled');
                                     }
                                 });
                         }
