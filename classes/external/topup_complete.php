@@ -43,15 +43,16 @@ class topup_complete extends external_api {
     public static function execute_parameters() {
         return new external_function_parameters([
             'uuid' => new external_value(PARAM_TEXT, 'The uuid coming back from Paynocchio'),
-            'external_request_id' => new external_value(PARAM_TEXT, 'The external_request_id coming back from Paynocchio'),
-            'created_at' => new external_value(PARAM_TEXT, 'The created_at coming back from Paynocchio'),
-            'company_id' => new external_value(PARAM_TEXT, 'The company_id coming back from Paynocchio'),
-            'payment_method' => new external_value(PARAM_TEXT, 'The payment_method coming back from Paynocchio'),
-            'amount' => new external_value(PARAM_TEXT, 'The amount coming back from Paynocchio'),
-            'currency_id' => new external_value(PARAM_TEXT, 'The currency_id coming back from Paynocchio'),
-            'wallet_uuid' => new external_value(PARAM_TEXT, 'The wallet_uuid coming back from Paynocchio'),
+            'request_uuid' => new external_value(PARAM_TEXT, 'The request_uuid coming back from Paynocchio'),
+            'environment_uuid' => new external_value(PARAM_TEXT, 'The uuid coming back from Paynocchio'),
             'user_uuid' => new external_value(PARAM_TEXT, 'The user_uuid coming back from Paynocchio'),
+            'wallet_uuid' => new external_value(PARAM_TEXT, 'The wallet_uuid coming back from Paynocchio'),
+            'amount' => new external_value(PARAM_TEXT, 'The amount coming back from Paynocchio'),
+            'currency' => new external_value(PARAM_TEXT, 'The currency coming back from Paynocchio'),
+            'type_operation' => new external_value(PARAM_TEXT, 'The type_operation coming back from Paynocchio'),
             'status_type' => new external_value(PARAM_TEXT, 'The status type coming back from Paynocchio'),
+            'order_uuid' => new external_value(PARAM_TEXT, 'The order_uuid id coming back from Paynocchio'),
+            'external_order_uuid' => new external_value(PARAM_TEXT, 'The order id coming back from Paynocchio'),
         ]);
     }
 
