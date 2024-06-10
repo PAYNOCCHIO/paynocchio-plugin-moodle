@@ -37,7 +37,7 @@ export const init = (wallet_uuid) => {
             showSuspendModal()
                 .then(modal => {
                     const paynocchio_suspend_button = document.getElementById('suspend_wallet_button');
-                    const modal_cancel_button = document.getElementById('modal_cancel_button');
+                    const modal_cancel_button = modal.body.find('#modal_cancel_button');
                     const spinner = modal.body.find('.paynocchio-spinner');
 
                     paynocchio_suspend_button.addEventListener('click', () => {
@@ -62,7 +62,7 @@ export const init = (wallet_uuid) => {
                             }
                         });
                     });
-                    modal_cancel_button.addEventListener('click', () => modal.hide());
+                    modal_cancel_button.click(() => modal.hide());
                 });
         });
     }

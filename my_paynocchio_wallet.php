@@ -2,6 +2,8 @@
 
 use paygw_paynocchio\paynocchio_helper;
 
+global $CFG, $PAGE, $USER, $OUTPUT, $DB;
+
 require_once __DIR__ . '/../../../config.php';
 require_once './lib.php';
 require_once("$CFG->dirroot/user/profile/lib.php");

@@ -93,17 +93,20 @@ function paygw_paynocchio_moove_additional_header() {
 
         $wallet_balance_response = $wallet->getWalletBalance($user->walletuuid);
 
-        return '<a href="/payment/gateway/paynocchio/my_paynocchio_wallet.php" title="Rewarding wallet"><div class="paynocchio-mini-block status-'.$wallet_balance_response['status'].'">
-    '.paynocchio_helper::custom_logo().'
-     <div role="button" class="amount" tabindex="0" data-toggle="popover" data-trigger="click, hover, focus" data-content="Wallet balance">
+        return '<div class="paynocchio-mini-block status-'.$wallet_balance_response['status'].'">
+    <a href="/payment/gateway/paynocchio/my_paynocchio_wallet.php" title="Rewarding wallet">'.paynocchio_helper::custom_logo().'</a>
+     <a href="/payment/gateway/paynocchio/my_paynocchio_wallet.php" title="Rewarding wallet"><div role="button" class="amount" tabindex="0" data-toggle="popover" data-trigger="click, hover, focus" data-content="Wallet balance">
                 <i class="fa-solid fa-wallet"></i> 
                 $<span class="numbers alance-value" data-balance="0">'.$wallet_balance_response['balance'].'</span>
             </div>
+            </a>
+            <a href="/payment/gateway/paynocchio/my_paynocchio_wallet.php" title="Rewarding wallet">
         <div role="button" class="bonuses" tabindex="0" data-toggle="popover" data-trigger="click, hover, focus" data-content="Rewarding balance">
             <i class="fa-solid fa-star"></i>
             <span class="numbers bonus-value">'.$wallet_balance_response['bonuses'].'</span>
         </div>
-</div></a>';
+        </a>
+</div>';
     } else {
         if($USER->id){
             return '<a class="paynocchio-mini-block" href="/payment/gateway/paynocchio/about.php" title="Rewarding wallet">
