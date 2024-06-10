@@ -68,7 +68,6 @@ class delete_wallet extends external_api {
             $record = $DB->get_record('paygw_paynocchio_wallets', ['walletuuid' => $wallet_uuid], 'userid');
             $paymentuser = $DB->get_record('user', ['id' => $record->userid]);
             $supportuser = core_user::get_support_user();
-
             email_to_user($paymentuser, $supportuser, 'Wallet deleted', 'You have deleted your wallet!');
 
 

@@ -100,12 +100,12 @@ class topup_complete extends external_api {
             'external_order_uuid' => $external_order_uuid,
         ]);
 
-        $user = $DB->get_record('paygw_paynocchio_wallets', ['useruuid' => $user_uuid]);
+        $wallet = $DB->get_record('paygw_paynocchio_wallets', ['useruuid' => $user_uuid]);
 
-        if($user) {
-            paynocchio_helper::registerTransaction((int) $user->id, 'topup', (float)$amount, 0, null);
+        if($wallet) {
+            paynocchio_helper::registerTransaction((int) $wallet->userid, 'topup', (float)$amount, 0, null);
 
-            $paymentuser = $DB->get_record('user', ['id' => $user->userid]);
+            $paymentuser = $DB->get_record('user', ['id' => $wallet->userid]);
             $supportuser = core_user::get_support_user();
 
             email_to_user($paymentuser, $supportuser, 'Topup complete', 'You have topped up your wallet successfully!');
