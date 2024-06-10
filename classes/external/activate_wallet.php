@@ -78,9 +78,10 @@ class activate_wallet extends external_api {
                 $DB->insert_record('paygw_paynocchio_wallets', $record);
                 notification::success('Your rewarding wallet has been activated');
 
+                $paymentuser = $DB->get_record('user', ['id' => $userId]);
                 $supportuser = core_user::get_support_user();
 
-                email_to_user($USER->id, $supportuser, 'Wallet activated', 'Congratulations! Your wallet has been activated!');
+                email_to_user($paymentuser, $supportuser, 'Wallet activated', 'Congratulations! Your wallet has been activated!');
 
                 return [
                     'wallet_uuid' => $json_response->wallet,
