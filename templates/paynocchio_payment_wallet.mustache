@@ -91,6 +91,7 @@
         </div>
     </div>
     {{/wallet_bonuses}}
+    <div class="text-center pt-4" id="topup_message"></div>
     <div class="paynocchio-actions-btns">
         <button type="button" id="paynocchio_pay_button" class="paynocchio_button paynocchio_colored btn-lg">
             {{#str}} pay, paygw_paynocchio {{/str}}
@@ -105,11 +106,9 @@
         </div>
         <div id="status_message"></div>
     </div>
-        <div class="text-center pt-2">And get {{bonuses_amount}} bonuses!
+        <div class="text-center pt-2">And get <span id="bonuses_to_get">{{bonuses_to_get}}</span> bonuses!
             <i class="fa-regular fa-circle-question" type="button" tabindex="0" data-trigger="click" data-container="body" data-toggle="popover" data-placement="top" data-title="How it works" data-content="Earn 10% for each payment! Keep earning rewards and pay with bonuses!"></i>
-
         </div>
-        <div class="text-center pt-2" id="topup_message"></div>
     {{/can_pay}}
     {{^can_pay}}
         <div class="topup-description">

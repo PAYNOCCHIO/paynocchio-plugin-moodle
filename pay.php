@@ -116,6 +116,7 @@ if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
             'max_bonus' => $max_bonus ?? 0,
             'full_amount' => $amount,
             'bonuses_amount' => $need_to_topup * 0.1,
+            'bonuses_to_get' => $wallet_balance_response['balance'] * 0.1,
             'need_to_topup' => $need_to_topup,
             'total_with_bonuses' => $need_to_topup + $need_to_topup * 0.1,
             'bottom_line' => $amount - $need_to_topup + $need_to_topup * 0.1,

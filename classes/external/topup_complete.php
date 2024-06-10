@@ -51,7 +51,7 @@ class topup_complete extends external_api {
             'currency' => new external_value(PARAM_TEXT, 'The currency coming back from Paynocchio'),
             'type_operation' => new external_value(PARAM_TEXT, 'The type_operation coming back from Paynocchio'),
             'status_type' => new external_value(PARAM_TEXT, 'The status type coming back from Paynocchio'),
-            'order_uuid' => new external_value(PARAM_TEXT, 'The order_uuid id coming back from Paynocchio'),
+            'order_uuid' => new external_value(PARAM_RAW, 'The order_uuid id coming back from Paynocchio'),
             'external_order_uuid' => new external_value(PARAM_RAW, 'The order id coming back from Paynocchio'),
         ]);
     }
@@ -69,7 +69,6 @@ class topup_complete extends external_api {
      * @param string $currency Paynocchio currency
      * @param string $type_operation Paynocchio type_operation
      * @param string $status_type Paynocchio status type
-     * @param string $order_uuid Paynocchio order_uuid ID
      * @return array
      */
     public static function execute(
@@ -82,7 +81,7 @@ class topup_complete extends external_api {
         string $currency,
         string $type_operation,
         string $status_type,
-        string $order_uuid,
+        $order_uuid,
         $external_order_uuid,
     ): array {
         global $DB;

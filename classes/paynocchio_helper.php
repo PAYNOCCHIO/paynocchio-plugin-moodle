@@ -468,6 +468,8 @@ class paynocchio_helper {
         string $orderuuid,
         int $user_id,
         float $totalamount,
+        float $paid,
+        float $bonuses_used,
         string $status)
     {
         global $DB;
@@ -485,6 +487,8 @@ class paynocchio_helper {
         $record->userid = $user_id;
         $record->paymentid = $paymentid;
         $record->totalamount = $totalamount;
+        $record->paid = $paid;
+        $record->bonuses_used = $bonuses_used;
         $record->status = $status;
         $record->timecreated = time();
 

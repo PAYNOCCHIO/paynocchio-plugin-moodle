@@ -116,7 +116,7 @@ class make_payment extends external_api {
                 $paymentid = payment_helper::save_payment($payable->get_account_id(), $component, $paymentarea,
                     $itemid, $userid, $originalAmount, $currency, 'paynocchio');
 
-                paynocchio_helper::registerPayment($paymentid, $component, $paymentarea, $itemid, $orderuuid, $userid, $originalAmount, 'P');
+                paynocchio_helper::registerPayment($paymentid, $component, $paymentarea, $itemid, $orderuuid, $userid, $originalAmount, $amount, $bonusAmount, 'P');
 
                 if($wallet_balance_response) {
                     return [
