@@ -35,10 +35,10 @@ const checkPayability = (value, fullAmount, balance = '0', element) => {
     }
 };
 
-const changeBonusesValue = (balance, bonuses) => {
+/*const changeBonusesValue = (balance, bonuses) => {
     const element = document.getElementById('bonuses_to_get');
     element.innerText = ((balance - bonuses) * 0.1).toFixed(2).slice(0, -1);
-};
+};*/
 
 export const init = (component, paymentArea, itemid, fullAmount, balance) => {
 
@@ -63,13 +63,11 @@ export const init = (component, paymentArea, itemid, fullAmount, balance) => {
                 bonuses = range.value;
                 input.value = range.value;
                 checkPayability(bonuses, fullAmount, balance, paynocchio_pay_button);
-                changeBonusesValue(balance, bonuses);
             });
             range.addEventListener('input', () => {
                 bonuses = range.value;
                 input.value = range.value;
                 checkPayability(bonuses, fullAmount, balance, paynocchio_pay_button);
-                changeBonusesValue(balance, bonuses);
             });
         } else {
             checkPayability(0, fullAmount, balance, paynocchio_pay_button);
