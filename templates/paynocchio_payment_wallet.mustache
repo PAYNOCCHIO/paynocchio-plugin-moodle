@@ -105,7 +105,7 @@
         </div>
         <div id="status_message"></div>
     </div>
-        <div class="text-center pt-2">And get {{new_amount}} bonuses!
+        <div class="text-center pt-2">And get {{bonuses_amount}} bonuses!
             <i class="fa-regular fa-circle-question" type="button" tabindex="0" data-trigger="click" data-container="body" data-toggle="popover" data-placement="top" data-title="How it works" data-content="Earn 10% for each payment! Keep earning rewards and pay with bonuses!"></i>
 
         </div>
@@ -113,8 +113,10 @@
     {{/can_pay}}
     {{^can_pay}}
         <div class="topup-description">
-            <p>You only need to add $<span id="need_to_top_up">{{need_to_topup}}</span> to your wallet!</p>
-            <p>Then pay using bonuses and earn {{new_amount}} bonuses extra <i class="fa-regular fa-circle-question" type="button" tabindex="0" data-trigger="click" data-container="body" data-toggle="popover" data-placement="top" data-title="How it works" data-content="Earn 10% for each top up! Earn 10% for each payment! Keep earning rewards and pay with bonuses!"></i></p>
+            <h3>Let's do some math</h3>
+            <p>You only need to add $<span id="need_to_top_up">{{need_to_topup}}</span> to your wallet to get {{bonuses_amount}} with bonuses which will give you {{total_with_bonuses}} total</p>
+            <p>Then pay using bonuses and earn extra {{bonuses_amount}} bonuses to your account</p>
+            <p>On the bottom line you will save ${{bottom_line}} ({{full_amount}} - {{need_to_topup}} + {{bonuses_amount}})</p>
         </div>
     {{/can_pay}}
     {{/wallet_active}}

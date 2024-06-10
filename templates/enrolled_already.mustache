@@ -41,24 +41,8 @@
             <p class="mb-4">Please refresh this page or check <a href="/my/courses.php" >your courses page</a>. After confirmation we will send email confirmation.</p>
             <p class="mb-4">Feel free to <a href="/user/contactsitesupport.php">contact support</a> in any case.</p>
         {{/completed}}
-    <table class="{{#completed}}table-success{{/completed}}{{^completed}}table-warning{{/completed}} table-bordered mb-4">
-        <tr><th class="p-2">Date</th><th class="p-2">Paid</th><th class="p-2">Bonuses earned</th><th class="p-2">Status</th></tr>
-            <tr>
-                <td class="p-2">{{#userdate}} {{timecreated}}, {{#str}} strftimedatetime, core_langconfig {{/str}} {{/userdate}}</td>
-                <td class="p-2">{{totalamount}}</td>
-                <td class="p-2">{{reward}}</td>
-                <td class="p-2">{{status}}</td>
-            </tr>
-    </table>
-    {{/data}}
 
-    <div class="mb-4 text-sm">
-        <h5>Statuses</h5>
-        <ul>
-            <li>P = pending</li>
-            <li>C = completed</li>
-        </ul>
-    </div>
+    {{/data}}
 
     <p><a href="/my/courses.php" >
         My Courses

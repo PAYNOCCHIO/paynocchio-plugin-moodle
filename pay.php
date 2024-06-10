@@ -115,8 +115,10 @@ if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
             'user_uuid' => $user->useruuid,
             'max_bonus' => $max_bonus ?? 0,
             'full_amount' => $amount,
-            'new_amount' => $amount * 0.1,
+            'bonuses_amount' => $need_to_topup * 0.1,
             'need_to_topup' => $need_to_topup,
+            'total_with_bonuses' => $need_to_topup + $need_to_topup * 0.1,
+            'bottom_line' => $amount - $need_to_topup + $need_to_topup * 0.1,
             'can_pay' => $wallet_balance_response['balance'] + $wallet_balance_response['bonuses'] >= $amount,
             'wallet_active' => $wallet_balance_response['code'] === "ACTIVE",
             'logo' => paynocchio_helper::custom_logo(),
@@ -135,6 +137,7 @@ if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
             'logo' => paynocchio_helper::custom_logo(),
             'full_amount' => $amount,
             'new_amount' => $amount * 0.1,
+            'brandname' => get_config('paygw_paynocchio', 'brandname'),
         ];
 
         echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet_activation', $data);

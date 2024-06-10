@@ -73,6 +73,7 @@ if(is_siteadmin($USER->id)) {
     $data = [
         'user_id' => $USER->id,
         'logo' => paynocchio_helper::custom_logo(),
+        'brandname' => get_config('paygw_paynocchio', 'brandname')
     ];
 
     echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet_activation', $data);

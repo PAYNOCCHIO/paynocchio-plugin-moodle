@@ -29,6 +29,7 @@ namespace paygw_paynocchio\external;
 use core\notification;
 use core\uuid;
 use core_payment\helper;
+use core_user;
 use paygw_paynocchio\paynocchio_helper;
 use core_external\external_api;
 use core_external\external_function_parameters;
@@ -56,7 +57,7 @@ class activate_wallet extends external_api {
      */
     public static function execute(int $userId): array
     {
-        global $DB;
+        global $DB, $USER;
         self::validate_parameters(self::execute_parameters(), [
             'userId' => $userId,
         ]);
@@ -76,6 +77,11 @@ class activate_wallet extends external_api {
                 $record->timecreated = time();
                 $DB->insert_record('paygw_paynocchio_wallets', $record);
                 notification::success('Your rewarding wallet has been activated');
+
+                $supportuser = core_user::get_support_user();
+
+                email_to_user($USER->id, $supportuser, 'Wallet activated', 'Congratulations! Your wallet has been activated!');
+
                 return [
                     'wallet_uuid' => $json_response->wallet,
                     'success' => true,

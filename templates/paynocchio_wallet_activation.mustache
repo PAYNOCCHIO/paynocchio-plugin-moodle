@@ -31,6 +31,7 @@
 
 }}
 <div class="paynocchio-wallet-wrapper">
+    <h2 class="text-center">Let's see how {{brandname}} helps to save money.</h2>
     <div class="paynocchio-card-container">
         <div class="paynocchio-card">
             <div class="paynocchio-card-header">
@@ -71,8 +72,8 @@
                 <img decoding="async" src="https://kopybara.com/wp-content/plugins/woocommerce-paynocchio/assets/img/icon_1.svg" alt="">
             </div>
             <div>
-                <h2>Be a member</h2>
-                <p>Login or register</p>
+                <h2>Activate your wallet</h2>
+                <p>to get the rewards</p>
             </div>
         </div>
         <div class="paynocchio-grid-row">
@@ -80,8 +81,8 @@
                 <img decoding="async" src="https://kopybara.com/wp-content/plugins/woocommerce-paynocchio/assets/img/icon_2.svg" alt="">
             </div>
             <div>
-                <h2>Register your wallet</h2>
-                <p>to get the rewards</p>
+                <h2>Top up</h2>
+                <p>And get 10% with bonuses</p>
             </div>
         </div>
         <div class="paynocchio-grid-row">
@@ -89,8 +90,8 @@
                 <img decoding="async" src="https://kopybara.com/wp-content/plugins/woocommerce-paynocchio/assets/img/icon_3.svg" alt="">
             </div>
             <div>
-                <h2>Earn bonuses</h2>
-                <p>for purchases and topups</p>
+                <h2>Pay with your wallet</h2>
+                <p>And get extra 10% with bonuses</p>
             </div>
         </div>
         <div class="paynocchio-grid-row">
@@ -98,8 +99,8 @@
                 <img decoding="async" src="https://kopybara.com/wp-content/plugins/woocommerce-paynocchio/assets/img/icon_4.svg" alt="">
             </div>
             <div>
-                <h2>Buy profitable</h2>
-                <p>spending bonuses for purchases</p>
+                <h2>Pay with bonuses</h2>
+                <p>1 bonus = $1</p>
             </div>
         </div>
     </div>
@@ -119,12 +120,6 @@
             </div>
         </div>
     </div>
-    {{^full_amount}}
-        <div class="text-center">
-            And get up to 10% bonuses for each top up
-            <i class="fa-regular fa-circle-question" type="button" tabindex="0" data-trigger="click" data-container="body" data-toggle="popover" data-placement="top" data-title="How it works" data-content="Earn 10% for each top up! Keep earning rewards and pay with bonuses!"></i>
-        </div>
-    {{/full_amount}}
     {{#full_amount}}
         <div class="text-center">
             You will get {{new_amount}} bonuses for this payment
