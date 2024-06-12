@@ -26,6 +26,33 @@ use paygw_paynocchio\paynocchio_helper;
 
 defined('MOODLE_INTERNAL') || die();
 
+function paygw_paynocchio_healthCheck(): bool
+{
+    global $USER;
+    if(is_siteadmin($USER->id)){
+        $secret = get_config('paygw_paynocchio', 'paynocchiosecret');
+        $env = get_config('paygw_paynocchio', 'environmentuuid');
+        $integrated = get_config('paygw_paynocchio', 'paynocchiointegrated');
+
+        if(!$secret || !$env) {
+            \core\notification::error('Please finish the Paynocchio gateway setup.');
+            return false;
+        }
+
+        if(!$integrated) {
+            \core\notification::error('An error occurred while integrating with Pyanocchio. Please check credentials.');
+            return false;
+        }
+
+        return true;
+    }
+
+    return false;
+}
+
+paygw_paynocchio_healthCheck();
+
+
 function paygw_paynocchio_myprofile_navigation(core_user\output\myprofile\tree $tree, $user, $iscurrentuser, $course)
 {
 
@@ -87,13 +114,26 @@ function paygw_paynocchio_moove_additional_header() {
     global $DB, $USER;
     $user = $DB->get_record('paygw_paynocchio_wallets', ['userid'  => $USER->id]);
 
-    if($user && $user->useruuid && $user->walletuuid) {
+    $secret = get_config('paygw_paynocchio', 'paynocchiosecret');
+    $env = get_config('paygw_paynocchio', 'environmentuuid');
+    $integrated = get_config('paygw_paynocchio', 'paynocchiointegrated');
 
-        $wallet = new paynocchio_helper($user->useruuid);
+    if($secret && $env) {
 
-        $wallet_balance_response = $wallet->getWalletBalance($user->walletuuid);
+        if(!$integrated) {
+            if(is_siteadmin($USER->id)) {
+                return '<a class="paynocchio-mini-block text-danger" href="/admin/settings.php?section=paymentgatewaypaynocchio">
+                        Integration with Paynocchio failed.
+                </a>';
+            }
+        }
+        if($user && $user->useruuid && $user->walletuuid) {
 
-        return '<div class="paynocchio-mini-block status-'.$wallet_balance_response['status'].'">
+            $wallet = new paynocchio_helper($user->useruuid);
+
+            $wallet_balance_response = $wallet->getWalletBalance($user->walletuuid);
+
+            return '<div class="paynocchio-mini-block status-'.$wallet_balance_response['status'].'">
     <a href="/payment/gateway/paynocchio/my_paynocchio_wallet.php" title="Rewarding wallet">'.paynocchio_helper::custom_logo().'</a>
      <a href="/payment/gateway/paynocchio/my_paynocchio_wallet.php" title="Rewarding wallet"><div role="button" class="amount" tabindex="0" data-toggle="popover" data-trigger="click, hover, focus" data-content="Wallet balance">
                 <i class="fa-solid fa-wallet"></i> 
@@ -107,16 +147,22 @@ function paygw_paynocchio_moove_additional_header() {
         </div>
         </a>
 </div>';
-    } else {
-        if($USER->id){
-            return '<a class="paynocchio-mini-block" href="/payment/gateway/paynocchio/about.php" title="Rewarding wallet">
+        } else {
+            if($USER->id){
+                return '<a class="paynocchio-mini-block" href="/payment/gateway/paynocchio/about.php" title="Rewarding wallet">
         <div class="bonuses">
             <i class="fa-solid fa-star"></i>
             Start earning rewards with '.get_config('paygw_paynocchio', 'brandname').'!
         </div>
 </a>';
+            }
+        }
+    } else{
+        if(is_siteadmin($USER->id)) {
+            return '<a class="paynocchio-mini-block text-danger" href="/admin/settings.php?section=paymentgatewaypaynocchio">
+        Please finish the Paynocchio gateway setup.
+</a>';
         }
     }
-
 }
 
