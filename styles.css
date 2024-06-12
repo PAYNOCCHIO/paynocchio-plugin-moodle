@@ -357,3 +357,49 @@ button.disabled {
         transform: rotate(1turn);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.paynocchio-wallet-tab {
+    width: 32%;
+}
+
+.paynocchio-lgray {
+    background: #f4f4f4;
+}
+
+.paynocchio-lblue {
+    background: #DBE5FF;
+}
+
+.paynocchio-rounded {
+    border-radius: 1rem;
+}
+
+.paynocchio-p4 {
+    padding: 1rem;
+}
+
+.paynocchio-no-of {
+    overflow: hidden;
+}
+
