@@ -50,8 +50,6 @@ if ($ADMIN->fulltree) {
             } else {
                 set_config('paynocchiointegrated', false, 'paygw_paynocchio');
             }
-
-
         }
     });
 

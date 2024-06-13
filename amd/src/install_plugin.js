@@ -25,8 +25,8 @@ const env_input = document.getElementById('id_s_paygw_paynocchio_environmentuuid
 const secret_input = document.getElementById('id_s_paygw_paynocchio_paynocchiosecret');
 const integration = document.getElementById('admin-paynocchiointegrated');
 const surcharge = document.getElementById('admin-surcharge');
-surcharge.remove();
-integration.remove();
+surcharge.classList.add('d-none');
+integration.classList.add('d-none');
 
 export const init = () => {
     checkButtonVisibility(env_input.value, secret_input.value);
@@ -41,7 +41,12 @@ export const init = () => {
  * @param {string} secret
  */
 function checkButtonVisibility(env, secret) {
-    const submit_button = document.querySelector('.settingsform button[type="submit"]');
+    let submit_button = document.querySelector('.settingsform button[type="submit"]');
+
+    if(document.querySelector('#adminsettings input[type="submit"]')) {
+        submit_button = document.querySelector('#adminsettings input[type="submit"]');
+    }
+
 
     if(env.trim() === '' || secret.trim() === '') {
         submit_button.classList.add('disabled');

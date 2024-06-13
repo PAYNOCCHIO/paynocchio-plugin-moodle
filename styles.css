@@ -2,6 +2,10 @@
     display: none;
 }
 
+.btn.disabled {
+    pointer-events: none;
+}
+
 .core_payment_gateways_modal .paynocchio .icon {
     height: 40px;
     width: auto;

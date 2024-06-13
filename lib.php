@@ -29,29 +29,30 @@ defined('MOODLE_INTERNAL') || die();
 function paygw_paynocchio_healthCheck(): bool
 {
     global $USER;
-    if(is_siteadmin($USER->id)){
-        $secret = get_config('paygw_paynocchio', 'paynocchiosecret');
-        $env = get_config('paygw_paynocchio', 'environmentuuid');
-        $integrated = get_config('paygw_paynocchio', 'paynocchiointegrated');
+    if($USER){
+        if(is_siteadmin($USER->id)){
+            $secret = get_config('paygw_paynocchio', 'paynocchiosecret');
+            $env = get_config('paygw_paynocchio', 'environmentuuid');
+            $integrated = get_config('paygw_paynocchio', 'paynocchiointegrated');
 
-        if(!$secret || !$env) {
-            \core\notification::error('Please finish the Paynocchio gateway setup.');
-            return false;
+            if(!$secret || !$env) {
+                \core\notification::error('Please finish the Paynocchio gateway setup.');
+                return false;
+            }
+
+            if(!$integrated) {
+                \core\notification::error('An error occurred while integrating with Pyanocchio. Please check credentials.');
+                return false;
+            }
+
+            return true;
         }
-
-        if(!$integrated) {
-            \core\notification::error('An error occurred while integrating with Pyanocchio. Please check credentials.');
-            return false;
-        }
-
-        return true;
     }
 
     return false;
 }
 
 paygw_paynocchio_healthCheck();
-
 
 function paygw_paynocchio_myprofile_navigation(core_user\output\myprofile\tree $tree, $user, $iscurrentuser, $course)
 {
