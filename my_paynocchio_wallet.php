@@ -38,6 +38,7 @@ if($user && $user->useruuid && $user->walletuuid) {
         'wallet_card' => chunk_split($wallet_balance_response['number'], 4, ' '),
         'wallet_status' => $wallet_balance_response['status'],
         'wallet_code' => $wallet_balance_response['code'],
+        'server_error' => $wallet_balance_response['code'] === 500,
         'wallet_blocked' => $wallet_balance_response['code'] === "BLOCKED",
         'wallet_active' => $wallet_balance_response['code'] === "ACTIVE",
         'logo' => paynocchio_helper::custom_logo(),

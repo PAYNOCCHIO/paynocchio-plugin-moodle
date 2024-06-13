@@ -36,6 +36,7 @@
             <div>Wallet Status:</div>
             <span id="wallet_status" class="{{#wallet_active}}active{{/wallet_active}} {{^wallet_active}}suspend{{/wallet_active}} {{#wallet_blocked}}blocked{{/wallet_blocked}}
 ">{{wallet_status}}</span>
+            {{wallet_code}}
             <div class="spinner">
                 <svg class="paynocchio-spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle class="spinner-circle" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -51,13 +52,19 @@
             {{/wallet_active}}
             {{^wallet_active}}
                 {{#wallet_blocked}}
-                    <button id="predelete_wallet_button" type="button" class="paynocchio_button btn-blue paynocchio_colored">Delete wallet</button>
+                    <button id="predelete_wallet_button" type="button" class="paynocchio_button btn-danger">Delete wallet</button>
                 {{/wallet_blocked}}
                 {{^wallet_blocked}}
+                {{^server_error}}
                     <button id="activate_wallet_button" type="button" class="paynocchio_button btn-blue paynocchio_colored">Activate wallet</button>
                     <button id="preblock_wallet_button"  class="paynocchio_button btn-gray">Block wallet</button>
+                {{/server_error}}
                 {{/wallet_blocked}}
             {{/wallet_active}}
+            {{# server_error }}
+                <div>This error is probably connected with Environment management and should be fixed by the Site administrator. You can also delete your wallet. </div>
+                <button id="predelete_wallet_button" type="button" class="paynocchio_button btn-danger">Delete wallet</button>
+            {{/server_error}}
         </div>
     </div>
 </div>
