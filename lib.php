@@ -41,7 +41,7 @@ function paygw_paynocchio_healthCheck(): bool
             }
 
             if(!$integrated) {
-                \core\notification::error('An error occurred while integrating with Pyanocchio. Please check credentials.');
+                \core\notification::error('Integrating with Pyanocchio failed. Please check credentials.');
                 return false;
             }
 

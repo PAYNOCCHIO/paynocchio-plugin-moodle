@@ -38,6 +38,14 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_configtext('paygw_paynocchio/environmentuuid', get_string('environment_uuid', 'paygw_paynocchio'), get_string('environment_uuid_help', 'paygw_paynocchio'), '', PARAM_TEXT));
 
     $secret = new admin_setting_configtext('paygw_paynocchio/paynocchiosecret', get_string('paynocchio_secret', 'paygw_paynocchio'), get_string('secret_help', 'paygw_paynocchio'), '', PARAM_TEXT);
+    $settings->add($secret);
+    $settings->add(new admin_setting_configcheckbox('paygw_paynocchio/sendconfmail', get_string('send_confirmation_mail', 'paygw_paynocchio'), '', 0));
+    $settings->add(new admin_setting_configtextarea('paygw_paynocchio/terms', get_string('terms', 'paygw_paynocchio'), '', get_string('terms_help', 'paygw_paynocchio')));
+    $settings->add(new admin_setting_configtextarea('paygw_paynocchio/privacy', get_string('privacy', 'paygw_paynocchio'), '', get_string('privacy_help', 'paygw_paynocchio')));
+
+    //$integrated = new admin_setting_configcheckbox('paygw_paynocchio/paynocchiointegrated', get_string('paynocchio_integrated', 'paygw_paynocchio'), get_string('paynocchio_integrated_help', 'paygw_paynocchio'), false, PARAM_BOOL);
+    //$settings->add($integrated);
+
     $secret->set_updatedcallback(function () {
         global $USER;
         if(is_siteadmin($USER->id)){
@@ -46,21 +54,12 @@ if ($ADMIN->fulltree) {
             $json_response = json_decode($wallet_response);
             if($json_response->status === 'success') {
                 \core\notification::success('Integrated with Paynocchio successfully.');
-                set_config('paynocchiointegrated', true, 'paygw_paynocchio');
+                set_config('paynocchiointegrated', 'true', 'paygw_paynocchio');
             } else {
-                set_config('paynocchiointegrated', false, 'paygw_paynocchio');
+                set_config('paynocchiointegrated', 0, 'paygw_paynocchio');
             }
         }
     });
-
-    $settings->add($secret);
-    $settings->add(new admin_setting_configcheckbox('paygw_paynocchio/sendconfmail', get_string('send_confirmation_mail', 'paygw_paynocchio'), '', 0));
-    $settings->add(new admin_setting_configtextarea('paygw_paynocchio/terms', get_string('terms', 'paygw_paynocchio'), '', get_string('terms_help', 'paygw_paynocchio')));
-    $settings->add(new admin_setting_configtextarea('paygw_paynocchio/privacy', get_string('privacy', 'paygw_paynocchio'), '', get_string('privacy_help', 'paygw_paynocchio')));
-
-    $integrated = new admin_setting_configcheckbox('paygw_paynocchio/paynocchiointegrated', get_string('paynocchio_integrated', 'paygw_paynocchio'), get_string('paynocchio_integrated_help', 'paygw_paynocchio'), false, PARAM_BOOL);
-    $integrated->set_locked_flag_options(admin_setting_flag::ENABLED, false);
-    $settings->add($integrated);
 
     \core_payment\helper::add_common_gateway_settings($settings, 'paygw_paynocchio');
 }

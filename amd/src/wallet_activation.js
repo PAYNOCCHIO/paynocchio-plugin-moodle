@@ -49,6 +49,7 @@ export const init = (user_id) => {
                     window.location.reload();
                 } else {
                     window.alert('There is an Error occurred. Please try again later.');
+                    window.console.log(data);
                 }
             });
         });

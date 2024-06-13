@@ -23,10 +23,8 @@
 
 const env_input = document.getElementById('id_s_paygw_paynocchio_environmentuuid');
 const secret_input = document.getElementById('id_s_paygw_paynocchio_paynocchiosecret');
-const integration = document.getElementById('admin-paynocchiointegrated');
 const surcharge = document.getElementById('admin-surcharge');
 surcharge.classList.add('d-none');
-integration.classList.add('d-none');
 
 export const init = () => {
     checkButtonVisibility(env_input.value, secret_input.value);
