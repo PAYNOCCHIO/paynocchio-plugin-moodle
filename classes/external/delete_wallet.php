@@ -67,8 +67,14 @@ class delete_wallet extends external_api {
 
             $paymentuser = $DB->get_record('user', ['id' => $USER->id]);
             $supportuser = core_user::get_support_user();
-            email_to_user($paymentuser, $supportuser, 'Wallet deleted', 'You have deleted your wallet!');
+            try{
+                email_to_user($paymentuser, $supportuser, 'Wallet deleted', 'You have deleted your wallet!');
 
+            }catch (\Exception $e) {
+                return [
+                    'success' => true,
+                ];
+            }
 
             return [
                 'success' => $deleted

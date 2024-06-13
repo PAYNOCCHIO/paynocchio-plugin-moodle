@@ -36,17 +36,19 @@ export const init = (wallet_uuid) => {
         paynocchio_presuspend_button.addEventListener('click', () => {
             showSuspendModal()
                 .then(modal => {
-                    const paynocchio_suspend_button = document.getElementById('suspend_wallet_button');
+                    const paynocchio_suspend_button = modal.body.find('#suspend_wallet_button');
                     const modal_cancel_button = modal.body.find('#modal_cancel_button');
                     const spinner = modal.body.find('.paynocchio-spinner');
 
-                    paynocchio_suspend_button.addEventListener('click', () => {
+                    paynocchio_suspend_button.click(() => {
                         const response = handleStatusButtonClick('SUSPEND');
                         spinner.toggleClass('active');
                         modal.body.find('#suspend_message').text('Working...');
+                        paynocchio_suspend_button.toggleClass('disabled');
                         response.then(data => {
                             if(data.success) {
                                 spinner.toggleClass('active');
+                                paynocchio_suspend_button.toggleClass('disabled');
                                 modal.body.find('#suspend_message').text('Success! Reloading...');
                                 /*Templates.renderForPromise('paygw_paynocchio/paynocchio_payment_wallet', {
                                     wallet_balance: 0,
@@ -58,6 +60,7 @@ export const init = (wallet_uuid) => {
                                     .catch((error) => displayException(error));*/
                                 window.location.reload();
                             } else {
+                                paynocchio_suspend_button.toggleClass('disabled');
                                 modal.body.find('#suspend_message').text('Something wrong. Please reload page and try again...');
                             }
                         });
@@ -71,13 +74,14 @@ export const init = (wallet_uuid) => {
         paynocchio_preblock_button.addEventListener('click', () => {
             showBlockModal()
                 .then(modal => {
-                    const paynocchio_block_button = document.getElementById('block_wallet_button');
-                    const modal_cancel_button = document.getElementById('modal_cancel_button');
+                    const paynocchio_block_button = modal.body.find('#block_wallet_button');
+                    const modal_cancel_button = modal.body.find('#modal_cancel_button');
                     const spinner = modal.body.find('.paynocchio-spinner');
 
-                    paynocchio_block_button.addEventListener('click', () => {
+                    paynocchio_block_button.click(() => {
                         const response = handleStatusButtonClick('BLOCKED');
                         spinner.toggleClass('active');
+                        paynocchio_block_button.toggleClass('disabled');
                         modal.body.find('#block_message').text('Working...');
                         response.then(data => {
                             if(data.success) {
@@ -85,11 +89,12 @@ export const init = (wallet_uuid) => {
                                 modal.body.find('#block_message').text('Success! Reloading...');
                                 window.location.reload();
                             } else {
+                                paynocchio_block_button.toggleClass('disabled');
                                 modal.body.find('#suspend_message').text('Something wrong. Please reload page and try again...');
                             }
                         });
                     });
-                    modal_cancel_button.addEventListener('click', () => modal.hide());
+                    modal_cancel_button.click(() => modal.hide());
                 });
         });
     }
@@ -98,13 +103,14 @@ export const init = (wallet_uuid) => {
         paynocchio_predelete_button.addEventListener('click', () => {
             showDeleteModal()
                 .then(modal => {
-                    const paynocchio_delete_button = document.getElementById('delete_wallet_button');
+                    const paynocchio_delete_button = modal.body.find('#delete_wallet_button');
                     const modal_cancel_button = modal.body.find('#modal_cancel_button');
                     const spinner = modal.body.find('.paynocchio-spinner');
 
-                    paynocchio_delete_button.addEventListener('click', () => {
+                    paynocchio_delete_button.click(() => {
                         const response = handleDeleteButtonClick(wallet_uuid);
                         spinner.toggleClass('active');
+                        paynocchio_delete_button.toggleClass('disabled');
                         modal.body.find('#delete_message').text('Working...');
                         response.then(data => {
                             if(data.success) {
@@ -112,11 +118,12 @@ export const init = (wallet_uuid) => {
                                 modal.body.find('#delete_message').text('Success! Reloading...');
                                 window.location.reload();
                             } else {
+                                paynocchio_delete_button.toggleClass('disabled');
                                 modal.body.find('#suspend_message').text('Something wrong. Please reload page and try again...');
                             }
                         });
                     });
-                    modal_cancel_button.addEventListener('click', () => modal.hide());
+                    modal_cancel_button.click(() => modal.hide());
                 });
 
         });
@@ -129,6 +136,7 @@ export const init = (wallet_uuid) => {
             const response = handleStatusButtonClick('ACTIVE');
             spinner.classList.add('active');
             message.innerText = 'Working...';
+            activate_wallet_button.classList.add('disabled');
             response.then(data => {
                 if(data.success) {
                     spinner.classList.remove('active');
