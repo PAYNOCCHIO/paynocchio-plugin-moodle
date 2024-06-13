@@ -1,4 +1,9 @@
-
+@media (min-width: 760px) {
+    #page-login-signup #region-main {
+        margin: auto;
+        max-width: 600px;
+    }
+}
 
 .btn.disabled {
     pointer-events: none;

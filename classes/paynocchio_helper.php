@@ -46,7 +46,7 @@ class paynocchio_helper {
     public const PAYNOCCHIO_WALLET_KEY = 'wallet_uuid';
     public const PAYNOCCHIO_TYPE_KEY = 'type_uuid';
     public const PAYNOCCHIO_STATUS_KEY = 'status_uuid';
-    public const PAYNOCCHIO_SECRET_KEY = 'secret';
+    public const PAYNOCCHIO_SECRET_KEY = 'secret_key';
 
     /**
      * @var string Paynocchio App secret
@@ -193,20 +193,18 @@ class paynocchio_helper {
     /**
      *  Check if Environment uuid and secret are valid
      */
-    public function healtCheck(): bool|string
+    public function healtCheck()
     {
         $data = [
             self::PAYNOCCHIO_ENV_KEY => $this->envId,
             self::PAYNOCCHIO_SECRET_KEY => $this->secret,
         ];
 
-        $response = $this->sendRequest('POST', '/wallet/health', json_encode($data, JSON_UNESCAPED_SLASHES));
-
-        if($response['status_code'] === 201) {
-            $json = json_decode($response['response']);
-            return json_encode(['status'=> 'success', 'timestamp' => $json->time,]);
+        $response = $this->sendRequest('POST', '/healthcheck/', json_encode($data, JSON_UNESCAPED_SLASHES));
+        if($response['status_code'] === 200) {
+            return json_encode(['status'=> 'success']);
         } else {
-            return json_encode($response);
+            return json_encode(['status'=> 'error']);
         }
     }
 

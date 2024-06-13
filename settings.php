@@ -50,7 +50,7 @@ if ($ADMIN->fulltree) {
         global $USER;
         if(is_siteadmin($USER->id)){
             $wallet = new paynocchio_helper(uuid::generate());
-            $wallet_response = $wallet->createWallet();
+            $wallet_response = $wallet->healtCheck();
             $json_response = json_decode($wallet_response);
             if($json_response->status === 'success') {
                 \core\notification::success('Integrated with Paynocchio successfully.');
