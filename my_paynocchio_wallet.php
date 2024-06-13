@@ -59,7 +59,7 @@ if($user && $user->useruuid && $user->walletuuid) {
     ];
     echo $OUTPUT->render_from_template('paygw_paynocchio/wallet_transactions', $wallet_transactions_data);
 
-if(is_siteadmin($USER->id)) {
+/*if(is_siteadmin($USER->id)) {
     echo 'user_uuid: '. $user->useruuid. '<br/>';
     echo 'wallet_uuid: '. $user->walletuuid. '<br/>';
     echo 'secret: '. $wallet->get_secret(). '<br/>';
@@ -67,7 +67,7 @@ if(is_siteadmin($USER->id)) {
     echo 'wallet signature: '. $wallet->getSignature(). '<br/>';
     echo 'company signature: '. $wallet->getSignature(true). '<br/>';
     echo 'generated signature: '. hash("sha256", $wallet->get_secret() . "|" . $wallet->get_env() . "|" . $user->useruuid). '<br/>';
-}
+}*/
 
 } else {
     $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_activation', 'init', ['user_id' => $USER->id]);
@@ -80,7 +80,7 @@ if(is_siteadmin($USER->id)) {
 
     echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet_activation', $data);
 
-    if(is_siteadmin($USER->id)) {
+    /*if(is_siteadmin($USER->id)) {
         $uuid = \core\uuid::generate();
         $wallet = new paynocchio_helper($uuid);
         echo 'user_uuid: '. $uuid. '<br/>';
@@ -89,7 +89,7 @@ if(is_siteadmin($USER->id)) {
         echo 'wallet signature: '. $wallet->getSignature(). '<br/>';
         echo 'company signature: '. $wallet->getSignature(true). '<br/>';
         echo 'generated signature: '. hash("sha256", $wallet->get_secret() . "|" . $wallet->get_env() . "|" . $uuid). '<br/>';
-    }
+    }*/
 }
 
 echo $OUTPUT->footer();

@@ -10,3 +10,12 @@ by
 
 ### Requirements
 PHP 8+
+Verified profile at [Paynocchio](https://paynocchio.com)
+
+
+### Installation
+
+Download the lateds version of the plugin and process standard plugin installation through the Moodle admin panel.
+
+### Setup
+
