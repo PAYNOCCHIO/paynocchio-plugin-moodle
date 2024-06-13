@@ -108,7 +108,7 @@ class transaction_complete extends external_api {
                 $order->status = 'C';
                 $order->timeupdated = time();
 
-                paynocchio_helper::registerTransaction((int) $order->userid, 'payment', (float)$amount, 0, (int)$order->paymentid);
+                paynocchio_helper::registerTransaction((int) $order->userid, 'payment', $amount, 0, (int)$order->paymentid);
                 payment_helper::deliver_order($order->component, $order->paymentarea, (int) $order->itemid, (int) $order->paymentid, (int) $order->userid);
 
                 $DB->update_record('paygw_paynocchio_payments', $order);

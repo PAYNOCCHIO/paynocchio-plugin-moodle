@@ -109,7 +109,7 @@ class make_payment extends external_api {
 
             $orderuuid = uuid::generate();
 
-            $wallet_response = $wallet->makePayment($wallet_uuid, $fullAmount, $amount, $orderuuid, (float) $bonuses);
+            $wallet_response = $wallet->makePayment($wallet_uuid, $fullAmount, $amount, $orderuuid, $bonuses);
 
             if($wallet_response['status_code'] === 200) {
 

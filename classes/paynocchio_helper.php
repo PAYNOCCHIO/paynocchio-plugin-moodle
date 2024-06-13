@@ -390,7 +390,7 @@ class paynocchio_helper {
     /**
      * Register Transaction
      */
-    public static function registerTransaction(int $user_id, string $type, float $totalamount, float $bonusAmount, int $paymentid = null)
+    public static function registerTransaction(int $user_id, string $type, $totalamount, $bonusAmount, int $paymentid = null)
     {
         global $DB;
 
@@ -451,16 +451,16 @@ class paynocchio_helper {
      * Register Payment
      */
     public static function registerPayment(
-        int $paymentid,
-        string $component,
-        string $paymentarea,
-        int $itemid,
-        string $orderuuid,
-        int $user_id,
-        float $totalamount,
-        float $paid,
-        float $bonuses_used,
-        string $status)
+        $paymentid,
+        $component,
+        $paymentarea,
+        $itemid,
+        $orderuuid,
+        $user_id,
+        $totalamount,
+        $paid,
+        $bonuses_used,
+        $status)
     {
         global $DB;
 
