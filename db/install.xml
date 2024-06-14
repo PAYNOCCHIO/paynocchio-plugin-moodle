@@ -13,9 +13,9 @@
         <FIELD NAME="itemid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="orderuuid" TYPE="char" LENGTH="36" NOTNULL="true" SEQUENCE="false" />
         <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="totalamount" TYPE="number" LENGTH="15" NOTNULL="true" SEQUENCE="false" DECIMALS="5"/>
-        <FIELD NAME="paid" TYPE="number" LENGTH="15" NOTNULL="true" SEQUENCE="false" DECIMALS="5"/>
-        <FIELD NAME="bonuses_used" TYPE="number" LENGTH="15" NOTNULL="false" SEQUENCE="false" DECIMALS="5"/>
+        <FIELD NAME="totalamount" TYPE="number" LENGTH="15" NOTNULL="true" SEQUENCE="false" DECIMALS="2"/>
+        <FIELD NAME="paid" TYPE="number" LENGTH="15" NOTNULL="true" SEQUENCE="false" DECIMALS="2"/>
+        <FIELD NAME="bonuses_used" TYPE="number" LENGTH="15" NOTNULL="false" SEQUENCE="false" DECIMALS="2"/>
         <FIELD NAME="status" TYPE="char" LENGTH="1" NOTNULL="true" DEFAULT="P" SEQUENCE="false"/>
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="timeupdated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>

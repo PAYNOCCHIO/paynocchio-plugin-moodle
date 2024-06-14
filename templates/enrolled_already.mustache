@@ -41,7 +41,22 @@
             <p class="mb-4">Please refresh this page or check <a href="/my/courses.php" >your courses page</a>. After confirmation we will send email confirmation.</p>
             <p class="mb-4">Feel free to <a href="/user/contactsitesupport.php">contact support</a> in any case.</p>
         {{/completed}}
-
+        <table class="{{#completed}}table-success{{/completed}}{{^completed}}table-warning{{/completed}} table-bordered mb-4">
+            <tr>
+                <th class="p-2">Date</th>
+                <th class="p-2">Total amount</th>
+                <th class="p-2">Paid</th>
+                <th class="p-2">Bonuses used</th>
+                <th class="p-2">Status</th>
+            </tr>
+            <tr>
+                <td class="p-2">{{#userdate}} {{timecreated}}, {{#str}} strftimedatetime, core_langconfig {{/str}} {{/userdate}}</td>
+                <td class="p-2">{{totalamount}}</td>
+                <td class="p-2">{{paid}}</td>
+                <td class="p-2">{{bonuses_used}}</td>
+                <td class="p-2">{{status}}</td>
+            </tr>
+        </table>
     {{/data}}
 
     <p><a href="/my/courses.php" >
