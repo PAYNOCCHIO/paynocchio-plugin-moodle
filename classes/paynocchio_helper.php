@@ -511,7 +511,7 @@ class paynocchio_helper {
                 $files[0]->get_filename(),
                 false                     // Do not force download of the file.
             );
-            return '<img width="100" src="'.$logo_url.'" alt="'.get_string('paynocchio', 'paygw_paynocchio').'" />';
+            return '<img src="'.$logo_url.'" alt="'.get_string('paynocchio', 'paygw_paynocchio').'" />';
         } else {
             return null;
         }
