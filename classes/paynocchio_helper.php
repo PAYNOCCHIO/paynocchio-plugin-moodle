@@ -380,11 +380,22 @@ class paynocchio_helper {
      * This needed to check conversion rates
      */
 
-    public function getEnvironmentStructure(): array
+    public function getEnvironmentStructure()
     {
         $url = '/wallet/environment-structure/?user_uuid=' . $this->userId . '&environment_uuid=' . $this->envId;
 
-        return $this->sendRequest('GET', $url);
+        $response = $this->sendRequest('GET', $url);
+        $json_response = json_decode($response['response']);
+        if($response['status_code'] === 200) {
+            return [
+                'card_balance_limit' => $json_response->card_balance_limit,
+                'daily_transaction_limit' => $json_response->daily_transaction_limit,
+                'multiple_accounts_limit' => $json_response->multiple_accounts_limit,
+                'minimum_topup_amount' => $json_response->minimum_topup_amount,
+                'bonus_conversion_rate' => $json_response->minimum_topup_amount,
+                'allow_withdraw' => $json_response->allow_withdraw,
+            ];
+        }
     }
 
     /**

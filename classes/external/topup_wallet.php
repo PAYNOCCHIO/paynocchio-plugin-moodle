@@ -71,6 +71,7 @@ class topup_wallet extends external_api {
             if($wallet_response['status_code'] === 200) {
 
                 $json_response = json_decode($wallet_response['response']);
+                \core\notification::success('Topped up.');
 
                 return [
                     'success' => true,
@@ -78,6 +79,7 @@ class topup_wallet extends external_api {
                 ];
 
             } else {
+                \core\notification::error('Error.');
                 return [
                     'success' => false,
                     'url' => 'ERROR: ' . $wallet_response['status_code'],
