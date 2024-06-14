@@ -82,7 +82,7 @@
         <div class="paynocchio-lgray paynocchio-rounded paynocchio-p4 {{#wallet_activated}}{{^can_pay}}active{{/can_pay}}{{/wallet_activated}}" id="paynocchio-step2">
             <h3>2 step. Add money</h3>
             {{^can_pay}}
-                <div>Top up your wallet by $<span id="need_to_top_up">{{need_to_topup}}</span> and get {{bonuses_amount}} bonus points, and you can pay for your chosen course. Additionally, you will receive additional {{bonuses_to_get}} bonuses for your purchase.</div>
+                <div>Top up your wallet by $<span id="need_to_top_up">{{need_to_topup}}</span> and get {{bonuses_amount}} bonus points, and you can pay for your chosen course. Additionally, you will receive up to {{bonuses_to_get}} bonuses for your purchase.</div>
             {{/can_pay}}
             {{#can_pay}}
                 <div><strong>Well done!</strong> Your wallet balance is enough to make a purchase!</div>
@@ -164,3 +164,14 @@
         </div>
     </div>
 </div>
+{{^wallet_activated}}
+<div class="modal_mini" id="congratz">
+    <div class="modal_mini_wrapper">
+        <h2>
+            Congratulations! Your wallet is activated!
+        </h2>
+        <img src="/payment/gateway/paynocchio/pix/girl_with_dudu.webp" alt="Congratz, img" width="609" height="435" />
+        <a onclick="window.location.reload()" class="paynocchio_done">Great!</a>
+    </div>
+</div>
+{{/wallet_activated}}
