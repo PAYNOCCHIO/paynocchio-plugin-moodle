@@ -835,6 +835,7 @@ button.disabled {
     right: 2rem;
     top: 2rem;
     max-width: 350px;
+    overflow: visible;
 }
 
 #page-payment-gateway-paynocchio-my_paynocchio_wallet #user-notifications .alert-success,
@@ -846,6 +847,8 @@ button.disabled {
     background-position: 0.75rem center;
     background-repeat: no-repeat;
     background-size: 1.5rem;
+    animation: hideAnima 0s ease-in 3s forwards;
+    animation-duration: 0.5s;
 }
 
 #page-payment-gateway-paynocchio-my_paynocchio_wallet #user-notifications .alert-danger,
@@ -857,6 +860,8 @@ button.disabled {
     background-position: 0.75rem center;
     background-repeat: no-repeat;
     background-size: 1.5rem;
+    animation: hideAnima 0s ease-in 3s forwards;
+    animation-duration: 0.5s;
 }
 
 #page-payment-gateway-paynocchio-pay #user-notifications .alert-dismissible .close,
@@ -871,4 +876,11 @@ button.disabled {
     padding: 0.25rem;
     background: #0f47ad;
     border-radius: 0.25rem;
+}
+
+@keyframes hideAnima {
+    to {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
 }
