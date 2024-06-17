@@ -39,12 +39,9 @@ if ($ADMIN->fulltree) {
 
     $secret = new admin_setting_configtext('paygw_paynocchio/paynocchiosecret', get_string('paynocchio_secret', 'paygw_paynocchio'), get_string('secret_help', 'paygw_paynocchio'), '', PARAM_TEXT);
     $settings->add($secret);
-    $settings->add(new admin_setting_configcheckbox('paygw_paynocchio/sendconfmail', get_string('send_confirmation_mail', 'paygw_paynocchio'), '', 0));
+    //$settings->add(new admin_setting_configcheckbox('paygw_paynocchio/sendconfmail', get_string('send_confirmation_mail', 'paygw_paynocchio'), '', 0));
     $settings->add(new admin_setting_configtextarea('paygw_paynocchio/terms', get_string('terms', 'paygw_paynocchio'), '', get_string('terms_help', 'paygw_paynocchio')));
     $settings->add(new admin_setting_configtextarea('paygw_paynocchio/privacy', get_string('privacy', 'paygw_paynocchio'), '', get_string('privacy_help', 'paygw_paynocchio')));
-
-    //$integrated = new admin_setting_configcheckbox('paygw_paynocchio/paynocchiointegrated', get_string('paynocchio_integrated', 'paygw_paynocchio'), get_string('paynocchio_integrated_help', 'paygw_paynocchio'), false, PARAM_BOOL);
-    //$settings->add($integrated);
 
     $secret->set_updatedcallback(function () {
         global $USER;
@@ -66,13 +63,5 @@ if ($ADMIN->fulltree) {
 $systemcontext = \context_system::instance();
 $node = new admin_category('paynocchio', get_config('paygw_paynocchio', 'brandname'));
 $ADMIN->add('root', $node);
-
-/*$ADMIN->add(
-    'paynocchio', new admin_externalpage(
-        'managepaynocchio',
-        get_string('manage', 'paygw_paynocchio'),
-        new moodle_url('/payment/gateway/paynocchio/manage.php'), 'paygw/paynocchio:managepayments'
-    )
-);*/
 
 

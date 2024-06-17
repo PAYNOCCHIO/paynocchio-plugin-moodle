@@ -72,15 +72,15 @@ class topup_complete extends external_api {
      * @return array
      */
     public static function execute(
-        string $uuid,
-        string $request_uuid,
-        string $environment_uuid,
-        string $user_uuid,
-        string $wallet_uuid,
-        string $amount,
-        string $currency,
-        string $type_operation,
-        string $status_type,
+         $uuid,
+         $request_uuid,
+         $environment_uuid,
+         $user_uuid,
+         $wallet_uuid,
+         $amount,
+         $currency,
+         $type_operation,
+         $status_type,
         $order_uuid,
         $external_order_uuid,
     ): array {
