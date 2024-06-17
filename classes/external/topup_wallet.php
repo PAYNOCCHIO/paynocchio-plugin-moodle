@@ -71,16 +71,28 @@ class topup_wallet extends external_api {
 
             if($wallet_response['status_code'] === 200) {
 
-                \core\notification::success('You have successfully replenished your wallet!');
+                if(!$json_response->schemas->is_error) {
+                    \core\notification::success('Topped up.');
 
-                return [
-                    'success' => true,
-                    'is_error' => $json_response->schemas->is_error,
-                    'message' => $json_response->schemas->message,
-                    'url' => $json_response->schemas->url,
-                    'type_interactions' => $json_response->type_interactions,
-                    'interaction' => $json_response->interaction,
-                ];
+                    return [
+                        'success' => true,
+                        'is_error' => $json_response->schemas->is_error,
+                        'message' => $json_response->schemas->message,
+                        'url' => $json_response->schemas->url,
+                        'type_interactions' => $json_response->type_interactions,
+                        'interaction' => $json_response->interaction,
+                    ];
+                } else {
+                    \core\notification::error($json_response->schemas->message);
+                    return [
+                        'success' => false,
+                        'is_error' => $json_response->schemas->is_error,
+                        'message' => $json_response->schemas->message,
+                        'url' => '',
+                        'type_interactions' => $json_response->type_interactions,
+                        'interaction' => $json_response->interaction,
+                    ];
+                }
 
             } else {
                 \core\notification::error('An error occurred during the replenishment. Please try again.');

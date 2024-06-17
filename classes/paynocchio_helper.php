@@ -390,7 +390,7 @@ class paynocchio_helper {
                 'daily_transaction_limit' => $json_response->daily_transaction_limit,
                 'multiple_accounts_limit' => $json_response->multiple_accounts_limit,
                 'minimum_topup_amount' => $json_response->minimum_topup_amount,
-                'bonus_conversion_rate' => $json_response->minimum_topup_amount,
+                'bonus_conversion_rate' => $json_response->bonus_conversion_rate,
                 'allow_withdraw' => $json_response->allow_withdraw,
             ];
         }
@@ -419,7 +419,9 @@ class paynocchio_helper {
         $items = $this->getTransactionHistory($wallet_uuid, $start, $end);
         $sum = '0';
         foreach ($items as $item) {
-            $sum += $item->amount;
+            if($item->status === 'complete') {
+                $sum += $item->amount;
+            }
         }
        return $sum;
 

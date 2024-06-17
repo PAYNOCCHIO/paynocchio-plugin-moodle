@@ -12,6 +12,7 @@ require_login();
 $context = context_system::instance(); // Because we "have no scope".
 $PAGE->set_context(context_user::instance($USER->id));
 $brandName = get_config('paygw_paynocchio', 'brandname');
+$cardBg = get_config('paygw_paynocchio', 'paynocchiocardbg');
 $PAGE->set_url('/payment/gateway/paynocchio/my_paynocchio_wallet.php');
 $PAGE->set_pagelayout('standard');
 $PAGE->set_title($brandName);
@@ -42,18 +43,16 @@ if($user && $user->useruuid && $user->walletuuid) {
         'wallet_blocked' => $wallet_balance_response['code'] === "BLOCKED",
         'wallet_active' => $wallet_balance_response['code'] === "ACTIVE",
         'minimum_topup_amount' => $wallet->getEnvironmentStructure()['minimum_topup_amount'],
+        'bonus_conversion_rate' => $wallet->getEnvironmentStructure()['bonus_conversion_rate'],
+        'bonus_to_spend' => $wallet_balance_response['balance'] * $wallet->getEnvironmentStructure()['bonus_conversion_rate'],
+        'cardBg' => $cardBg,
         'logo' => paynocchio_helper::custom_logo(),
-        'wallet_activated' => true,
     ];
 
-    /*print_r($wallet->countTodayTransactions($user->walletuuid));*/
-
-    /*echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet', $data);
+    echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet', $data);
     if($wallet_balance_response['code'] === "ACTIVE") {
         echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet_actions_buttons', $data);
-    }*/
-
-    echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet_all_in_one_cabinet', $data);
+    }
 
     $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_status_control', 'init', ['wallet_uuid' => $user->walletuuid]);
     echo $OUTPUT->render_from_template('paygw_paynocchio/wallet_status_control', $data);
