@@ -32,12 +32,15 @@
 }}
 <div>
     <div class="mb-6">
-        Please enter amount you want to add to you wallet. After clicking Topup button you will be redirected to Stripe for secure money transfer.
+        Please enter amount you want to add to you wallet. After clicking "Add money" you will be redirected to Stripe for secure money transfer.
     </div>
     <div class="paynocchio-inline-form">
+        <div class="paynocchio-fs4">
+            $
+        </div>
         <input type="number" step="0.01" name="amount" id="top_up_amount" placeholder="0">
         <button type="button" id="topup_button" class="paynocchio_button paynocchio_colored btn-lg">
-            Topup
+            Add money
         </button>
         <div class="spinner">
             <svg class="paynocchio-spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

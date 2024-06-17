@@ -235,6 +235,11 @@
     opacity: 1;
 }
 
+.paynocchio-status-block {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
 .paynocchio-status-block .paynocchio-actions-btns {
     margin-top: 20px;
     padding: 10px;
@@ -251,12 +256,12 @@
     border: none;
     outline: none;
     background: #fff;
-    color: #3b82f6;
+    color: #3d3bf5;
 }
 
 .paynocchio_colored {
     color: #fff;
-    background: #3b82f6;
+    background: #3d3bf5;
 }
 
 .paynocchio_payment_card_button svg {
@@ -303,11 +308,15 @@
 .paynocchio-inline-form {
     display: flex;
     gap: 1rem;
+    align-items: center;
 }
 
 .paynocchio-inline-form input {
-    border-radius: 10px;
+    border-radius: 0;
     font-size: 1.3rem;
+    border: none;
+    border-bottom: 2px solid #f2f2f2;
+    width: 150px;
 }
 
 .spinner {
@@ -380,6 +389,11 @@ button.disabled {
     gap: 3rem;
     flex-wrap: nowrap;
     align-items: stretch;
+    justify-content: space-between;
+}
+
+.paynocchio-account {
+    margin-bottom: 4rem;
 }
 
 .paynocchio-container-body {
@@ -431,7 +445,12 @@ button.disabled {
     height: 80px;
 }
 
+.paynocchio-account .paynocchio-wallet-tab-head {
+    height: auto;
+}
+
 .paynocchio_activation_button {
+    display: block;
     width: 100%;
     background: #3d3bf5;
     color: white;
@@ -442,6 +461,16 @@ button.disabled {
     border: 0;
 }
 
+.paynocchio_activation_button:hover {
+    color: white;
+    text-decoration: none;
+}
+
+.paynocchio-account .paynocchio_activation_button {
+    max-width: 300px;
+    margin: 0 auto;
+}
+
 .paynocchio_activation_button.activated {
     background: #7a839b;
     width: 100%;
@@ -450,10 +479,27 @@ button.disabled {
 }
 
 .paynocchio-instruction,
-.paynocchio-banner {
+.paynocchio-banner,
+.paynocchio-account .paynocchio-wallet-container {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+}
+
+.paynocchio-account .paynocchio-banner {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto 3rem;
+}
+
+.paynocchio-account .paynocchio-instruction {
+    width: 48%;
+}
+
+.paynocchio-account .paynocchio-wallet-container {
+    width: 100%;
+    min-width: 300px;
+    max-width: 400px;
 }
 
 .paynocchio-wallet-tab h3 {
@@ -488,7 +534,8 @@ button.disabled {
     padding: 1rem;
 }
 
-.paynocchio-wallet-card.inactive {
+.paynocchio-wallet-card.inactive,
+.status-SUSPEND .paynocchio-wallet-card {
     background: #7a839b;
 }
 
@@ -539,9 +586,8 @@ button.disabled {
     justify-content: center;
 }
 
-.paynocchio-inactive {
+.inactive {
     filter: grayscale(100);
-    opacity: 0.5;
 }
 
 .paynocchio-bonuses-conversion-rate {
@@ -658,6 +704,10 @@ button.disabled {
     padding: 1rem;
 }
 
+.paynocchio-p8 {
+    padding: 2rem;
+}
+
 .paynocchio-no-of {
     overflow: hidden;
 }
@@ -683,6 +733,20 @@ button.disabled {
     margin-bottom: 2rem;
 }
 
+.paynocchio-my4 {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.paynocchio-mxauto {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.paynocchio-block {
+    display: block;
+}
+
 .paynocchio-flright {
     float: right;
 }
@@ -697,6 +761,10 @@ button.disabled {
 
 .paynocchio-flcenter {
     justify-content: center;
+}
+
+.paynocchio-fs4 {
+    font-size: 1.5rem;
 }
 
 .modal_mini {
@@ -729,7 +797,7 @@ button.disabled {
     width: 95%;
     max-width: 768px;
     border-radius: 1rem;
-    box-shadow: 0 0 100px #00000044;
+    box-shadow: 0 0 100px #0004;
 }
 
 .modal_mini_wrapper img {
@@ -754,4 +822,47 @@ button.disabled {
 
 .modal_mini_wrapper a.paynocchio_done:hover {
     text-decoration: none;
+}
+
+#page-payment-gateway-paynocchio-my_paynocchio_wallet #region-main,
+#page-payment-gateway-paynocchio-pay #region-main {
+    position: relative;
+}
+
+#page-payment-gateway-paynocchio-my_paynocchio_wallet #user-notifications,
+#page-payment-gateway-paynocchio-pay #user-notifications {
+    position: absolute;
+    right: 2rem;
+    top: 2rem;
+    max-width: 350px;
+}
+
+#page-payment-gateway-paynocchio-my_paynocchio_wallet #user-notifications .alert-success,
+#page-payment-gateway-paynocchio-pay #user-notifications .alert-success {
+    background: #05b65e;
+    color: white;
+    padding-left: 3rem;
+    background-image: url(/payment/gateway/paynocchio/pix/check.png);
+    background-position: 0.75rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5rem;
+}
+
+#page-payment-gateway-paynocchio-my_paynocchio_wallet #user-notifications .alert-danger,
+#page-payment-gateway-paynocchio-pay #user-notifications .alert-danger {
+    background: #df720d;
+    color: white;
+    padding-left: 3rem;
+    background-image: url(/payment/gateway/paynocchio/pix/error.png);
+    background-position: 0.75rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5rem;
+}
+
+#page-payment-gateway-paynocchio-pay #user-notifications .alert-dismissible .close,
+#page-payment-gateway-paynocchio-my_paynocchio_wallet #user-notifications .alert-dismissible .close,
+#page-payment-gateway-paynocchio-pay #user-notifications .environmenttable .ok .close,
+#page-payment-gateway-paynocchio-my_paynocchio_wallet #user-notifications .environmenttable .ok .close {
+    top: 50%;
+    transform: translateY(-50%);
 }

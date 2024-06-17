@@ -71,7 +71,7 @@ class topup_wallet extends external_api {
 
             if($wallet_response['status_code'] === 200) {
 
-                \core\notification::success('Topped up.');
+                \core\notification::success('You have successfully replenished your wallet!');
 
                 return [
                     'success' => true,
@@ -83,7 +83,7 @@ class topup_wallet extends external_api {
                 ];
 
             } else {
-                \core\notification::error('Error.');
+                \core\notification::error('An error occurred during the replenishment. Please try again.');
                 return [
                     'success' => false,
                     'is_error' => $json_response->schemas->is_error,

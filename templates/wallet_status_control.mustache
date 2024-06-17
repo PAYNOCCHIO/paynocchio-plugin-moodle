@@ -32,23 +32,27 @@
 }}
 <div class="paynocchio-status-block">
     <div class="paynocchio-status-actions">
-        <div class="paynocchio-status">
-            <div>Wallet Status:</div>
-            <span id="wallet_status" class="{{#wallet_active}}active{{/wallet_active}} {{^wallet_active}}suspend{{/wallet_active}} {{#wallet_blocked}}blocked{{/wallet_blocked}}
-">{{wallet_status}}</span>
-            {{wallet_code}}
-            <div class="spinner">
-                <svg class="paynocchio-spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="spinner-circle" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="spinner-path" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-            </div>
-            <div id="wallet_status_message"></div>
-        </div>
+
         <div class="paynocchio-actions-btns">
+
+            <div class="paynocchio-status">
+                <div>Wallet Status:</div>
+                <span id="wallet_status" class="{{#wallet_active}}active{{/wallet_active}} {{^wallet_active}}suspend{{/wallet_active}} {{#wallet_blocked}}blocked{{/wallet_blocked}}
+">{{wallet_status}}</span>
+
+                <div class="spinner">
+                    <svg class="paynocchio-spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="spinner-circle" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="spinner-path" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                </div>
+                <div id="wallet_status_message"></div>
+            </div>
+
+
             {{#wallet_active}}
                 <button id="presuspend_wallet_button" type="button" class="paynocchio_button btn-blue paynocchio_colored">Suspend wallet</button>
-                <button id="preblock_wallet_button"  class="paynocchio_button btn-gray">Block wallet</button>
+                <button id="preblock_wallet_button"  class="paynocchio_button paynocchio-lgray">Block wallet</button>
             {{/wallet_active}}
             {{^wallet_active}}
                 {{#wallet_blocked}}
@@ -57,7 +61,7 @@
                 {{^wallet_blocked}}
                 {{^server_error}}
                     <button id="activate_wallet_button" type="button" class="paynocchio_button btn-blue paynocchio_colored">Activate wallet</button>
-                    <button id="preblock_wallet_button"  class="paynocchio_button btn-gray">Block wallet</button>
+                    <button id="preblock_wallet_button"  class="paynocchio_button paynocchio-lgray">Block wallet</button>
                 {{/server_error}}
                 {{/wallet_blocked}}
             {{/wallet_active}}

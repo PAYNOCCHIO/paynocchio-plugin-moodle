@@ -43,14 +43,17 @@ if($user && $user->useruuid && $user->walletuuid) {
         'wallet_active' => $wallet_balance_response['code'] === "ACTIVE",
         'minimum_topup_amount' => $wallet->getEnvironmentStructure()['minimum_topup_amount'],
         'logo' => paynocchio_helper::custom_logo(),
+        'wallet_activated' => true,
     ];
 
-    print_r($wallet->countTodayTransactions($user->walletuuid));
+    /*print_r($wallet->countTodayTransactions($user->walletuuid));*/
 
-    echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet', $data);
+    /*echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet', $data);
     if($wallet_balance_response['code'] === "ACTIVE") {
         echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet_actions_buttons', $data);
-    }
+    }*/
+
+    echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet_all_in_one_cabinet', $data);
 
     $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_status_control', 'init', ['wallet_uuid' => $user->walletuuid]);
     echo $OUTPUT->render_from_template('paygw_paynocchio/wallet_status_control', $data);
@@ -73,30 +76,25 @@ if(is_siteadmin($USER->id)) {
     echo 'generated signature: '. hash("sha256", $wallet->get_secret() . "|" . $wallet->get_env() . "|" . $user->useruuid). '<br/>';
     echo '<br/>';
     echo 'Card balance limit: '. $wallet->getEnvironmentStructure()['card_balance_limit']. '<br/>';
-
 }
 
 } else {
     $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_activation', 'init', ['user_id' => $USER->id]);
 
     $data = [
+        'wallet_balance' => 0,
+        'wallet_bonuses' => 0,
+        'wallet_card' => '',
+        'wallet_status' => '',
+        'wallet_code' => '',
+        'wallet_uuid' => '',
+        'user_uuid' => '',
         'user_id' => $USER->id,
+        'brandname' => get_config('paygw_paynocchio', 'brandname'),
         'logo' => paynocchio_helper::custom_logo(),
-        'brandname' => get_config('paygw_paynocchio', 'brandname')
     ];
 
-    echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet_activation', $data);
-
-    /*if(is_siteadmin($USER->id)) {
-        $uuid = \core\uuid::generate();
-        $wallet = new paynocchio_helper($uuid);
-        echo 'user_uuid: '. $uuid. '<br/>';
-        echo 'secret: '. $wallet->get_secret(). '<br/>';
-        echo 'env_uuid: '. $wallet->get_env(). '<br/>';
-        echo 'wallet signature: '. $wallet->getSignature(). '<br/>';
-        echo 'company signature: '. $wallet->getSignature(true). '<br/>';
-        echo 'generated signature: '. hash("sha256", $wallet->get_secret() . "|" . $wallet->get_env() . "|" . $uuid). '<br/>';
-    }*/
+    echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet_all_in_one_cabinet', $data);
 }
 
 echo $OUTPUT->footer();

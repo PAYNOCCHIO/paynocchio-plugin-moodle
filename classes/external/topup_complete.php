@@ -112,12 +112,12 @@ class topup_complete extends external_api {
 
             return [
                 'success' => true,
-                'message' => 'Topup complete',
+                'message' => 'You have successfully replenished your wallet!',
             ];
             } else {
                 return [
                     'success' => false,
-                    'message' => 'Some error',
+                    'message' => 'An error occurred during the replenishment. Please try again.',
                 ];
             }
     }

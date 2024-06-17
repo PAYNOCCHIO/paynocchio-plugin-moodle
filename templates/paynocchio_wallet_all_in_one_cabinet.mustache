@@ -1,0 +1,158 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template paygw_paynocchio/paynocchio_wallet_account
+
+    Classes required for JS:
+    * none
+
+    Data attributes required for JS:
+    * none
+
+    Context variables required for this template:
+    * none
+
+    Example context (json):
+    {}
+}}
+<div class="paynocchio-account">
+    <h1 class="paynocchio-my8 paynocchio-center paynocchio-wfull">Campus.Pay Rewards Wallet</h1>
+
+    {{^wallet_activated}}
+    <div class="paynocchio-wallet-tab paynocchio-banner">
+        <div class="paynocchio-lgray paynocchio-rounded paynocchio-no-of">
+            <div class="paynocchio-lblue paynocchio-p4 paynocchio-center">
+                <img alt="Percent, image" src="/payment/gateway/paynocchio/pix/percent.png" width="20" height="19" class="paynocchio-mr2" /> <strong style="color: #002F67;">Extra discounts - pay with bonuses!</strong>
+            </div>
+            <div class="paynocchio-p8">
+                <img class="paynocchio-flright paynocchio-mb4" alt="Campus.Pay promo, image" src="/payment/gateway/paynocchio/pix/edugraph1.png" width="400" height="395" />
+                <h2 class="paynocchio-mb4">Why to pay with {{brandname}}?</h2>
+                <div class="w-50 paynocchio-fs4 paynocchio-mb4">
+                    Campus.Pay is a free loyalty wallet for profitable payment of our courses.
+                </div>
+                <div class="w-50 paynocchio-fs4 paynocchio-mb4">
+                    Add money on wallet, get cashback bonuses and buy courses for $1!
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/wallet_activated}}
+
+    <div class="paynocchio-wallet-card-wrapper">
+        <div class="paynocchio-wallet-tab paynocchio-instruction">
+            <div class="paynocchio-wallet-tab-head">
+                <h2 class="paynocchio-mb4">How to pay?</h2>
+            </div>
+
+            {{^wallet_activated}}
+                <div class="paynocchio-lgray paynocchio-rounded {{^wallet_activated}}active{{/wallet_activated}} paynocchio-p4" id="paynocchio-step1">
+                    <img class="paynocchio-flright" src="/payment/gateway/paynocchio/pix/rocket.png" alt="Rocket, image" width="93" height="115" />
+                    <h3>1 step. Activate wallet</h3>
+                    <p class="paynocchio-mb8">Activate our secure wallet to become a member of the loyalty program and pay for all our products with an additional fee. Activate your wallet and get 500 bonuses!</p>
+                    {{#wallet_activated}}
+                        <button type="button"
+                                class="paynocchio_activation_button activated"
+                                disabled
+                        >
+                            <span>Activated</span>
+                        </button>
+                    {{/wallet_activated}}
+                    {{^wallet_activated}}
+                        <button id="paynocchio_activation_button"
+                                type="button"
+                                class="paynocchio_activation_button">
+                            <span>Activate</span>
+                            <svg class="paynocchio-spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="spinner-circle" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="spinner-path" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                        </button>
+                        <div class="topup-description hidden">
+                            Activating...
+                        </div>
+                    {{/wallet_activated}}
+                </div>
+            {{/wallet_activated}}
+
+            <div class="paynocchio-lgray paynocchio-rounded paynocchio-p4 {{#wallet_activated}}{{^can_pay}}active{{/can_pay}}{{/wallet_activated}}" id="paynocchio-step2">
+                <h3>{{#wallet_activated}}1{{/wallet_activated}}{{^wallet_activated}}2{{/wallet_activated}} step. Add money</h3>
+                <div>Add money on your wallet with the required amount. You will be able to pay for any of our products and receive bonuses or a discount.</div>
+                {{#wallet_activated}}<img class="paynocchio-block paynocchio-my4 paynocchio-mxauto" src="/payment/gateway/paynocchio/pix/coin.png" width="70" height="70" alt="Dollar, icon" />{{/wallet_activated}}
+            </div>
+
+            <div class="paynocchio-lgray paynocchio-rounded paynocchio-p4 {{#wallet_activated}}{{#can_pay}}active{{/can_pay}}{{/wallet_activated}}" id="paynocchio-step3">
+                <h3>{{#wallet_activated}}2{{/wallet_activated}}{{^wallet_activated}}3{{/wallet_activated}} step. Spend bonuses and pay</h3>
+                <p>Choose course and select the amount of bonus you would like to deduct from your account to pay for your order.</p>
+                {{#wallet_activated}}<img class="paynocchio-block paynocchio-my4 paynocchio-mxauto" src="/payment/gateway/paynocchio/pix/percentstar.png" width="70" height="70" alt="Percent, icon" />{{/wallet_activated}}
+                {{^wallet_activated}}
+                <button type="button"
+                        class="paynocchio_activation_button activated"
+                        disabled
+                >
+                    <span>Start learning!</span>
+                </button>
+                {{/wallet_activated}}
+                {{#wallet_activated}}
+                    <a href="/" class="paynocchio_activation_button">
+                        <span>Start learning!</span>
+                    </a>
+                {{/wallet_activated}}
+            </div>
+        </div>
+        <div class="paynocchio-wallet-tab paynocchio-wallet-container">
+            <div class="paynocchio-wallet-tab-head">
+                <h2 class="paynocchio-mb4">Your personal wallet</h2>
+            </div>
+            <div class="paynocchio-fs4">
+                <strong>${{wallet_balance}}</strong> / {{wallet_bonuses}} bonuses
+            </div>
+            <div class="paynocchio-wallet-card {{^wallet_active}}inactive{{/wallet_active}}">
+                <div class="on_card_embleme">{{{logo}}}</div>
+                <div class="paynocchio-wallet-card-footer">
+                    <div class="paynocchio-card-number">
+                        {{#wallet_card}}
+                            {{wallet_card}}
+                        {{/wallet_card}}
+                        {{^wallet_card}}
+                            <div>••••</div>
+                            <div>••••</div>
+                            <div>••••</div>
+                            <div>••••</div>
+                        {{/wallet_card}}
+                    </div>
+                </div>
+            </div>
+            <div id="paynocchio-wallet-actions-buttons">
+                <button type="button" id="{{#wallet_active}}paynocchio_topup_button{{/wallet_active}}" class="paynocchio_top_up_button {{^wallet_active}}inactive{{/wallet_active}}" {{^wallet_active}}disable{{/wallet_active}}>
+                    <img decoding="async" src="/payment/gateway/paynocchio/pix/plus.png" class="">
+                    Add money
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{{^wallet_activated}}
+    <div class="modal_mini" id="congratz">
+        <div class="modal_mini_wrapper">
+            <h2>
+                Congratulations! Your wallet is activated!
+            </h2>
+            <img src="/payment/gateway/paynocchio/pix/girl_with_dudu.webp" alt="Congratz, img" width="609" height="435" />
+            <a onclick="window.location.reload()" class="paynocchio_done">Great!</a>
+        </div>
+    </div>
+{{/wallet_activated}}
