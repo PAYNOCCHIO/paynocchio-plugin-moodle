@@ -67,22 +67,30 @@ class topup_wallet extends external_api {
         if($wallet_uuid) {
             $wallet = new paynocchio_helper($user_uuid);
             $wallet_response = $wallet->topUpWallet($wallet_uuid, $amount, $redirect_url);
+            $json_response = json_decode($wallet_response['response']);
 
             if($wallet_response['status_code'] === 200) {
 
-                $json_response = json_decode($wallet_response['response']);
                 \core\notification::success('Topped up.');
 
                 return [
                     'success' => true,
-                    'url' => $json_response->url,
+                    'is_error' => $json_response->schemas->is_error,
+                    'message' => $json_response->schemas->message,
+                    'url' => $json_response->schemas->url,
+                    'type_interactions' => $json_response->type_interactions,
+                    'interaction' => $json_response->interaction,
                 ];
 
             } else {
                 \core\notification::error('Error.');
                 return [
                     'success' => false,
-                    'url' => 'ERROR: ' . $wallet_response['status_code'],
+                    'is_error' => $json_response->schemas->is_error,
+                    'message' => $json_response->schemas->message,
+                    'url' => '',
+                    'type_interactions' => $json_response->type_interactions,
+                    'interaction' => $json_response->interaction,
                 ];
             }
         }
@@ -97,7 +105,11 @@ class topup_wallet extends external_api {
     public static function execute_returns(): external_single_structure {
         return new external_single_structure([
             'success' => new external_value(PARAM_BOOL, 'Paynocchio success status'),
+            'is_error' => new external_value(PARAM_TEXT, 'Stripe payment url'),
+            'message' => new external_value(PARAM_TEXT, 'Stripe payment url'),
             'url' => new external_value(PARAM_TEXT, 'Stripe payment url'),
+            'type_interactions' => new external_value(PARAM_TEXT, 'Stripe payment url'),
+            'interaction' => new external_value(PARAM_TEXT, 'Stripe payment url'),
         ]);
     }
 }

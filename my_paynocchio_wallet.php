@@ -41,8 +41,11 @@ if($user && $user->useruuid && $user->walletuuid) {
         'server_error' => $wallet_balance_response['code'] === 500,
         'wallet_blocked' => $wallet_balance_response['code'] === "BLOCKED",
         'wallet_active' => $wallet_balance_response['code'] === "ACTIVE",
+        'minimum_topup_amount' => $wallet->getEnvironmentStructure()['minimum_topup_amount'],
         'logo' => paynocchio_helper::custom_logo(),
     ];
+
+    print_r($wallet->countTodayTransactions($user->walletuuid));
 
     echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet', $data);
     if($wallet_balance_response['code'] === "ACTIVE") {

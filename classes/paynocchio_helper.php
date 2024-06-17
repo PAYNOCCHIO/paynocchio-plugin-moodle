@@ -309,9 +309,7 @@ class paynocchio_helper {
             $queryParams['created_at.to'] = $filters['created_at']['to'];
         }
 
-        $response = $this->sendRequest('GET', $url, $queryParams);
-
-        return $response;
+        return $this->sendRequest('GET', $url, $queryParams);
     }
 
     /**
@@ -396,6 +394,37 @@ class paynocchio_helper {
                 'allow_withdraw' => $json_response->allow_withdraw,
             ];
         }
+    }
+
+    /**
+     * Get Transaction History
+     * This needed to check wallet Limit
+     */
+
+    public function getTransactionHistory(string $wallet_uuid, string $start, string $end, int $page = 1, int $size = 500)
+    {
+        $url = '/wallet/transaction-history/?user_uuid=' . $this->userId . '&environment_uuid=' . $this->envId . '&wallet_uuid=' . $wallet_uuid . '&start='.$start. '&end='.$end.'&page='.$page.'&size='.$size;
+
+        $response = $this->sendRequest('GET', $url);
+        return json_decode($response['response'])->item;
+    }
+
+    /** Count current limit
+     *
+     */
+    public function countTodayTransactions(string $wallet_uuid)
+    {
+        $start = strtotime('today midnight');
+        $end = time();
+        $items = $this->getTransactionHistory($wallet_uuid, $start, $end);
+        $sum = '0';
+        foreach ($items as $item) {
+            $sum += $item->amount;
+        }
+       return $sum;
+
+
+
     }
 
     /**

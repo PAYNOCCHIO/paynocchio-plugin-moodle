@@ -54,15 +54,17 @@ export const init = (pay) => {
                             modal.body.find('#topup_message').text('Working...');
                             handleTopUpClick(input.val(), window.location.href)
                                 .then(data => {
-                                    if (data.success) {
+                                    if (!data.is_error) {
                                         modal.body.find('#topup_message').text('OK... Sending to Stripe...');
                                         window.location.replace(data.url);
                                     } else {
                                         modal.body.find('.paynocchio-spinner').toggleClass('active');
                                         modal.body.find('#topup_message')
-                                            .text('There is an Error occurred. Please try again later.');
+                                            .text(data.message);
                                         button.toggleClass('disabled');
                                     }
+                                    window.console.log(data);
+
                                 });
                         }
                     });
