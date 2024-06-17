@@ -47,12 +47,10 @@ if($user && $user->useruuid && $user->walletuuid) {
         'bonus_to_spend' => $wallet_balance_response['balance'] * $wallet->getEnvironmentStructure()['bonus_conversion_rate'],
         'cardBg' => $cardBg,
         'logo' => paynocchio_helper::custom_logo(),
+        'wallet_activated' => true,
     ];
 
-    echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet', $data);
-    if($wallet_balance_response['code'] === "ACTIVE") {
-        echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet_actions_buttons', $data);
-    }
+    echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet_all_in_one_cabinet', $data);
 
     $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_status_control', 'init', ['wallet_uuid' => $user->walletuuid]);
     echo $OUTPUT->render_from_template('paygw_paynocchio/wallet_status_control', $data);
@@ -65,17 +63,17 @@ if($user && $user->useruuid && $user->walletuuid) {
     ];
     echo $OUTPUT->render_from_template('paygw_paynocchio/wallet_transactions', $wallet_transactions_data);
 
-if(is_siteadmin($USER->id)) {
-    echo 'user_uuid: '. $user->useruuid. '<br/>';
-    echo 'wallet_uuid: '. $user->walletuuid. '<br/>';
-    echo 'secret: '. $wallet->get_secret(). '<br/>';
-    echo 'env_uuid: '. $wallet->get_env(). '<br/>';
-    echo 'wallet signature: '. $wallet->getSignature(). '<br/>';
-    echo 'company signature: '. $wallet->getSignature(true). '<br/>';
-    echo 'generated signature: '. hash("sha256", $wallet->get_secret() . "|" . $wallet->get_env() . "|" . $user->useruuid). '<br/>';
-    echo '<br/>';
-    echo 'Card balance limit: '. $wallet->getEnvironmentStructure()['card_balance_limit']. '<br/>';
-}
+    if(is_siteadmin($USER->id)) {
+        echo 'user_uuid: '. $user->useruuid. '<br/>';
+        echo 'wallet_uuid: '. $user->walletuuid. '<br/>';
+        echo 'secret: '. $wallet->get_secret(). '<br/>';
+        echo 'env_uuid: '. $wallet->get_env(). '<br/>';
+        echo 'wallet signature: '. $wallet->getSignature(). '<br/>';
+        echo 'company signature: '. $wallet->getSignature(true). '<br/>';
+        echo 'generated signature: '. hash("sha256", $wallet->get_secret() . "|" . $wallet->get_env() . "|" . $user->useruuid). '<br/>';
+        echo '<br/>';
+        echo 'Card balance limit: '. $wallet->getEnvironmentStructure()['card_balance_limit']. '<br/>';
+    }
 
 } else {
     $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_activation', 'init', ['user_id' => $USER->id]);
