@@ -88,6 +88,7 @@ if($user && $user->useruuid && $user->walletuuid) {
         'user_uuid' => '',
         'user_id' => $USER->id,
         'brandname' => get_config('paygw_paynocchio', 'brandname'),
+        'cardBg' => $cardBg,
         'logo' => paynocchio_helper::custom_logo(),
     ];
 

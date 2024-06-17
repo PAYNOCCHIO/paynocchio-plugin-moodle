@@ -13,6 +13,7 @@ $PAGE->set_context($context);
 $component = required_param('component', PARAM_COMPONENT);
 $paymentarea = required_param('paymentarea', PARAM_AREA);
 $itemid = required_param('itemid', PARAM_INT);
+$cardBg = get_config('paygw_paynocchio', 'paynocchiocardbg');
 $description = required_param('description', PARAM_TEXT);
 $description = json_decode('"'.$description.'"');
 $params = [
@@ -203,6 +204,7 @@ if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
             'logo' => paynocchio_helper::custom_logo(),
             'description' => $pagetitle,
             'wallet_activated' => true,
+            'cardBg' => $cardBg,
             'brandname' => get_config('paygw_paynocchio', 'brandname'),
         ];
         echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet_all_in_one_payment', $data);
