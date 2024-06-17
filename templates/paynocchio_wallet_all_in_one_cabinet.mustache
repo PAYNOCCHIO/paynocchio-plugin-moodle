@@ -100,8 +100,7 @@
                 {{#wallet_activated}}<img class="paynocchio-block paynocchio-my4 paynocchio-mxauto" src="/payment/gateway/paynocchio/pix/percentstar.png" width="70" height="70" alt="Percent, icon" />{{/wallet_activated}}
                 {{^wallet_activated}}
                 <button type="button"
-                        class="paynocchio_activation_button activated"
-                        disabled
+                        class="paynocchio_activation_button activated disabled"
                 >
                     <span>Start learning!</span>
                 </button>
@@ -137,7 +136,7 @@
                 </div>
             </div>
             <div id="paynocchio-wallet-actions-buttons">
-                <button type="button" id="{{#wallet_active}}paynocchio_topup_button{{/wallet_active}}" class="paynocchio_top_up_button {{^wallet_active}}inactive{{/wallet_active}}" {{^wallet_active}}disable{{/wallet_active}}>
+                <button type="button" id="{{#wallet_active}}paynocchio_topup_button{{/wallet_active}}" class="paynocchio_top_up_button {{^wallet_active}}inactive{{/wallet_active}} {{^wallet_active}}disabled{{/wallet_active}}">
                     <img decoding="async" src="/payment/gateway/paynocchio/pix/plus.png" class="">
                     Add money
                 </button>

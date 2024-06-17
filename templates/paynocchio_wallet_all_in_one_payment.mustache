@@ -59,7 +59,7 @@
                         class="paynocchio_activation_button activated"
                         disabled
                 >
-                    <span>Activated</span>
+                    <span>{{wallet_status_readable}}</span>
                 </button>
             {{/wallet_activated}}
             {{^wallet_activated}}
@@ -103,7 +103,7 @@
             <div class="">
                 <strong>${{wallet_balance}}</strong> / {{wallet_bonuses}} bonuses
             </div>
-            <div class="paynocchio-wallet-card {{^wallet_activated}}inactive{{/wallet_activated}}" {{#cardBg}} style="background-color: {{cardBg}}"{{/cardBg}}>
+            <div class="paynocchio-wallet-card {{^wallet_active}}inactive{{/wallet_active}}">
                 <div class="on_card_embleme">{{{logo}}}</div>
                 <div class="paynocchio-wallet-card-footer">
                     <div class="paynocchio-card-number">
@@ -120,7 +120,7 @@
                 </div>
             </div>
             <div id="paynocchio-wallet-actions-buttons">
-                <button type="button" id="paynocchio_topup_button" class="paynocchio_top_up_button {{^wallet_activated}}paynocchio-inactive{{/wallet_activated}}">
+                <button type="button" id="paynocchio_topup_button" class="paynocchio_top_up_button {{^wallet_active}}inactive disable{{/wallet_active}}" {{^wallet_active}}disable{{/wallet_active}}>
                     <img decoding="async" src="/payment/gateway/paynocchio/pix/plus.png" class="">
                     Add money
                 </button>
@@ -138,14 +138,14 @@
                 <div class="paynocchio-pay-form">
                     <input id="fullamount-input" type="hidden" value="{{full_amount}}">
                     <input id="bonuses-range" type="range" min="0" max="{{max_bonus}}" step="1" value="0"
-                           class="styled-slider slider-progress" {{^wallet_activated}}disabled{{/wallet_activated}}
+                           class="styled-slider slider-progress" {{^wallet_active}}disabled{{/wallet_active}}
                              {{^wallet_balance}}disabled{{/wallet_balance}}>
-                    <input id="bonuses-value" type="number" readonly="readonly" value="0" min="0" max="{{max_bonus}}" {{^wallet_activated}}disabled{{/wallet_activated}}>
+                    <input id="bonuses-value" type="number" readonly="readonly" value="0" min="0" max="{{max_bonus}}" {{^wallet_active}}disabled{{/wallet_active}}>
                 </div>
             </div>
             <div class="paynocchio-topup-message paynocchio-hidden" id="topup_message"></div>
             <div class="paynocchio-pay-button-container">
-                <button type="button" id="paynocchio_pay_button" class="paynocchio-pay-button {{^wallet_activated}}disabled{{/wallet_activated}}">
+                <button type="button" id="paynocchio_pay_button" class="paynocchio-pay-button {{^wallet_active}}inactive disabled{{/wallet_active}}" {{^wallet_active}}disabled{{/wallet_active}}>
                     <div class="paynocchio-bold">Pay $<span id="current_amount">{{full_amount}}</span></div><div id="old_amount" class="paynocchio-hidden"></div><div id="discount" class="paynocchio-hidden"></div>
                 </button>
                 <div class="spinner">
@@ -156,9 +156,16 @@
                 </div>
                 <div id="status_message"></div>
             </div>
+            {{^wallet_active}}
+            <div class="paynocchio-topup-message paynocchio-hidden" id="paynocchio_gaining_bonuses">
+                Check your wallet status to continue.
+            </div>
+            {{/wallet_active}}
+            {{#wallet_active}}
             <div class="paynocchio-topup-message paynocchio-hidden" id="paynocchio_gaining_bonuses">And get additional <span id="bonuses_to_get">{{bonuses_to_get}}</span> bonuses!
                 <i class="fa-regular fa-circle-question" type="button" tabindex="0" data-trigger="click" data-container="body" data-toggle="popover" data-placement="top" data-title="How it works" data-content="Earn 10% for each payment! Keep earning rewards and pay with bonuses!"></i>
             </div>
+            {{/wallet_active}}
         </div>
     </div>
 </div>

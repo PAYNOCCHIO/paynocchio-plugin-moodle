@@ -106,6 +106,14 @@ if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
             $max_bonus = $amount;
         }
 
+        if ($wallet_balance_response['code'] === "SUSPEND") {
+            $wallet_status_readable = 'Wallet suspended';
+        } elseif ($wallet_balance_response['code'] === "BLOCKED") {
+            $wallet_status_readable = 'Wallet blocked';
+        } else {
+            $wallet_status_readable = 'Wallet activated';
+        }
+
         $need_to_topup = ceil(($amount - floor($wallet_balance_response['balance']) - floor($wallet_balance_response['bonuses']))/1.1);
 
         $data = [
@@ -113,6 +121,7 @@ if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
             'wallet_bonuses' => $wallet_balance_response['bonuses'] ?? 0,
             'wallet_card' => chunk_split($wallet_balance_response['number'], 4, ' '),
             'wallet_status' => $wallet_balance_response['status'],
+            'wallet_status_readable' => $wallet_status_readable,
             'wallet_code' => $wallet_balance_response['code'],
             'wallet_uuid' => $user->walletuuid,
             'user_uuid' => $user->useruuid,
@@ -159,9 +168,11 @@ if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
 
         $max_bonuses_to_spend = $wallet_balance_response['bonuses'] * $conversion_rate;
 
-        $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_topup', 'init', [
-            'pay' => true
-        ]);
+        if($wallet_balance_response['code'] === "ACTIVE") {
+            $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_topup', 'init', [
+                'pay' => true
+            ]);
+        }
 
         $PAGE->requires->js_call_amd('paygw_paynocchio/paynocchio_pay', 'init', [
             'component' => $component,

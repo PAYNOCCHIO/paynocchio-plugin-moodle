@@ -24,14 +24,17 @@ echo $OUTPUT->header();
 $user = $DB->get_record('paygw_paynocchio_wallets', ['userid'  => $USER->id]);
 
 if($user && $user->useruuid && $user->walletuuid) {
-    $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_topup', 'init');
-
-    $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_withdraw', 'init', [
-        'pay' => true
-    ]);
 
     $wallet = new paynocchio_helper($user->useruuid);
     $wallet_balance_response = $wallet->getWalletBalance($user->walletuuid);
+
+    if($wallet_balance_response['code'] === "ACTIVE") {
+        $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_topup', 'init');
+
+        $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_withdraw', 'init', [
+            'pay' => true
+        ]);
+    }
 
     $data = [
         'wallet_balance' => $wallet_balance_response['balance'],

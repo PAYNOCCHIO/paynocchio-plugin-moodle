@@ -235,7 +235,8 @@
     opacity: 1;
 }
 
-.paynocchio-status-block {
+.paynocchio-status-block,
+.paynocchio-transactions {
     max-width: 1100px;
     margin: 0 auto;
 }

@@ -46,7 +46,7 @@ const changePayButtonValues = (fullAmount, bonuses) => {
     if (bonuses != 0) {
         current_amount.innerText = (old_amount_value - bonuses);
         old_amount.innerText = "$" + old_amount_value;
-        discount.innerText = '-' + (bonuses * 100) / old_amount_value + '%';
+        discount.innerText = '-' + ((bonuses * 100) / old_amount_value).toFixed(2) + '%';
         old_amount.classList.remove('paynocchio-hidden');
         discount.classList.remove('paynocchio-hidden');
     } else {
