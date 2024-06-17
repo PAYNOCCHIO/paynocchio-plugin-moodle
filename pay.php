@@ -60,108 +60,16 @@ if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
     echo '<div class="paynocchio-container">';
     echo '<div class="paynocchio-container-body">';
     echo '<a onclick="window.history.go(-1)" class="back_button"><img src="/payment/gateway/paynocchio/pix/back.png" alt="Backward button" width="30" height="30" /> Back</a>';
-    /*echo '<ul class="list-group list-group-flush">';
-    if ($surcharge && $surcharge > 0) {
-
-        echo '<li class="list-group-item">' . get_string('cost', 'paygw_paynocchio') . ':';
-        echo '<h4 id="price">' . helper::get_cost_as_string($payable->get_amount(), $currency) . '</h4>';
-        echo '</li>';
-        echo '<li class="list-group-item"><h4>' . get_string('surcharge', 'core_payment') . ':</h4>';
-        echo '<div id="price">' . $surcharge. '%</div>';
-        echo '<div id="explanation">' . get_string('surcharge_desc', 'core_payment') . '</div>';
-        echo '</li>';
-
-        echo '<li class="list-group-item"><h4>' . get_string('total_cost', 'paygw_paynocchio') . ':</h4>';
-        echo '<div id="price">' . helper::get_cost_as_string($amount, $currency). ' ' . $currency . '</div>';
-        echo '</li>';
-    } else {
-        echo '<li class="list-group-item">' . get_string('total_cost', 'paygw_paynocchio') . ':';
-        echo '<h4 id="price">' . helper::get_cost_as_string($amount, $currency). ' ' . $currency . '</h4>';
-        echo '</li>';
-    }
-    echo "</ul>";*/
 
     $user = $DB->get_record('paygw_paynocchio_wallets', ['userid'  => $USER->id]);
 
-    /*if($user && $user->useruuid && $user->walletuuid) {
-
+    if($user && $user->useruuid) {
         $wallet = new paynocchio_helper($user->useruuid);
-
-        $wallet_balance_response = $wallet->getWalletBalance($user->walletuuid);
-
-        $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_topup', 'init', [
-            'pay' => true
-        ]);
-        $PAGE->requires->js_call_amd('paygw_paynocchio/paynocchio_pay', 'init', [
-            'component' => $component,
-            'paymentarea' => $paymentarea,
-            'itemid' => $itemid,
-            'fullAmount' => $amount,
-            'balance' => $wallet_balance_response['balance'],
-        ]);
-
-        if($wallet_balance_response['bonuses'] && $wallet_balance_response['bonuses'] < $amount) {
-            $max_bonus = $wallet_balance_response['bonuses'];
-        } else {
-            $max_bonus = $amount;
-        }
-
-        if ($wallet_balance_response['code'] === "SUSPEND") {
-            $wallet_status_readable = 'Wallet suspended';
-        } elseif ($wallet_balance_response['code'] === "BLOCKED") {
-            $wallet_status_readable = 'Wallet blocked';
-        } else {
-            $wallet_status_readable = 'Wallet activated';
-        }
-
-        $need_to_topup = ceil(($amount - floor($wallet_balance_response['balance']) - floor($wallet_balance_response['bonuses']))/1.1);
-
-        $data = [
-            'wallet_balance' => $wallet_balance_response['balance'] ?? 0,
-            'wallet_bonuses' => $wallet_balance_response['bonuses'] ?? 0,
-            'wallet_card' => chunk_split($wallet_balance_response['number'], 4, ' '),
-            'wallet_status' => $wallet_balance_response['status'],
-            'wallet_status_readable' => $wallet_status_readable,
-            'wallet_code' => $wallet_balance_response['code'],
-            'wallet_uuid' => $user->walletuuid,
-            'user_uuid' => $user->useruuid,
-            'max_bonus' => $max_bonus ?? 0,
-            'full_amount' => $amount,
-            'bonuses_amount' => $need_to_topup * 0.1,
-            'bonuses_to_get' => $amount * 0.1,
-            'need_to_topup' => $need_to_topup,
-            'total_with_bonuses' => $need_to_topup + $need_to_topup * 0.1,
-            'bottom_line' => $amount - $need_to_topup + $need_to_topup * 0.1,
-            'can_pay' => $wallet_balance_response['balance'] + $wallet_balance_response['bonuses'] >= $amount,
-            'wallet_active' => $wallet_balance_response['code'] === "ACTIVE",
-            'logo' => paynocchio_helper::custom_logo(),
-        ];
-
-        echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_payment_wallet', $data);
-
-        $PAGE->requires->js_call_amd('paygw_paynocchio/terms_and_conditions', 'init', []);
-
-        echo $OUTPUT->render_from_template('paygw_paynocchio/terms_and_conditions', []);
-
     } else {
-        $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_activation', 'init', ['user_id' => $USER->id]);
-
-        $data = [
-            'user_id' => $USER->id,
-            'logo' => paynocchio_helper::custom_logo(),
-            'full_amount' => $amount,
-            'new_amount' => $amount * 0.1,
-            'brandname' => get_config('paygw_paynocchio', 'brandname'),
-            'itemid' => $itemid,
-            'description' => $pagetitle,
-        ];
-
-        echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet_activation', $data);
-    }*/
+        $wallet = new paynocchio_helper(\core\uuid::generate());
+    }
 
     if($user && $user->useruuid && $user->walletuuid) {
-
-        $wallet = new paynocchio_helper($user->useruuid);
 
         $wallet_balance_response = $wallet->getWalletBalance($user->walletuuid);
         $conversion_rate = $wallet->getEnvironmentStructure()['bonus_conversion_rate'];
@@ -222,6 +130,7 @@ if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
         $PAGE->requires->js_call_amd('paygw_paynocchio/terms_and_conditions', 'init', []);
         echo $OUTPUT->render_from_template('paygw_paynocchio/terms_and_conditions', []);
     } else {
+
         $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_activation', 'init', ['user_id' => $USER->id]);
         $need_to_topup = $amount;
         $data = [
