@@ -43,6 +43,10 @@ if ($ADMIN->fulltree) {
     $secret = new admin_setting_configtext('paygw_paynocchio/paynocchiosecret', get_string('paynocchio_secret', 'paygw_paynocchio'), get_string('secret_help', 'paygw_paynocchio'), '', PARAM_TEXT);
     $settings->add($secret);
 
+    $settings->add(new admin_setting_configtext('paygw_paynocchio/paynocchio_activation_subject', get_string('paynocchio_activation_subject', 'paygw_paynocchio'), '', 'Wallet activated', PARAM_TEXT));
+    $settings->add(new admin_setting_configtext('paygw_paynocchio/paynocchio_mail_topup_subject', get_string('paynocchio_mail_topup_subject', 'paygw_paynocchio'), '', 'Topped up successfully', PARAM_TEXT));
+    $settings->add(new admin_setting_configtextarea('paygw_paynocchio/paynocchio_mail_topup_message', get_string('paynocchio_mail_topup_message', 'paygw_paynocchio'), get_string('paynocchio_mail_topup_message_help', 'paygw_paynocchio'), 'Dear {$a->user_name}, you have topped up your wallet with {$a->sum} successfully.', PARAM_TEXT));
+
     //$settings->add(new admin_setting_configcheckbox('paygw_paynocchio/sendconfmail', get_string('send_confirmation_mail', 'paygw_paynocchio'), '', 0));
     $settings->add(new admin_setting_configtextarea('paygw_paynocchio/terms', get_string('terms', 'paygw_paynocchio'), '', get_string('terms_help', 'paygw_paynocchio')));
     $settings->add(new admin_setting_configtextarea('paygw_paynocchio/privacy', get_string('privacy', 'paygw_paynocchio'), '', get_string('privacy_help', 'paygw_paynocchio')));

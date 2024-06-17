@@ -26,17 +26,10 @@ declare(strict_types=1);
 
 namespace paygw_paynocchio\external;
 
-use core\uuid;
-use core_payment\helper;
-use core_payment\helper as payment_helper;
-use core_reportbuilder\local\filters\number;
-use mod_lti\local\ltiservice\response;
-use paygw_paynocchio\paynocchio_helper;
 use core_external\external_api;
 use core_external\external_function_parameters;
 use core_external\external_value;
 use core_external\external_single_structure;
-use stdClass;
 
 class get_conf extends external_api {
 

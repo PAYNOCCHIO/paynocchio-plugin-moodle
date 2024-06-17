@@ -168,6 +168,7 @@ if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
             'itemid' => $itemid,
             'fullAmount' => $amount,
             'balance' => $wallet_balance_response['balance'],
+            'bonuses_conversion_rate' => $conversion_rate,
         ]);
 
         if($max_bonuses_to_spend && $max_bonuses_to_spend < $amount) {

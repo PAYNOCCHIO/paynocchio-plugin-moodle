@@ -61,7 +61,7 @@ const changeBonusesValue = (balance, bonuses) => {
     element.innerText = ((balance - bonuses) * 0.1).toFixed(2).slice(0, -1);
 };
 
-export const init = (component, paymentArea, itemid, fullAmount, balance) => {
+export const init = (component, paymentArea, itemid, fullAmount, balance, bonuses_conversion_rate) => {
 
     const paynocchio_pay_button = document.getElementById('paynocchio_pay_button');
 
@@ -72,7 +72,7 @@ export const init = (component, paymentArea, itemid, fullAmount, balance) => {
 
         let bonuses = 0;
         if(input) {
-            bonuses = parseFloat(input.value);
+            bonuses = parseFloat(input.value) * parseFloat(bonuses_conversion_rate);
         }
 
         if(range && input) {
@@ -124,7 +124,6 @@ export const init = (component, paymentArea, itemid, fullAmount, balance) => {
                             })
                             .catch((error) => displayException(error));
                     } else {
-                        window.console.log(data);
                         topup_message.innerText = 'There is an Error occurred. Please try again later.';
                         paynocchio_pay_button.classList.remove('disabled');
                     }
