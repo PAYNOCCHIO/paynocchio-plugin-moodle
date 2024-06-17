@@ -124,8 +124,8 @@ function paygw_paynocchio_moove_additional_header() {
         if(!$integrated) {
             if(is_siteadmin($USER->id)) {
                 return '<a class="paynocchio-mini-block text-danger" href="/admin/settings.php?section=paymentgatewaypaynocchio">
-                        Integration with Paynocchio failed.
-                </a>';
+                            Integration with Paynocchio failed.
+                        </a>';
             }
         }
         if($user && $user->useruuid && $user->walletuuid) {
@@ -135,34 +135,39 @@ function paygw_paynocchio_moove_additional_header() {
             $wallet_balance_response = $wallet->getWalletBalance($user->walletuuid);
 
             return '<div class="paynocchio-mini-block status-'.$wallet_balance_response['status'].'">
-    <a href="/payment/gateway/paynocchio/my_paynocchio_wallet.php" title="Rewarding wallet">'.paynocchio_helper::custom_logo().'</a>
-     <a href="/payment/gateway/paynocchio/my_paynocchio_wallet.php" title="Rewarding wallet"><div role="button" class="amount" tabindex="0" data-toggle="popover" data-trigger="click, hover, focus" data-content="Wallet balance">
-                <i class="fa-solid fa-wallet"></i> 
-                $<span class="numbers alance-value" data-balance="0">'.$wallet_balance_response['balance'].'</span>
-            </div>
-            </a>
-            <a href="/payment/gateway/paynocchio/my_paynocchio_wallet.php" title="Rewarding wallet">
-        <div role="button" class="bonuses" tabindex="0" data-toggle="popover" data-trigger="click, hover, focus" data-content="Rewarding balance">
-            <i class="fa-solid fa-star"></i>
-            <span class="numbers bonus-value">'.$wallet_balance_response['bonuses'].'</span>
-        </div>
-        </a>
-</div>';
+                        <a href="/payment/gateway/paynocchio/my_paynocchio_wallet.php" title="Rewarding wallet">
+                            <div class="paynocchio_embleme_cont">
+                                '.paynocchio_helper::custom_logo().'
+                            </div>
+                        </a>
+                        <a href="/payment/gateway/paynocchio/my_paynocchio_wallet.php" title="Rewarding wallet">
+                            <div role="button" class="amount" tabindex="0" data-toggle="popover" data-trigger="click, hover, focus" data-content="Wallet balance">
+                                <i class="fa-solid fa-wallet"></i> 
+                                $<span class="numbers alance-value" data-balance="0">'.$wallet_balance_response['balance'].'</span>
+                            </div>
+                        </a>
+                        <a href="/payment/gateway/paynocchio/my_paynocchio_wallet.php" title="Rewarding wallet">
+                            <div role="button" class="bonuses" tabindex="0" data-toggle="popover" data-trigger="click, hover, focus" data-content="Rewarding balance">
+                                <i class="fa-solid fa-star"></i>
+                                <span class="numbers bonus-value">'.$wallet_balance_response['bonuses'].'</span>
+                            </div>
+                        </a>
+                    </div>';
         } else {
             if($USER->id){
                 return '<a class="paynocchio-mini-block" href="/payment/gateway/paynocchio/about.php" title="Rewarding wallet">
-        <div class="bonuses">
-            <i class="fa-solid fa-star"></i>
-            Start earning rewards with '.get_config('paygw_paynocchio', 'brandname').'!
-        </div>
-</a>';
+                            <div class="bonuses">
+                                <i class="fa-solid fa-star"></i>
+                                Start earning rewards with '.get_config('paygw_paynocchio', 'brandname').'!
+                            </div>
+                        </a>';
             }
         }
     } else{
         if(is_siteadmin($USER->id)) {
             return '<a class="paynocchio-mini-block text-danger" href="/admin/settings.php?section=paymentgatewaypaynocchio">
-        Please finish the Paynocchio gateway setup.
-</a>';
+                        Please finish the Paynocchio gateway setup.
+                    </a>';
         }
     }
 }

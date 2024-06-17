@@ -224,7 +224,7 @@
 }
 
 .paynocchio-mini-block img {
-    max-width: 50px;
+    max-width: 90px;
 }
 
 .paynocchio-profile-block .paynocchio-card {
@@ -865,4 +865,10 @@ button.disabled {
 #page-payment-gateway-paynocchio-my_paynocchio_wallet #user-notifications .environmenttable .ok .close {
     top: 50%;
     transform: translateY(-50%);
+}
+
+.paynocchio_embleme_cont {
+    padding: 0.25rem;
+    background: #0f47ad;
+    border-radius: 0.25rem;
 }
