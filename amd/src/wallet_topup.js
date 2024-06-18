@@ -39,7 +39,7 @@ export const init = (pay, minimum_topup_amount) => {
                     modal.setTitle('Topup your Wallet');
                     const input = modal.body.find('#top_up_amount');
                     const message = modal.body.find('#topup_message');
-                    if(pay && need_to_top_up) {
+                    if(need_to_top_up) {
                         input.val(need_to_top_up);
                         message.text(`You will get ${parseInt(need_to_top_up * 0.1)} bonuses`);
                     }
