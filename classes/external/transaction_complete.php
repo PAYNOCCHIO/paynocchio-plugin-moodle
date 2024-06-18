@@ -116,7 +116,7 @@ class transaction_complete extends external_api {
                 $paymentuser = $DB->get_record('user', ['id' => $order->userid]);
                 $supportuser = core_user::get_support_user();
 
-                email_to_user($paymentuser, $supportuser, 'Payment complete', 'Your order has been confirmed and you have been enrolled in the course');
+                email_to_user($paymentuser, $supportuser, get_config('paygw_paynocchio', 'paynocchio_transaction_subject'), get_config('paygw_paynocchio', 'paynocchio_transaction_message'));
 
                 return [
                     'success' => true,
