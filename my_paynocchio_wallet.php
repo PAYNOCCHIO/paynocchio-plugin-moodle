@@ -27,9 +27,14 @@ if($user && $user->useruuid && $user->walletuuid) {
 
     $wallet = new paynocchio_helper($user->useruuid);
     $wallet_balance_response = $wallet->getWalletBalance($user->walletuuid);
+    $minimum_topup_amount = $wallet->getEnvironmentStructure()['minimum_topup_amount'];
+
 
     if($wallet_balance_response['code'] === "ACTIVE") {
-        $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_topup', 'init');
+        $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_topup', 'init', [
+            'pay' => false,
+            'minimum_topup_amount' => $minimum_topup_amount,
+        ]);
 
         $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_withdraw', 'init', [
             'pay' => true
