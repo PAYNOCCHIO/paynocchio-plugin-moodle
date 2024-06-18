@@ -70,14 +70,15 @@ if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
         $wallet = new paynocchio_helper(uuid::generate());
     }
 
-    $conversion_rate = $wallet->getEnvironmentStructure()['bonus_conversion_rate'];
+    $conversion_rate = $wallet->getEnvironmentStructure()['bonus_conversion_rate'] ?: 1;
     $minimum_topup_amount = $wallet->getEnvironmentStructure()['minimum_topup_amount'];
 
     if($user && $user->useruuid && $user->walletuuid) {
 
         $wallet_balance_response = $wallet->getWalletBalance($user->walletuuid);
 
-        $max_bonuses_to_spend = $wallet_balance_response['bonuses'] * $conversion_rate;
+        $max_bonuses_to_spend = $wallet_balance_response['bonuses'];
+        $money_bonuses_equivalent = $wallet_balance_response['bonuses'] * $conversion_rate;
 
         if($wallet_balance_response['code'] === "ACTIVE") {
             $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_topup', 'init', [
@@ -103,7 +104,7 @@ if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
 
         $rewarding_rate = 0.1;
         $rewarding_for_topup = 1 + $rewarding_rate * $conversion_rate;
-        $need_to_topup = ceil(($amount - floor($wallet_balance_response['balance']) - floor($max_bonuses_to_spend)) / $rewarding_for_topup);
+        $need_to_topup = ceil(($amount - floor($wallet_balance_response['balance']) - floor($money_bonuses_equivalent)) / $rewarding_for_topup);
 
         if ($wallet_balance_response['code'] == 'SUSPEND') {
             $wallet_status_readable = 'Wallet suspended';
@@ -129,11 +130,11 @@ if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
             'full_amount' => $amount,
             'bonuses_amount' => $need_to_topup * $rewarding_rate,
             'bonuses_amount_in_dollar' => $need_to_topup * $rewarding_rate * $conversion_rate,
-            'bonuses_to_get' => $amount * 0.1,
+            'bonuses_to_get' => $amount * $rewarding_rate,
             'need_to_topup' => $need_to_topup,
             'total_with_bonuses' => $need_to_topup + $need_to_topup * $rewarding_rate,
             'bottom_line' => $amount - $need_to_topup + $need_to_topup * $rewarding_rate,
-            'can_pay' => $wallet_balance_response['balance'] + $max_bonuses_to_spend >= $amount,
+            'can_pay' => $wallet_balance_response['balance'] + $money_bonuses_equivalent >= $amount,
             'wallet_active' => $wallet_balance_response['code'] === "ACTIVE",
             'logo' => paynocchio_helper::custom_logo(),
             'description' => $pagetitle,

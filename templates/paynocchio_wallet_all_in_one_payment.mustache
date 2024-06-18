@@ -132,19 +132,14 @@
             </div>
             <div class="paynocchio-bonuses-conversion-rate">
                 <div>
-                    <nobr>Spend bonuses for</nobr>
+                    <nobr>Spend bonuses</nobr>
                 </div>
-                {{#wallet_active}}
-                {{^bonus_conversion_rate_equal}}
-                    <!--<small class="text-nowrap"> {{wallet_bonuses}} X {{bonus_conversion_rate}} <sup role="button" tabindex="0" data-toggle="popover" data-trigger="click" data-placement="top" data-title="Conversion rate" data-content="1 bonus = {{bonus_conversion_rate}}$">?</sup></small>-->
-                {{/bonus_conversion_rate_equal}}
-                {{/wallet_active}}
                 <div class="paynocchio-pay-form">
                     <input id="fullamount-input" type="hidden" value="{{full_amount}}">
                     <input id="bonuses-range" type="range" min="0" max="{{max_bonus}}" step="1" value="0"
                            class="styled-slider slider-progress" {{^wallet_active}}disabled{{/wallet_active}}
                              {{^wallet_balance}}disabled{{/wallet_balance}}>
-                    <div class="bonuses_value_cont">$<input id="bonuses-value" type="number" readonly="readonly" value="0" min="0" max="{{max_bonus}}" {{^wallet_active}}disabled{{/wallet_active}}></div>
+                    <div class="bonuses_value_cont"><input id="bonuses-value" type="number" readonly="readonly" value="0" min="0" max="{{max_bonus}}" {{^wallet_active}}disabled{{/wallet_active}}><span id="money_equivalent"></span></div>
                 </div>
                 <i class="fa-regular fa-circle-question" type="button" tabindex="0" data-trigger="click" data-container="body" data-toggle="popover" data-placement="top" data-title="Conversion Rate" data-content="Each bonus is equal to ${{bonus_conversion_rate}}"></i>
             </div>

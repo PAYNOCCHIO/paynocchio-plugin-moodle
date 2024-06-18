@@ -322,8 +322,8 @@ class paynocchio_helper {
         if($user_paynocchio_wallet['status_code'] === 200) {
             $json_response = json_decode($user_paynocchio_wallet['response']);
             return [
-                'balance' => $json_response->balance->current,
-                'bonuses' => $json_response->rewarding_balance,
+                'balance' => 0.01 * (int)($json_response->balance->current*100),
+                'bonuses' => intval($json_response->rewarding_balance),
                 'number' => $json_response->number,
                 'status' => $json_response->status->code,
                 'code' => $json_response->status->code,

@@ -86,7 +86,6 @@ class make_payment extends external_api {
             $wallet_balance_response = $wallet->getWalletBalance($wallet_uuid);
             $bonuses_conversion_rate = $wallet->getEnvironmentStructure()['bonus_conversion_rate'];
             $bonuses_equivalent = $wallet_balance_response['bonuses'] * $bonuses_conversion_rate;
-            $converted_bonuses = $wallet_balance_response['bonuses'] / $bonuses_conversion_rate;
 
             /**
              * Check if money + converted bonuses are enough for payment
@@ -105,17 +104,17 @@ class make_payment extends external_api {
 
             $originalAmount = $fullAmount;
             $amount = $fullAmount;
-            $bonusAmount = $converted_bonuses ?: null;
+            $bonusAmount = $bonuses ?: null;
 
             if(!$bonusAmount) {
                 $fullAmount = null;
             } else {
-                $amount = $fullAmount - $bonusAmount;
+                $amount = $fullAmount - $bonuses_equivalent ;
             }
 
             $orderuuid = uuid::generate();
 
-            $wallet_response = $wallet->makePayment($wallet_uuid, $fullAmount, $amount, $orderuuid, $converted_bonuses);
+            $wallet_response = $wallet->makePayment($wallet_uuid, $fullAmount, $amount, $orderuuid, $bonuses);
 
             if($wallet_response['status_code'] === 200) {
 

@@ -25,8 +25,8 @@ import Templates from 'core/templates';
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-const checkPayability = (value, fullAmount, balance = '0', element) => {
-    if(parseFloat(value)+parseFloat(balance) < parseFloat(fullAmount)) {
+const checkPayability = (bonuses, fullAmount, balance = '0', element, bonuses_conversion_rate) => {
+    if(parseFloat(bonuses) * parseFloat(bonuses_conversion_rate) + parseFloat(balance) < parseFloat(fullAmount)) {
         element.classList.add('disabled');
         document.getElementById('topup_message').innerText = 'Please top up or use your Bonuses.';
         document.getElementById('topup_message').classList.remove('paynocchio-hidden');
@@ -38,18 +38,23 @@ const checkPayability = (value, fullAmount, balance = '0', element) => {
     }
 };
 
-const changePayButtonValues = (fullAmount, bonuses) => {
+const changePayButtonValues = (fullAmount, bonuses, bonuses_conversion_rate) => {
     const current_amount = document.getElementById('current_amount');
     const old_amount = document.getElementById('old_amount');
     const discount = document.getElementById('discount');
+    const money_equivalent = document.getElementById('money_equivalent');
     let old_amount_value = fullAmount;
-    if (bonuses != 0) {
-        current_amount.innerText = (old_amount_value - bonuses);
+    if (bonuses > 0) {
+        if(bonuses_conversion_rate !== 1) {
+            money_equivalent.innerHTML = `<span>$${bonuses * bonuses_conversion_rate}</span>`;
+        }
+        current_amount.innerText = (old_amount_value - bonuses * bonuses_conversion_rate);
         old_amount.innerText = "$" + old_amount_value;
-        discount.innerText = '-' + ((bonuses * 100) / old_amount_value).toFixed(2) + '%';
+        discount.innerText = '-' + ((bonuses * bonuses_conversion_rate * 100) / old_amount_value).toFixed(2) + '%';
         old_amount.classList.remove('paynocchio-hidden');
         discount.classList.remove('paynocchio-hidden');
     } else {
+        money_equivalent.innerHTML = '';
         current_amount.innerText = old_amount_value;
         old_amount.classList.add('paynocchio-hidden');
         discount.classList.add('paynocchio-hidden');
@@ -71,12 +76,13 @@ export const init = (component, paymentArea, itemid, fullAmount, balance, bonuse
         const input = document.getElementById('bonuses-value');
 
         let bonuses = 0;
+
         if(input) {
-            bonuses = parseFloat(input.value) * parseFloat(bonuses_conversion_rate);
+            bonuses = parseFloat(input.value);
         }
 
         if(range && input) {
-            checkPayability(bonuses, fullAmount, balance, paynocchio_pay_button);
+            checkPayability(bonuses, fullAmount, balance, paynocchio_pay_button, bonuses_conversion_rate);
 
             input.addEventListener('change', () => {
                 range.value = bonuses;
@@ -84,19 +90,19 @@ export const init = (component, paymentArea, itemid, fullAmount, balance, bonuse
             range.addEventListener('change', () => {
                 bonuses = range.value;
                 input.value = range.value;
-                checkPayability(bonuses, fullAmount, balance, paynocchio_pay_button);
-                changeBonusesValue(fullAmount, bonuses);
-                changePayButtonValues(fullAmount, bonuses);
+                checkPayability(bonuses, fullAmount, balance, paynocchio_pay_button, bonuses_conversion_rate);
+                changeBonusesValue(fullAmount, bonuses * bonuses_conversion_rate);
+                changePayButtonValues(fullAmount, bonuses, bonuses_conversion_rate);
             });
             range.addEventListener('input', () => {
                 bonuses = range.value;
                 input.value = range.value;
-                checkPayability(bonuses, fullAmount, balance, paynocchio_pay_button);
-                changeBonusesValue(fullAmount, bonuses);
-                changePayButtonValues(fullAmount, bonuses);
+                checkPayability(bonuses, fullAmount, balance, paynocchio_pay_button, bonuses_conversion_rate);
+                changeBonusesValue(fullAmount, bonuses * bonuses_conversion_rate);
+                changePayButtonValues(fullAmount, bonuses, bonuses_conversion_rate);
             });
         } else {
-            checkPayability(0, fullAmount, balance, paynocchio_pay_button);
+            checkPayability(0, fullAmount, balance, paynocchio_pay_button, bonuses_conversion_rate);
         }
 
         paynocchio_pay_button.addEventListener('click', () => {
