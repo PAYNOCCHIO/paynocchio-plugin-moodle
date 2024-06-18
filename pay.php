@@ -136,6 +136,8 @@ if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
             'bottom_line' => $amount - $need_to_topup + $need_to_topup * $rewarding_rate,
             'can_pay' => $wallet_balance_response['balance'] + $money_bonuses_equivalent >= $amount,
             'wallet_active' => $wallet_balance_response['code'] === "ACTIVE",
+            'wallet_suspend' => $wallet_balance_response['code'] === "SUSPEND",
+            'wallet_blocked' => $wallet_balance_response['code'] === "BLOCKED",
             'logo' => paynocchio_helper::custom_logo(),
             'description' => $pagetitle,
             'wallet_activated' => true,
@@ -145,6 +147,8 @@ if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
         echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet_all_in_one_payment', $data);
         $PAGE->requires->js_call_amd('paygw_paynocchio/terms_and_conditions', 'init', []);
         echo $OUTPUT->render_from_template('paygw_paynocchio/terms_and_conditions', []);
+
+        $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_status_control', 'init', ['wallet_uuid' => $user->walletuuid]);
 
     } else {
 

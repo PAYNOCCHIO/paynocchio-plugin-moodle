@@ -442,6 +442,10 @@ button.disabled {
     background: #ebffde;
 }
 
+.paynocchio-wallet-tab .issue {
+    background: #ffdede;
+}
+
 .paynocchio-wallet-tab-head {
     height: 80px;
 }
@@ -638,7 +642,7 @@ button.disabled {
     font-weight: 600;
     line-height: 1rem;
     padding: 0;
-    width: 50px;
+
 }
 
 .paynocchio-pay-button-container {
