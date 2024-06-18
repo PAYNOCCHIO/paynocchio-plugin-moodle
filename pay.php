@@ -71,6 +71,7 @@ if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
     }
 
     $conversion_rate = $wallet->getEnvironmentStructure()['bonus_conversion_rate'];
+    $minimum_topup_amount = $wallet->getEnvironmentStructure()['minimum_topup_amount'];
 
     if($user && $user->useruuid && $user->walletuuid) {
 
@@ -80,7 +81,8 @@ if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
 
         if($wallet_balance_response['code'] === "ACTIVE") {
             $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_topup', 'init', [
-                'pay' => true
+                'pay' => true,
+                'minimum_topup_amount' => $minimum_topup_amount,
             ]);
         }
 

@@ -84,8 +84,13 @@ class make_payment extends external_api {
         if($wallet_uuid) {
             $wallet = new paynocchio_helper($user_uuid);
             $wallet_balance_response = $wallet->getWalletBalance($wallet_uuid);
+            $bonuses_conversion_rate = $wallet->getEnvironmentStructure()['bonus_conversion_rate'];
+            $converted_bonuses = $wallet_balance_response['bonuses'] * $bonuses_conversion_rate;
 
-            if($fullAmount > floatval($wallet_balance_response['balance']) + floatval($wallet_balance_response['bonuses'])) {
+            /**
+             * Check if money + converted bonuses are enough for payment
+             */
+            if($fullAmount > floatval($wallet_balance_response['balance']) + $converted_bonuses) {
                 return [
                     'success' => false,
                     'message' => 'Insufficient funds',

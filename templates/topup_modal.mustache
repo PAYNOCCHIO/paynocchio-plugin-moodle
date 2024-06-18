@@ -31,14 +31,15 @@
 
 }}
 <div>
-    <div class="mb-6">
+    <div class="mb-2">
         Please enter amount you want to add to you wallet. After clicking "Add money" you will be redirected to Stripe for secure money transfer.
     </div>
+    <div class="mb-6">The minimum replenishment amount for this card is ${{minimum_topup_amount}}</div>
     <div class="paynocchio-inline-form">
         <div class="paynocchio-fs4">
             $
         </div>
-        <input type="number" step="0.01" name="amount" id="top_up_amount" placeholder="0">
+        <input type="number" step="0.01" name="amount" id="top_up_amount" placeholder="{{minimum_topup_amount}}" value="{{minimum_topup_amount}}">
         <button type="button" id="topup_button" class="paynocchio_button paynocchio_colored btn-lg">
             Add money
         </button>

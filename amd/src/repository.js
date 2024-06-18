@@ -115,10 +115,11 @@ export const handleDeleteButtonClick = async (wallet_uuid) => {
 /**
  * Creates and shows a modal that contains a placeholder.
  *
+ * @param {string} minimum_topup_amount
  * @returns {Promise<Modal>}
  */
-export const showModalWithTopup = async() => await Modal.create({
-    body: await Templates.render('paygw_paynocchio/topup_modal', {}),
+export const showModalWithTopup = async(minimum_topup_amount) => await Modal.create({
+    body: await Templates.render('paygw_paynocchio/topup_modal', {minimum_topup_amount }),
     show: true,
     removeOnClose: true,
 });
