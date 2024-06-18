@@ -44,7 +44,11 @@ export const init = (pay, minimum_topup_amount) => {
                         message.text(`You will get ${(need_to_top_up * 0.1).toFixed(3).slice(0, -1)} bonuses`);
                     }
                     input.on('keyup change', (evt) => {
-                        message.text(`You will get ${(parseFloat(evt.target.value) * 0.1).toFixed(3).slice(0, -1)} bonuses`);
+                        if (evt.target.value >= minimum_topup_amount) {
+                            message.text(`You will get ${(parseFloat(evt.target.value) * 0.1).toFixed(3).slice(0, -1)} bonuses`);
+                        } else {
+                            message.text('Please enter amount more than minimum replenishment amount.');
+                        }
                     });
                     const button = modal.body.find('#topup_button');
                     button.click(() => {

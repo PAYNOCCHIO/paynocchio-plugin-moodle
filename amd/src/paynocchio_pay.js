@@ -50,7 +50,7 @@ const changePayButtonValues = (fullAmount, bonuses, bonuses_conversion_rate) => 
         }
         current_amount.innerText = (old_amount_value - bonuses * bonuses_conversion_rate);
         old_amount.innerText = "$" + old_amount_value;
-        discount.innerText = '-' + ((bonuses * bonuses_conversion_rate * 100) / old_amount_value).toFixed(2) + '%';
+        discount.innerText = '—' + ((bonuses * bonuses_conversion_rate * 100) / old_amount_value).toFixed(2) + '%';
         old_amount.classList.remove('paynocchio-hidden');
         discount.classList.remove('paynocchio-hidden');
     } else {
@@ -63,6 +63,14 @@ const changePayButtonValues = (fullAmount, bonuses, bonuses_conversion_rate) => 
 
 const changeBonusesValue = (balance, bonuses) => {
     const element = document.getElementById('bonuses_to_get');
+    let bonuses_to_get_value = ((balance - bonuses) * 0.1).toFixed(2).slice(0, -1);
+    if (bonuses_to_get_value > 0) {
+        element.classList.remove('paynocchio-hidden');
+        element.innerText = bonuses_to_get_value;
+    } else {
+        element.classList.add('paynocchio-hidden');
+    }
+
     element.innerText = ((balance - bonuses) * 0.1).toFixed(2).slice(0, -1);
 };
 

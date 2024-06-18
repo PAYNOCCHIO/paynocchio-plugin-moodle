@@ -81,14 +81,14 @@
             <h3>2 step. Add money</h3>
             {{#wallet_activated}}
                 {{^can_pay}}
-                    <div>Top up your wallet by $<span id="need_to_top_up">{{need_to_topup}}</span> and get {{bonuses_amount}} bonus points{{^bonus_conversion_rate_equal}} (that equals to ${{bonuses_amount_in_dollar}}){{/bonus_conversion_rate_equal}}, and you can pay for your chosen course. Additionally, you will receive up to {{bonuses_to_get}} bonuses for your purchase.</div>
+                    <div>Top up your wallet by $<span id="need_to_top_up">{{need_to_topup}}</span> and get {{bonuses_amount}} bonuses{{^bonus_conversion_rate_equal}} (that equals to ${{bonuses_amount_in_dollar}}){{/bonus_conversion_rate_equal}}, and you can pay for your chosen course. Additionally, you will receive up to {{bonuses_to_get}} bonuses for your purchase.</div>
                 {{/can_pay}}
                 {{#can_pay}}
                     <div><strong>Well done!</strong> Your wallet balance is enough to make a purchase!</div>
                 {{/can_pay}}
             {{/wallet_activated}}
             {{^wallet_activated}}
-                <div>Top up your wallet by $<span id="need_to_top_up">{{need_to_topup}}</span> and get TEMP bonus points{{^bonus_conversion_rate_equal}} (that equals to TEMP){{/bonus_conversion_rate_equal}}, and you can pay for your chosen course. Additionally, you will receive up to TEMP bonuses for your purchase.</div>
+                <div>Top up your wallet by $<span id="need_to_top_up">{{need_to_topup}}</span> and get {{bonuses_amount}} bonus points{{^bonus_conversion_rate_equal}} (that equals to ${{bonuses_amount_in_dollar}}){{/bonus_conversion_rate_equal}}, and you can pay for your chosen course. Additionally, you will receive up to {{bonuses_to_get}} bonuses for your purchase.</div>
             {{/wallet_activated}}
         </div>
         <div class="paynocchio-lgray paynocchio-rounded paynocchio-p4 {{#wallet_activated}}{{#can_pay}}active{{/can_pay}}{{/wallet_activated}}" id="paynocchio-step3">
@@ -139,9 +139,8 @@
                     <input id="bonuses-range" type="range" min="0" max="{{max_bonus}}" step="1" value="0"
                            class="styled-slider slider-progress" {{^wallet_active}}disabled{{/wallet_active}}
                              {{^wallet_balance}}disabled{{/wallet_balance}}>
-                    <div class="bonuses_value_cont"><input id="bonuses-value" type="number" readonly="readonly" value="0" min="0" max="{{max_bonus}}" {{^wallet_active}}disabled{{/wallet_active}}><span id="money_equivalent"></span></div>
+                    <div class="bonuses_value_cont"><input id="bonuses-value" type="number" readonly="readonly" value="0" min="0" max="{{max_bonus}}" {{^wallet_active}}disabled{{/wallet_active}}><span id="money_equivalent" class="paynocchio-hidden"></span></div>
                 </div>
-                <i class="fa-regular fa-circle-question" type="button" tabindex="0" data-trigger="click" data-container="body" data-toggle="popover" data-placement="top" data-title="Conversion Rate" data-content="Each bonus is equal to ${{bonus_conversion_rate}}"></i>
             </div>
             <div class="paynocchio-topup-message paynocchio-hidden" id="topup_message"></div>
             <div class="paynocchio-pay-button-container">

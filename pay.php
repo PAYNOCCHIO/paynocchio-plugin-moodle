@@ -149,27 +149,25 @@ if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
     } else {
 
         $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_activation', 'init', ['user_id' => $USER->id]);
-        $need_to_topup = $amount;
+
+        $rewarding_rate = 0.1;
+        $rewarding_for_topup = 1 + $rewarding_rate * $conversion_rate;
+        $need_to_topup = ceil($amount / $rewarding_for_topup);
+
         $data = [
+            'user_id' => $USER->id,
             'wallet_balance' => 0,
             'wallet_bonuses' => 0,
-            'wallet_card' => '',
-            'wallet_status' => '',
-            'wallet_code' => '',
-            'wallet_uuid' => '',
-            'user_uuid' => '',
-            'max_bonus' => $max_bonus ?? 0,
-            'bonuses_amount' => $need_to_topup * $conversion_rate,
-            'bonuses_to_get' => $amount * $conversion_rate,
-            'need_to_topup' => $need_to_topup,
-            'total_with_bonuses' => $need_to_topup + $need_to_topup * $conversion_rate,
-            'bottom_line' => $amount - $need_to_topup + $need_to_topup * $conversion_rate,
+            'wallet_activated' => false,
+            'wallet_active' => false,
             'can_pay' => false,
-            'wallet_active' => '',
-            'user_id' => $USER->id,
-            'logo' => paynocchio_helper::custom_logo(),
             'full_amount' => $amount,
             'new_amount' => $amount * $conversion_rate,
+            'need_to_topup' => $amount - $amount * $rewarding_rate * $conversion_rate,
+            'bonuses_amount' => $amount * $rewarding_rate,
+            'bonuses_amount_in_dollar' => $amount * $rewarding_rate * $conversion_rate,
+            'bonuses_to_get' => $amount * $rewarding_rate,
+            'logo' => paynocchio_helper::custom_logo(),
             'brandname' => get_config('paygw_paynocchio', 'brandname'),
             'itemid' => $itemid,
             'description' => $pagetitle,
