@@ -105,6 +105,14 @@ if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
         $rewarding_for_topup = 1 + $rewarding_rate * $conversion_rate;
         $need_to_topup = ceil(($amount - floor($wallet_balance_response['balance']) - floor($max_bonuses_to_spend)) / $rewarding_for_topup);
 
+        if ($wallet_balance_response['code'] == 'SUSPEND') {
+            $wallet_status_readable = 'Wallet suspended';
+        } elseif ($wallet_balance_response['code'] == 'BLOCKED') {
+            $wallet_status_readable = 'Wallet blocked';
+        } else {
+            $wallet_status_readable = 'Wallet activated';
+        }
+
         $data = [
             'wallet_balance' => $wallet_balance_response['balance'] ?? 0,
             'wallet_bonuses' => $wallet_balance_response['bonuses'] ?? 0,
@@ -113,12 +121,14 @@ if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
             'bonus_to_spend' => $max_bonuses_to_spend,
             'wallet_card' => chunk_split($wallet_balance_response['number'], 4, ' '),
             'wallet_status' => $wallet_balance_response['status'],
+            'wallet_status_readable' => $wallet_status_readable,
             'wallet_code' => $wallet_balance_response['code'],
             'wallet_uuid' => $user->walletuuid,
             'user_uuid' => $user->useruuid,
             'max_bonus' => floor($max_bonus) ?? 0,
             'full_amount' => $amount,
             'bonuses_amount' => $need_to_topup * $rewarding_rate,
+            'bonuses_amount_in_dollar' => $need_to_topup * $rewarding_rate * $conversion_rate,
             'bonuses_to_get' => $amount * 0.1,
             'need_to_topup' => $need_to_topup,
             'total_with_bonuses' => $need_to_topup + $need_to_topup * $rewarding_rate,
@@ -134,6 +144,7 @@ if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
         echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet_all_in_one_payment', $data);
         $PAGE->requires->js_call_amd('paygw_paynocchio/terms_and_conditions', 'init', []);
         echo $OUTPUT->render_from_template('paygw_paynocchio/terms_and_conditions', []);
+
     } else {
 
         $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_activation', 'init', ['user_id' => $USER->id]);
@@ -163,6 +174,7 @@ if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
             'description' => $pagetitle,
         ];
         echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet_all_in_one_payment', $data);
+        echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_congratz', $data);
     }
 
     echo "</div>";

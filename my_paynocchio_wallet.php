@@ -96,6 +96,7 @@ if($user && $user->useruuid && $user->walletuuid) {
     ];
 
     echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet_all_in_one_cabinet', $data);
+    echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_congratz', $data);
 }
 
 echo $OUTPUT->footer();

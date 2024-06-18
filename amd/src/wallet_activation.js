@@ -48,7 +48,12 @@ export const init = (user_id) => {
                         .catch((error) => displayException(error));*/
                     //window.location.reload();
                     document.getElementById('congratz').classList.add('shown');
-                    document.getElementById('page-payment-gateway-paynocchio-pay').style.overflow = 'hidden';
+                    if (document.getElementById('page-payment-gateway-paynocchio-pay')) {
+                        document.getElementById('page-payment-gateway-paynocchio-pay').style.overflow = 'hidden';
+                    }
+                    if (document.getElementById('page-payment-gateway-paynocchio-my_paynocchio_wallet')) {
+                        document.getElementById('page-payment-gateway-paynocchio-my_paynocchio_wallet').style.overflow = 'hidden';
+                    }
                 } else {
                     window.alert('There is an Error occurred. Please try again later.');
                     window.console.log(data);
