@@ -126,7 +126,7 @@ if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
             'wallet_code' => $wallet_balance_response['code'],
             'wallet_uuid' => $user->walletuuid,
             'user_uuid' => $user->useruuid,
-            'max_bonus' => $max_bonus / $conversion_rate ?? 0,
+            'max_bonus' => $max_bonus ?? 0,
             'full_amount' => $amount,
             'bonuses_amount' => $need_to_topup * $rewarding_rate,
             'bonuses_amount_in_dollar' => $need_to_topup * $rewarding_rate * $conversion_rate,
