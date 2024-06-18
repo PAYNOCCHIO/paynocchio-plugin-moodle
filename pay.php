@@ -1,5 +1,6 @@
 <?php
 
+use core\uuid;
 use core_payment\helper;
 use paygw_paynocchio\pay_form;
 use paygw_paynocchio\paynocchio_helper;
@@ -66,13 +67,14 @@ if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
     if($user && $user->useruuid) {
         $wallet = new paynocchio_helper($user->useruuid);
     } else {
-        $wallet = new paynocchio_helper(\core\uuid::generate());
+        $wallet = new paynocchio_helper(uuid::generate());
     }
+
+    $conversion_rate = $wallet->getEnvironmentStructure()['bonus_conversion_rate'];
 
     if($user && $user->useruuid && $user->walletuuid) {
 
         $wallet_balance_response = $wallet->getWalletBalance($user->walletuuid);
-        $conversion_rate = $wallet->getEnvironmentStructure()['bonus_conversion_rate'];
 
         $max_bonuses_to_spend = $wallet_balance_response['bonuses'] * $conversion_rate;
 
@@ -105,13 +107,14 @@ if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
             'wallet_balance' => $wallet_balance_response['balance'] ?? 0,
             'wallet_bonuses' => $wallet_balance_response['bonuses'] ?? 0,
             'bonus_conversion_rate' => $wallet->getEnvironmentStructure()['bonus_conversion_rate'],
+            'bonus_conversion_rate_equal' => $wallet->getEnvironmentStructure()['bonus_conversion_rate'] === 1,
             'bonus_to_spend' => $max_bonuses_to_spend,
             'wallet_card' => chunk_split($wallet_balance_response['number'], 4, ' '),
             'wallet_status' => $wallet_balance_response['status'],
             'wallet_code' => $wallet_balance_response['code'],
             'wallet_uuid' => $user->walletuuid,
             'user_uuid' => $user->useruuid,
-            'max_bonus' => $max_bonus ?? 0,
+            'max_bonus' => floor($max_bonus) ?? 0,
             'full_amount' => $amount,
             'bonuses_amount' => $need_to_topup * $rewarding_rate,
             'bonuses_to_get' => $amount * 0.1,
@@ -142,17 +145,17 @@ if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
             'wallet_uuid' => '',
             'user_uuid' => '',
             'max_bonus' => $max_bonus ?? 0,
-            'bonuses_amount' => $need_to_topup * 0.1,
-            'bonuses_to_get' => $amount * 0.1,
+            'bonuses_amount' => $need_to_topup * $conversion_rate,
+            'bonuses_to_get' => $amount * $conversion_rate,
             'need_to_topup' => $need_to_topup,
-            'total_with_bonuses' => $need_to_topup + $need_to_topup * 0.1,
-            'bottom_line' => $amount - $need_to_topup + $need_to_topup * 0.1,
+            'total_with_bonuses' => $need_to_topup + $need_to_topup * $conversion_rate,
+            'bottom_line' => $amount - $need_to_topup + $need_to_topup * $conversion_rate,
             'can_pay' => false,
             'wallet_active' => '',
             'user_id' => $USER->id,
             'logo' => paynocchio_helper::custom_logo(),
             'full_amount' => $amount,
-            'new_amount' => $amount * 0.1,
+            'new_amount' => $amount * $conversion_rate,
             'brandname' => get_config('paygw_paynocchio', 'brandname'),
             'itemid' => $itemid,
             'description' => $pagetitle,

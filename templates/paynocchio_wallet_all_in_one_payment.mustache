@@ -135,12 +135,15 @@
                 <div>
                     <nobr>Spend bonuses</nobr>
                 </div>
+                {{^bonus_conversion_rate_equal}}
+                    <small class="text-nowrap"> {{wallet_bonuses}} X {{bonus_conversion_rate}} <sup role="button" tabindex="0" data-toggle="popover" data-trigger="click" data-placement="top" data-title="Conversion rate" data-content="1 bonus = {{bonus_conversion_rate}}$">?</sup></small>
+                {{/bonus_conversion_rate_equal}}
                 <div class="paynocchio-pay-form">
                     <input id="fullamount-input" type="hidden" value="{{full_amount}}">
                     <input id="bonuses-range" type="range" min="0" max="{{max_bonus}}" step="1" value="0"
                            class="styled-slider slider-progress" {{^wallet_active}}disabled{{/wallet_active}}
                              {{^wallet_balance}}disabled{{/wallet_balance}}>
-                    <input id="bonuses-value" type="number" readonly="readonly" value="0" min="0" max="{{max_bonus}}" {{^wallet_active}}disabled{{/wallet_active}}>
+                    $<input id="bonuses-value" type="number" readonly="readonly" value="0" min="0" max="{{max_bonus}}" {{^wallet_active}}disabled{{/wallet_active}}>
                 </div>
             </div>
             <div class="paynocchio-topup-message paynocchio-hidden" id="topup_message"></div>
