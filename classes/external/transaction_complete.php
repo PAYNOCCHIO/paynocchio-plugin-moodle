@@ -125,7 +125,7 @@ class transaction_complete extends external_api {
             } else {
                 return [
                     'success' => false,
-                    'message' => 'Some error',
+                    'message' => 'Some error!',
                 ];
             }
         }
