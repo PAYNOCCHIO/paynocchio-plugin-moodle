@@ -108,7 +108,7 @@ class topup_complete extends external_api {
             $paymentuser = $DB->get_record('user', ['id' => $wallet->userid]);
             $supportuser = core_user::get_support_user();
 
-            email_to_user($paymentuser, $supportuser, get_config('paygw_paynocchio', 'paynocchio_mail_topup_subject'), get_config('paygw_paynocchio', 'paynocchio_mail_topup_message', ['user_name' => $paymentuser->firstname.' '.$paymentuser->lastname, 'sum' => $amount]));
+            email_to_user($paymentuser, $supportuser, get_string('paynocchio_topup_subject', 'paygw_paynocchio'), get_string('paynocchio_topup_message', 'paygw_paynocchio', ['username' => $USER->firstname . ' ' . $USER->lastname, 'sum' => $amount]));
 
             return [
                 'success' => true,

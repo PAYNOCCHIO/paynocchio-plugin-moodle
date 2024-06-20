@@ -27,6 +27,7 @@ declare(strict_types=1);
 namespace paygw_paynocchio\external;
 
 use core\notification;
+use core_user;
 use paygw_paynocchio\paynocchio_helper;
 use core_external\external_api;
 use core_external\external_function_parameters;
@@ -63,7 +64,6 @@ class update_wallet_status extends external_api {
         $wallet_uuid = $paynocchio_data->walletuuid;
         $paynocchio_wallet = $DB->get_record('paygw_paynocchio_wallets', ['walletuuid'  => $paynocchio_data->walletuuid]);
 
-
         if($wallet_uuid) {
             $wallet = new paynocchio_helper($user_uuid);
             $wallet_statuses = $wallet->getWalletStatuses();
@@ -77,6 +77,22 @@ class update_wallet_status extends external_api {
 
                 if($wallet_balance_response && $updated) {
                     notification::success('Status has been successfully changed!');
+
+                    $current_status = $wallet_balance_response['status'];
+                    $paymentuser = $DB->get_record('user', ['id' => $USER->id]);
+                    $supportuser = core_user::get_support_user();
+
+                    if ($current_status == 'BLOCKED') {
+                        email_to_user($paymentuser, $supportuser, get_string('paynocchio_block_subject', 'paygw_paynocchio'), get_string('paynocchio_block_message', 'paygw_paynocchio', ['username' => $USER->firstname . ' ' . $USER->lastname]));
+                    }
+
+                    if ($current_status == 'SUSPEND') {
+                        email_to_user($paymentuser, $supportuser, get_string('paynocchio_suspend_subject', 'paygw_paynocchio'), get_string('paynocchio_suspend_message', 'paygw_paynocchio', ['username' => $USER->firstname . ' ' . $USER->lastname]));
+                    }
+
+                    if ($current_status == 'ACTIVE') {
+                        email_to_user($paymentuser, $supportuser, get_string('paynocchio_reactivate_subject', 'paygw_paynocchio'), get_string('paynocchio_reactivate_message', 'paygw_paynocchio', ['username' => $USER->firstname . ' ' . $USER->lastname]));
+                    }
 
                     return [
                         'success' => true,
