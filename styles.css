@@ -49,6 +49,7 @@
     animation: rotate 1s linear infinite;
     top: 1rem;
     right: 0.5rem;
+    background-color: transparent;
 }
 
 .paynocchio-spinner.active {
@@ -339,6 +340,7 @@
 
 .spinner .paynocchio-spinner.active {
     display: block;
+    background-color: transparent;
 }
 
 .paynocchio-transactions {
@@ -438,7 +440,7 @@ button.disabled {
     height: 100%;
 }
 
-.paynocchio-wallet-tab .active {
+.paynocchio-wallet-tab .paynocchio-lgray.active {
     background: #ebffde;
 }
 
