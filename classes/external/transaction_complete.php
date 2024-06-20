@@ -116,7 +116,7 @@ class transaction_complete extends external_api {
                 $paymentuser = $DB->get_record('user', ['id' => $order->userid]);
                 $supportuser = core_user::get_support_user();
 
-                email_to_user($paymentuser, $supportuser, get_string('paynocchio_transaction_subject', 'paygw_paynocchio'), get_string('paynocchio_transaction_message', 'paygw_paynocchio', ['username' => $paymentuser->firstname . ' ' . $paymentuser->lastname, 'sum' => $amount ]));
+                email_to_user($paymentuser, $supportuser, get_string('paynocchio_transaction_subject', 'paygw_paynocchio'), get_string('paynocchio_transaction_message', 'paygw_paynocchio', ['username' => $USER->firstname . ' ' . $USER->lastname, 'sum' => $amount ]));
 
                 return [
                     'success' => true,
