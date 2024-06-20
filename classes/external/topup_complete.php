@@ -84,7 +84,7 @@ class topup_complete extends external_api {
         $order_uuid,
         $external_order_uuid,
     ): array {
-        global $DB;
+        global $DB, $USER;
 
         self::validate_parameters(self::execute_parameters(), [
             'uuid' => $uuid,

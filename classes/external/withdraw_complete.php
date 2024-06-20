@@ -83,7 +83,7 @@ class withdraw_complete extends external_api {
         string $user_uuid,
         string $status_type
     ): array {
-        global $DB;
+        global $DB, $USER;
 
         self::validate_parameters(self::execute_parameters(), [
             'uuid' => $uuid,

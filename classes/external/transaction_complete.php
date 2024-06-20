@@ -85,7 +85,7 @@ class transaction_complete extends external_api {
         string $status_type,
         string $order_uuid,
         string $external_order_uuid): array {
-        global $DB;
+        global $DB, $USER;
 
         self::validate_parameters(self::execute_parameters(), [
             'uuid' => $uuid,
