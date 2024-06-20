@@ -553,6 +553,26 @@ button.disabled {
     padding: 1rem;
 }
 
+#congratz .paynocchio-wallet-card {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: -1;
+}
+
+#congratz .paynocchio-wallet-card .on_card_embleme img {
+    width: 100px;
+    display: block;
+    margin-left: auto;
+}
+
+#congratz .paynocchio-wallet-card .paynocchio-wallet-card-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
 .paynocchio-wallet-card.inactive,
 .status-SUSPEND .paynocchio-wallet-card {
     background: #7a839b;
@@ -642,7 +662,6 @@ button.disabled {
     font-weight: 600;
     line-height: 1rem;
     padding: 0;
-
 }
 
 .paynocchio-pay-button-container {
@@ -793,6 +812,10 @@ button.disabled {
 
 .paynocchio-flcenter {
     justify-content: center;
+}
+
+.paynocchio-relative {
+    position: relative;
 }
 
 .paynocchio-fs4 {

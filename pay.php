@@ -175,6 +175,7 @@ if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
             'brandname' => get_config('paygw_paynocchio', 'brandname'),
             'itemid' => $itemid,
             'description' => $pagetitle,
+            'username' => $USER->firstname . ' ' . $USER->lastname,
         ];
         echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet_all_in_one_payment', $data);
         echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_congratz', $data);

@@ -35,6 +35,7 @@ export const init = (user_id) => {
             const response = handleWalletActivationClick(user_id);
             spinner.classList.add('active');
             response.then(data => {
+                /*window.console.log(data);*/
                 if(data.success) {
                     spinner.classList.remove('active');
                     message.classList.remove('hidden');
@@ -47,6 +48,7 @@ export const init = (user_id) => {
                         })
                         .catch((error) => displayException(error));*/
                     //window.location.reload();
+
                     document.getElementById('congratz').classList.add('shown');
                     if (document.getElementById('page-payment-gateway-paynocchio-pay')) {
                         document.getElementById('page-payment-gateway-paynocchio-pay').style.overflow = 'hidden';

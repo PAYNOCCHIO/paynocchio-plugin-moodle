@@ -56,6 +56,7 @@ if($user && $user->useruuid && $user->walletuuid) {
         'cardBg' => $cardBg,
         'logo' => paynocchio_helper::custom_logo(),
         'wallet_activated' => true,
+
     ];
 
     echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet_all_in_one_cabinet', $data);
@@ -100,6 +101,7 @@ if($user && $user->useruuid && $user->walletuuid) {
         'brandname' => get_config('paygw_paynocchio', 'brandname'),
         'cardBg' => $cardBg,
         'logo' => paynocchio_helper::custom_logo(),
+        'username' => $USER->firstname . ' ' . $USER->lastname,
     ];
 
     echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet_all_in_one_cabinet', $data);
