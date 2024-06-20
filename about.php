@@ -19,7 +19,10 @@ $PAGE->set_heading($pagetitle);
 
 echo $OUTPUT->header();
 
-echo $OUTPUT->render_from_template('paygw_paynocchio/about', ['logo' => paynocchio_helper::custom_logo(),]);
+$cardBg = get_config('paygw_paynocchio', 'paynocchiocardbg');
+
+
+echo $OUTPUT->render_from_template('paygw_paynocchio/about', ['logo' => paynocchio_helper::custom_logo(), 'cardBg' => $cardBg]);
 
 
 echo $OUTPUT->footer();
