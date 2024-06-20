@@ -29,6 +29,8 @@ export const init = (pay, minimum_topup_amount) => {
     let need_to_top_up = 0;
     if(pay && document.getElementById('need_to_top_up')) {
         need_to_top_up = parseFloat(document.getElementById('need_to_top_up').innerText);
+    } else {
+        need_to_top_up = minimum_topup_amount;
     }
 
     if (paynocchio_wallet_topup_button) {
