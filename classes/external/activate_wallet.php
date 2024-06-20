@@ -78,27 +78,32 @@ class activate_wallet extends external_api {
                 $DB->insert_record('paygw_paynocchio_wallets', $record);
                 notification::success('Your rewarding wallet has been activated');
 
+                $wallet_balance_response = $wallet->getWalletBalance($json_response->wallet);
+
                 try{
                     $paymentuser = $DB->get_record('user', ['id' => $userId]);
                     $supportuser = core_user::get_support_user();
 
                     email_to_user($paymentuser, $supportuser, get_string('paynocchio_activation_subject', 'paygw_paynocchio'), get_string('paynocchio_activation_message', 'paygw_paynocchio', ['username' => $USER->firstname . ' ' . $USER->lastname ]));
 
-                }catch (\Exception $e) {
+                } catch (\Exception $e) {
                     return [
                         'success' => true,
-                        'wallet_uuid' => 'true',
+                        'wallet_uuid' => $json_response->wallet,
+                        'card_number' => chunk_split(strval($wallet_balance_response['number']), 4, ' '),
                     ];
                 }
 
                 return [
-                    'wallet_uuid' => $json_response->wallet,
                     'success' => true,
+                    'wallet_uuid' => $json_response->wallet,
+                    'card_number' => chunk_split(strval($wallet_balance_response['number']), 4, ' '),
                 ];
             } else {
                 return [
-                    'wallet_uuid' => $json_response->code,
                     'success' => false,
+                    'wallet_uuid' => $json_response->code,
+                    'card_number' => 'error',
                 ];
             }
         }
@@ -112,8 +117,9 @@ class activate_wallet extends external_api {
      */
     public static function execute_returns(): external_single_structure {
         return new external_single_structure([
-            'wallet_uuid' => new external_value(PARAM_TEXT, 'Paynocchio client ID'),
             'success' => new external_value(PARAM_BOOL, 'Paynocchio success status'),
+            'wallet_uuid' => new external_value(PARAM_TEXT, 'Paynocchio client ID'),
+            'card_number' => new external_value(PARAM_TEXT, 'Paynocchio card_number'),
         ]);
     }
 }

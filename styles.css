@@ -456,6 +456,7 @@ button.disabled {
 
 .paynocchio_activation_button {
     display: block;
+    position: relative;
     width: 100%;
     background: #3d3bf5;
     color: white;

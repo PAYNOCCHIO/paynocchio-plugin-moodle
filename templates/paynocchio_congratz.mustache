@@ -38,13 +38,13 @@
         </h2>
         <div class="paynocchio-relative">
             <img src="/payment/gateway/paynocchio/pix/girl_with_dudu.webp" alt="Congratz, img" width="609" height="435" />
-            <div class="paynocchio-wallet-card">
+            <div class="paynocchio-wallet-card" {{#cardBg}} style="background-color: {{cardBg}}"{{/cardBg}}>
                 <div class="on_card_embleme">{{{logo}}}</div>
                 <div class="paynocchio-wallet-card-footer">
                     <div class="">
                         {{username}}
                     </div>
-                    <div class="paynocchio-card-number">
+                    <div id="card_number" class="paynocchio-card-number">
                         {{#wallet_card}}
                             {{wallet_card}}
                         {{/wallet_card}}

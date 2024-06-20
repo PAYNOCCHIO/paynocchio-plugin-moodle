@@ -79,19 +79,28 @@ class update_wallet_status extends external_api {
                     notification::success('Status has been successfully changed!');
 
                     $current_status = $wallet_balance_response['status'];
-                    $paymentuser = $DB->get_record('user', ['id' => $USER->id]);
-                    $supportuser = core_user::get_support_user();
 
-                    if ($current_status == 'BLOCKED') {
-                        email_to_user($paymentuser, $supportuser, get_string('paynocchio_block_subject', 'paygw_paynocchio'), get_string('paynocchio_block_message', 'paygw_paynocchio', ['username' => $USER->firstname . ' ' . $USER->lastname]));
-                    }
+                    try {
+                        $paymentuser = $DB->get_record('user', ['id' => $USER->id]);
+                        $supportuser = core_user::get_support_user();
 
-                    if ($current_status == 'SUSPEND') {
-                        email_to_user($paymentuser, $supportuser, get_string('paynocchio_suspend_subject', 'paygw_paynocchio'), get_string('paynocchio_suspend_message', 'paygw_paynocchio', ['username' => $USER->firstname . ' ' . $USER->lastname]));
-                    }
+                        if ($current_status == 'BLOCKED') {
+                            email_to_user($paymentuser, $supportuser, get_string('paynocchio_block_subject', 'paygw_paynocchio'), get_string('paynocchio_block_message', 'paygw_paynocchio', ['username' => $USER->firstname . ' ' . $USER->lastname]));
+                        }
 
-                    if ($current_status == 'ACTIVE') {
-                        email_to_user($paymentuser, $supportuser, get_string('paynocchio_reactivate_subject', 'paygw_paynocchio'), get_string('paynocchio_reactivate_message', 'paygw_paynocchio', ['username' => $USER->firstname . ' ' . $USER->lastname]));
+                        if ($current_status == 'SUSPEND') {
+                            email_to_user($paymentuser, $supportuser, get_string('paynocchio_suspend_subject', 'paygw_paynocchio'), get_string('paynocchio_suspend_message', 'paygw_paynocchio', ['username' => $USER->firstname . ' ' . $USER->lastname]));
+                        }
+
+                        if ($current_status == 'ACTIVE') {
+                            email_to_user($paymentuser, $supportuser, get_string('paynocchio_reactivate_subject', 'paygw_paynocchio'), get_string('paynocchio_reactivate_message', 'paygw_paynocchio', ['username' => $USER->firstname . ' ' . $USER->lastname]));
+                        }
+                    } catch (\Exception $e) {
+                        return [
+                            'success' => true,
+                            'wallet_status' => $wallet_balance_response['status'],
+                            'wallet_code' => $wallet_balance_response['code'],
+                        ];
                     }
 
                     return [

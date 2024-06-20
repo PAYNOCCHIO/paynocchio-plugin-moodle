@@ -32,6 +32,7 @@ export const init = (user_id) => {
         const spinner = paynocchio_activation_button.querySelector('.paynocchio-spinner');
         const message = document.querySelector('.topup-description');
         paynocchio_activation_button.addEventListener('click', () => {
+            paynocchio_activation_button.classList.add('disabled');
             const response = handleWalletActivationClick(user_id);
             spinner.classList.add('active');
             response.then(data => {
@@ -50,6 +51,7 @@ export const init = (user_id) => {
                     //window.location.reload();
 
                     document.getElementById('congratz').classList.add('shown');
+                    document.getElementById('card_number').innerText = data.card_number;
                     if (document.getElementById('page-payment-gateway-paynocchio-pay')) {
                         document.getElementById('page-payment-gateway-paynocchio-pay').style.overflow = 'hidden';
                     }
