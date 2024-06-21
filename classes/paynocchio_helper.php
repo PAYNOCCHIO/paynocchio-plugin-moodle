@@ -201,11 +201,8 @@ class paynocchio_helper {
         ];
 
         $response = $this->sendRequest('POST', '/healthcheck/', json_encode($data, JSON_UNESCAPED_SLASHES));
-        if($response['status_code'] === 200) {
-            return json_encode(['status'=> 'success']);
-        } else {
-            return json_encode(['status'=> 'error']);
-        }
+
+        return json_encode(['status'=> $response['status_code']]);
     }
 
     /**
