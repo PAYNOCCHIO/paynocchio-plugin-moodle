@@ -39,6 +39,7 @@ export const init = (pay, minimum_topup_amount) => {
             showModalWithTopup(minimum_topup_amount)
                 .then(modal => {
                     modal.setTitle('Topup your Wallet');
+                    const button = modal.body.find('#topup_button');
                     const input = modal.body.find('#top_up_amount');
                     const message = modal.body.find('#topup_message');
                     if(need_to_top_up) {
@@ -48,11 +49,13 @@ export const init = (pay, minimum_topup_amount) => {
                     input.on('keyup change', (evt) => {
                         if (evt.target.value >= minimum_topup_amount) {
                             message.text(`You will get ${parseInt(parseInt(evt.target.value) * 0.1)} bonuses`);
+                            button.removeClass('disabled');
                         } else {
                             message.text('Please enter amount more than minimum replenishment amount.');
+                            button.addClass('disabled');
                         }
                     });
-                    const button = modal.body.find('#topup_button');
+
                     button.click(() => {
                         if (input.val()) {
                             button.addClass('disabled');
