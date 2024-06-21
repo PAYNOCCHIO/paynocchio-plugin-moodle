@@ -43,8 +43,12 @@ export const init = (pay, minimum_topup_amount, card_balance_limit, balance) => 
                     const input = modal.body.find('#top_up_amount');
                     const message = modal.body.find('#topup_message');
                     if(need_to_top_up) {
-                        input.val(need_to_top_up);
-                        message.text(`You will get ${parseInt(need_to_top_up * 0.1)} bonuses`);
+                        const top_up_default_input = need_to_top_up <= minimum_topup_amount ? minimum_topup_amount: need_to_top_up;
+                        input.val(top_up_default_input);
+
+                        if(parseInt(need_to_top_up * 0.1) > 0) {
+                            message.text(`You will get ${parseInt(need_to_top_up * 0.1)} bonuses`);
+                        }
                     }
                     input.on('keyup change', (evt) => {
                         if (parseFloat(evt.target.value) + balance > card_balance_limit) {
