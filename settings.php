@@ -37,7 +37,8 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_configtext('paygw_paynocchio/paynocchiocardbg', get_string('paynocchiocardbg', 'paygw_paynocchio'), get_string('paynocchiocardbg_help', 'paygw_paynocchio'), '#3b82f6', PARAM_TEXT));
 
     $settings->add(new admin_setting_configstoredfile('paygw_paynocchio/brandlogo', get_string('brandlogo', 'paygw_paynocchio'), get_string('brandlogo_help', 'paygw_paynocchio'), 'brandlogoimage'));
-    $settings->add(new admin_setting_configtext('paygw_paynocchio/environmentuuid', get_string('environment_uuid', 'paygw_paynocchio'), get_string('environment_uuid_help', 'paygw_paynocchio'), '', PARAM_TEXT));
+    $env = new admin_setting_configtext('paygw_paynocchio/environmentuuid', get_string('environment_uuid', 'paygw_paynocchio'), get_string('environment_uuid_help', 'paygw_paynocchio'), '', PARAM_TEXT);
+    $settings->add($env);
 
     $secret = new admin_setting_configtext('paygw_paynocchio/paynocchiosecret', get_string('paynocchio_secret', 'paygw_paynocchio'), get_string('secret_help', 'paygw_paynocchio'), '', PARAM_TEXT);
     $settings->add($secret);
@@ -46,6 +47,21 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_configtextarea('paygw_paynocchio/privacy', get_string('privacy', 'paygw_paynocchio'), '', get_string('privacy_help', 'paygw_paynocchio')));
 
     $secret->set_updatedcallback(function () {
+        global $USER;
+        if(is_siteadmin($USER->id)){
+            $wallet = new paynocchio_helper(uuid::generate());
+            $wallet_response = $wallet->healtCheck();
+            $json_response = json_decode($wallet_response);
+            if($json_response->status === 'success') {
+                \core\notification::success('Integrated with Paynocchio successfully.');
+                set_config('paynocchiointegrated', 'true', 'paygw_paynocchio');
+            } else {
+                set_config('paynocchiointegrated', 0, 'paygw_paynocchio');
+            }
+        }
+    });
+
+    $env->set_updatedcallback(function () {
         global $USER;
         if(is_siteadmin($USER->id)){
             $wallet = new paynocchio_helper(uuid::generate());
