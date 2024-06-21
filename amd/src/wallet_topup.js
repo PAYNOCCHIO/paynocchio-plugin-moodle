@@ -23,7 +23,7 @@
 
 import {handleTopUpClick, showModalWithTopup} from "./repository";
 
-export const init = (pay, minimum_topup_amount) => {
+export const init = (pay, minimum_topup_amount, card_balance_limit, balance) => {
     const paynocchio_wallet_topup_button = document.getElementById('paynocchio_topup_button');
 
     let need_to_top_up = 0;
@@ -36,7 +36,7 @@ export const init = (pay, minimum_topup_amount) => {
     if (paynocchio_wallet_topup_button) {
 
         paynocchio_wallet_topup_button.addEventListener('click', () => {
-            showModalWithTopup(minimum_topup_amount)
+            showModalWithTopup(minimum_topup_amount, card_balance_limit)
                 .then(modal => {
                     modal.setTitle('Topup your Wallet');
                     const button = modal.body.find('#topup_button');
@@ -47,7 +47,11 @@ export const init = (pay, minimum_topup_amount) => {
                         message.text(`You will get ${parseInt(need_to_top_up * 0.1)} bonuses`);
                     }
                     input.on('keyup change', (evt) => {
-                        if (evt.target.value >= minimum_topup_amount) {
+                        if (parseFloat(evt.target.value) + balance > card_balance_limit) {
+                            message.text(`When replenishing the amount ${evt.target.value}, 
+                            the balance limit will exceed the set value ${card_balance_limit}`);
+                            button.addClass('disabled');
+                        } else if (evt.target.value >= minimum_topup_amount) {
                             message.text(`You will get ${parseInt(parseInt(evt.target.value) * 0.1)} bonuses`);
                             button.removeClass('disabled');
                         } else {
@@ -63,7 +67,7 @@ export const init = (pay, minimum_topup_amount) => {
                             modal.body.find('#topup_message').text('Working...');
                             handleTopUpClick(input.val(), window.location.href)
                                 .then(data => {
-                                    if (!data.is_error) {
+                                    if (!data.is_error && data.url) {
                                         modal.body.find('#topup_message').text('OK... Sending to Stripe...');
                                         window.location.replace(data.url);
                                     } else {
@@ -72,8 +76,6 @@ export const init = (pay, minimum_topup_amount) => {
                                             .text(data.message);
                                         button.toggleClass('disabled');
                                     }
-                                    window.console.log(data);
-
                                 });
                         }
                     });

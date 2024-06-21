@@ -27,13 +27,18 @@ if($user && $user->useruuid && $user->walletuuid) {
 
     $wallet = new paynocchio_helper($user->useruuid);
     $wallet_balance_response = $wallet->getWalletBalance($user->walletuuid);
+    $wallet_balance = $wallet_balance_response['balance'];
+    $wallet_bonuses = $wallet_balance_response['bonuses'];
+    $wallet_response_code = $wallet_balance_response['code'];
     $minimum_topup_amount = $wallet->getEnvironmentStructure()['minimum_topup_amount'];
+    $card_balance_limit = $wallet->getEnvironmentStructure()['card_balance_limit'];
 
-
-    if($wallet_balance_response['code'] === "ACTIVE") {
+    if($wallet_response_code === "ACTIVE") {
         $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_topup', 'init', [
             'pay' => false,
             'minimum_topup_amount' => $minimum_topup_amount,
+            'card_balance_limit' => $card_balance_limit,
+            'balance' => $wallet_balance,
         ]);
 
         $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_withdraw', 'init', [
@@ -42,17 +47,17 @@ if($user && $user->useruuid && $user->walletuuid) {
     }
 
     $data = [
-        'wallet_balance' => $wallet_balance_response['balance'],
-        'wallet_bonuses' => $wallet_balance_response['bonuses'],
+        'wallet_balance' => $wallet_balance,
+        'wallet_bonuses' => $wallet_bonuses,
         'wallet_card' => chunk_split($wallet_balance_response['number'], 4, ' '),
         'wallet_status' => $wallet_balance_response['status'],
-        'wallet_code' => $wallet_balance_response['code'],
-        'server_error' => $wallet_balance_response['code'] === 500,
-        'wallet_blocked' => $wallet_balance_response['code'] === "BLOCKED",
-        'wallet_active' => $wallet_balance_response['code'] === "ACTIVE",
+        'wallet_code' => $wallet_response_code,
+        'server_error' => $wallet_response_code === 500,
+        'wallet_blocked' => $wallet_response_code === "BLOCKED",
+        'wallet_active' => $wallet_response_code === "ACTIVE",
         'minimum_topup_amount' => $wallet->getEnvironmentStructure()['minimum_topup_amount'],
         'bonus_conversion_rate' => $wallet->getEnvironmentStructure()['bonus_conversion_rate'],
-        'bonus_to_spend' => $wallet_balance_response['balance'] * $wallet->getEnvironmentStructure()['bonus_conversion_rate'],
+        'bonus_to_spend' => $wallet_balance * $wallet->getEnvironmentStructure()['bonus_conversion_rate'],
         'cardBg' => $cardBg,
         'logo' => paynocchio_helper::custom_logo(),
         'wallet_activated' => true,

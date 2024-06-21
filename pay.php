@@ -72,18 +72,22 @@ if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
 
     $conversion_rate = $wallet->getEnvironmentStructure()['bonus_conversion_rate'] ?: 1;
     $minimum_topup_amount = $wallet->getEnvironmentStructure()['minimum_topup_amount'];
+    $card_balance_limit = $wallet->getEnvironmentStructure()['card_balance_limit'];
 
     if($user && $user->useruuid && $user->walletuuid) {
 
         $wallet_balance_response = $wallet->getWalletBalance($user->walletuuid);
-
+        $wallet_balance = $wallet_balance_response['balance'];
         $max_bonuses_to_spend = $wallet_balance_response['bonuses'];
-        $money_bonuses_equivalent = $wallet_balance_response['bonuses'] * $conversion_rate;
+        $money_bonuses_equivalent = $max_bonuses_to_spend * $conversion_rate;
+        $wallet_response_code = $wallet_balance_response['code'];
 
-        if($wallet_balance_response['code'] === "ACTIVE") {
+        if($wallet_response_code === "ACTIVE") {
             $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_topup', 'init', [
                 'pay' => true,
                 'minimum_topup_amount' => $minimum_topup_amount,
+                'card_balance_limit' => $card_balance_limit,
+                'balance' => $wallet_balance,
             ]);
         }
 
@@ -92,7 +96,7 @@ if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
             'paymentarea' => $paymentarea,
             'itemid' => $itemid,
             'fullAmount' => $amount,
-            'balance' => $wallet_balance_response['balance'],
+            'balance' => $wallet_balance,
             'bonuses_conversion_rate' => $conversion_rate,
         ]);
 
@@ -104,26 +108,26 @@ if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
 
         $rewarding_rate = 0.1;
         $rewarding_for_topup = 1 + $rewarding_rate * $conversion_rate;
-        $need_to_topup = ceil(($amount - floor($wallet_balance_response['balance']) - floor($money_bonuses_equivalent)) / $rewarding_for_topup);
+        $need_to_topup = ceil(($amount - floor($wallet_balance) - floor($money_bonuses_equivalent)) / $rewarding_for_topup);
 
-        if ($wallet_balance_response['code'] == 'SUSPEND') {
+        if ($wallet_response_code == 'SUSPEND') {
             $wallet_status_readable = 'Wallet suspended';
-        } elseif ($wallet_balance_response['code'] == 'BLOCKED') {
+        } elseif ($wallet_response_code == 'BLOCKED') {
             $wallet_status_readable = 'Wallet blocked';
         } else {
             $wallet_status_readable = 'Wallet activated';
         }
 
         $data = [
-            'wallet_balance' => $wallet_balance_response['balance'] ?? 0,
-            'wallet_bonuses' => $wallet_balance_response['bonuses'] ?? 0,
+            'wallet_balance' => $wallet_balance ?? 0,
+            'wallet_bonuses' => $max_bonuses_to_spend ?? 0,
             'bonus_conversion_rate' => $wallet->getEnvironmentStructure()['bonus_conversion_rate'],
             'bonus_conversion_rate_equal' => $wallet->getEnvironmentStructure()['bonus_conversion_rate'] === 1,
             'bonus_to_spend' => $max_bonuses_to_spend,
             'wallet_card' => chunk_split($wallet_balance_response['number'], 4, ' '),
             'wallet_status' => $wallet_balance_response['status'],
             'wallet_status_readable' => $wallet_status_readable,
-            'wallet_code' => $wallet_balance_response['code'],
+            'wallet_code' => $wallet_response_code,
             'wallet_uuid' => $user->walletuuid,
             'user_uuid' => $user->useruuid,
             'max_bonus' => $max_bonus ?? 0,
@@ -134,10 +138,10 @@ if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
             'need_to_topup' => $need_to_topup,
             'total_with_bonuses' => $need_to_topup + $need_to_topup * $rewarding_rate,
             'bottom_line' => $amount - $need_to_topup + $need_to_topup * $rewarding_rate,
-            'can_pay' => $wallet_balance_response['balance'] + $money_bonuses_equivalent >= $amount,
-            'wallet_active' => $wallet_balance_response['code'] === "ACTIVE",
-            'wallet_suspend' => $wallet_balance_response['code'] === "SUSPEND",
-            'wallet_blocked' => $wallet_balance_response['code'] === "BLOCKED",
+            'can_pay' => $wallet_balance + $money_bonuses_equivalent >= $amount,
+            'wallet_active' => $wallet_response_code === "ACTIVE",
+            'wallet_suspend' => $wallet_response_code === "SUSPEND",
+            'wallet_blocked' => $wallet_response_code === "BLOCKED",
             'logo' => paynocchio_helper::custom_logo(),
             'description' => $pagetitle,
             'wallet_activated' => true,
