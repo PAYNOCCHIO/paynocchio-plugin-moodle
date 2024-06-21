@@ -149,6 +149,7 @@
                     Add money
                 </button>
             </div>
+            {{#bonus_to_spend}}
             <div class="paynocchio-bonuses-conversion-rate">
                 <div>
                     <nobr>Spend bonuses</nobr>
@@ -161,6 +162,7 @@
                     <div class="bonuses_value_cont"><input id="bonuses-value" type="number" readonly="readonly" value="0" min="0" max="{{max_bonus}}" {{^wallet_active}}disabled{{/wallet_active}}><span id="money_equivalent" class="paynocchio-hidden"></span></div>
                 </div>
             </div>
+            {{/bonus_to_spend}}
             <div class="paynocchio-topup-message paynocchio-hidden" id="topup_message"></div>
             <div class="paynocchio-pay-button-container">
                 <button type="button" id="paynocchio_pay_button" class="paynocchio-pay-button {{^wallet_active}}inactive disabled{{/wallet_active}}" {{^wallet_active}}disabled{{/wallet_active}}>
