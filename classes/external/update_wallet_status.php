@@ -85,15 +85,15 @@ class update_wallet_status extends external_api {
                         $supportuser = core_user::get_support_user();
 
                         if ($current_status == 'BLOCKED') {
-                            email_to_user($paymentuser, $supportuser, get_string('paynocchio_block_subject', 'paygw_paynocchio'), get_string('paynocchio_block_message', 'paygw_paynocchio', ['username' => $paymentuser['firstname'] . ' ' . $paymentuser['lastname']]));
+                            email_to_user($paymentuser, $supportuser, get_string('paynocchio_block_subject', 'paygw_paynocchio'), get_string('paynocchio_block_message', 'paygw_paynocchio', ['username' => $USER->firstname . ' ' . $USER->lastname]));
                         }
 
                         if ($current_status == 'SUSPEND') {
-                            email_to_user($paymentuser, $supportuser, get_string('paynocchio_suspend_subject', 'paygw_paynocchio'), get_string('paynocchio_suspend_message', 'paygw_paynocchio', ['username' => $paymentuser['firstname'] . ' ' . $paymentuser['lastname']]));
+                            email_to_user($paymentuser, $supportuser, get_string('paynocchio_suspend_subject', 'paygw_paynocchio'), get_string('paynocchio_suspend_message', 'paygw_paynocchio', ['username' => $USER->firstname . ' ' . $USER->lastname]));
                         }
 
                         if ($current_status == 'ACTIVE') {
-                            email_to_user($paymentuser, $supportuser, get_string('paynocchio_reactivate_subject', 'paygw_paynocchio'), get_string('paynocchio_reactivate_message', 'paygw_paynocchio', ['username' => $paymentuser['firstname'] . ' ' . $paymentuser['lastname']]));
+                            email_to_user($paymentuser, $supportuser, get_string('paynocchio_reactivate_subject', 'paygw_paynocchio'), get_string('paynocchio_reactivate_message', 'paygw_paynocchio', ['username' => $USER->firstname . ' ' . $USER->lastname]));
                         }
                     } catch (\Exception $e) {
                         return [

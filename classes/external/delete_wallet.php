@@ -68,7 +68,7 @@ class delete_wallet extends external_api {
             $paymentuser = $DB->get_record('user', ['id' => $USER->id]);
             $supportuser = core_user::get_support_user();
             try{
-                email_to_user($paymentuser, $supportuser, get_string('paynocchio_delete_subject', 'paygw_paynocchio'), get_string('paynocchio_delete_message', 'paygw_paynocchio', ['username' => $paymentuser['firstname'] . ' ' . $paymentuser['lastname'] ]));
+                email_to_user($paymentuser, $supportuser, get_string('paynocchio_delete_subject', 'paygw_paynocchio'), get_string('paynocchio_delete_message', 'paygw_paynocchio', ['username' => $USER->firstname . ' ' . $USER->lastname ]));
 
             }catch (\Exception $e) {
                 return [

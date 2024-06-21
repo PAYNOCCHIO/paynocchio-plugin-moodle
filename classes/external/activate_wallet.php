@@ -84,7 +84,7 @@ class activate_wallet extends external_api {
                     $paymentuser = $DB->get_record('user', ['id' => $userId]);
                     $supportuser = core_user::get_support_user();
 
-                    email_to_user($paymentuser, $supportuser, get_string('paynocchio_activation_subject', 'paygw_paynocchio'), get_string('paynocchio_activation_message', 'paygw_paynocchio', ['username' => $paymentuser['firstname'] . ' ' . $paymentuser['lastname'] ]));
+                    email_to_user($paymentuser, $supportuser, get_string('paynocchio_activation_subject', 'paygw_paynocchio'), get_string('paynocchio_activation_message', 'paygw_paynocchio', ['username' => $USER->firstname . ' ' . $USER->lastname ]));
 
                 } catch (\Exception $e) {
                     return [
