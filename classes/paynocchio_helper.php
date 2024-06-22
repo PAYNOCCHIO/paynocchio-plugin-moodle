@@ -285,34 +285,8 @@ class paynocchio_helper {
     }
 
     /**
-     *  Get Orders List
-     */
-    public function getOrdersList(string $orderId, array $filters = []): array
-    {
-        $url = '/orders/' . $orderId;
-
-        $queryParams = [
-            PAYNOCCHIO_ENV_KEY => $this->envId,
-            PAYNOCCHIO_USER_UUID_KEY => $this->userId,
-            PAYNOCCHIO_WALLET_KEY => $this->walletId,
-            // Add other filters from the $filters array
-        ];
-
-        // Example of using created_at filter
-        if (isset($filters['created_at']['from'])) {
-            $queryParams['created_at.from'] = $filters['created_at']['from'];
-        }
-        if (isset($filters['created_at']['to'])) {
-            $queryParams['created_at.to'] = $filters['created_at']['to'];
-        }
-
-        return $this->sendRequest('GET', $url, $queryParams);
-    }
-
-    /**
      *  Wallet information
      */
-
     public function getWalletBalance(string $walletId): array
     {
         $user_paynocchio_wallet = $this->getWalletById($walletId);
@@ -421,9 +395,6 @@ class paynocchio_helper {
             }
         }
        return $sum;
-
-
-
     }
 
     /**
@@ -476,14 +447,16 @@ class paynocchio_helper {
     /**
      * Check if enrolled already
      */
-    public static function has_enrolled($itemid, $userid): bool
+    public static function user_has_payed($itemid, $userid): bool
     {
         global $DB;
-        if ($DB->count_records('paygw_paynocchio_payments', ['itemid' => $itemid, 'userid' => $userid]) > 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return $DB->count_records('paygw_paynocchio_payments', ['itemid' => $itemid, 'userid' => $userid]) > 0;
+    }
+
+    public static function get_pending(): array
+    {
+        global $DB;
+        return $DB->get_records('paygw_paynocchio_payments', ['status' => 'P']);
     }
 
     /**
@@ -503,7 +476,7 @@ class paynocchio_helper {
     {
         global $DB;
 
-        if (paynocchio_helper::has_enrolled($itemid, $user_id)) {
+        if (paynocchio_helper::user_has_payed($itemid, $user_id)) {
             return null;
         }
 
@@ -554,7 +527,17 @@ class paynocchio_helper {
         } else {
             return null;
         }
+    }
 
+    /**
+     * Check if Payment confirmed
+     */
+
+    public static function checkPaymentConfirmation($paymentid)
+    {
+        global $DB;
+        $record = $DB->get_record('paygw_paynocchio_payments', ['paymentid' => $paymentid]);
+        return $record->status === 'C';
     }
 
 }

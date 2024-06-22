@@ -22,7 +22,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use core\notification;
 use core\uuid;
+use core_payment\helper;
 use paygw_paynocchio\paynocchio_helper;
 
 defined('MOODLE_INTERNAL') || die();
@@ -53,7 +55,7 @@ if ($ADMIN->fulltree) {
             $wallet_response = $wallet->healtCheck();
             $json_response = json_decode($wallet_response);
             if($json_response->status === 200) {
-                \core\notification::success('Integrated with Paynocchio successfully.');
+                notification::success('Integrated with Paynocchio successfully.');
                 set_config('paynocchiointegrated', 'true', 'paygw_paynocchio');
             } else {
                 set_config('paynocchiointegrated', 0, 'paygw_paynocchio');
@@ -68,7 +70,7 @@ if ($ADMIN->fulltree) {
             $wallet_response = $wallet->healtCheck();
             $json_response = json_decode($wallet_response);
             if($json_response->status === 200) {
-                \core\notification::success('Integrated with Paynocchio successfully.');
+                notification::success('Integrated with Paynocchio successfully.');
                 set_config('paynocchiointegrated', 'true', 'paygw_paynocchio');
             } else {
                 set_config('paynocchiointegrated', 0, 'paygw_paynocchio');
@@ -76,7 +78,7 @@ if ($ADMIN->fulltree) {
         }
     });
 
-    \core_payment\helper::add_common_gateway_settings($settings, 'paygw_paynocchio');
+    helper::add_common_gateway_settings($settings, 'paygw_paynocchio');
 }
 $systemcontext = \context_system::instance();
 $node = new admin_category('paynocchio', get_config('paygw_paynocchio', 'brandname'));

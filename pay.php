@@ -45,7 +45,7 @@ $amount = helper::get_rounded_cost($payable->get_amount(), $currency, $surcharge
 
 echo $OUTPUT->header();
 
-if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
+if(paynocchio_helper::user_has_payed($itemid, (int) $USER->id)) {
     $record = $DB->get_record('paygw_paynocchio_payments', ['userid'  => $USER->id, 'itemid' => $itemid]);
     $data = [
         'timecreated' => $record->timecreated,
@@ -55,6 +55,9 @@ if(paynocchio_helper::has_enrolled($itemid, (int) $USER->id)) {
         'status' => $record->status === 'C' ? 'Completed' : 'Pending',
         'completed' => $record->status === 'C',
     ];
+    if($record->status !== 'C') {
+        $PAGE->requires->js_call_amd('paygw_paynocchio/check_transaction_complete', 'init', ['paymentid' => $record->paymentid]);
+    }
     echo $OUTPUT->render_from_template('paygw_paynocchio/enrolled_already', ['data' => $data]);
 
 } else {
