@@ -245,14 +245,14 @@ export const makePayment = (component, paymentArea, itemid, fullAmount, bonuses)
 /**
  * Call server to check if payment was confirmed.
  *
- * @param {number} paymentId id of the Payment to check
+ * @param {number} paymentid id of the Payment to check
  * @returns {*}
  */
-export const checkPaymentConfirmation = (paymentId) => {
+export const checkPaymentConfirmation = (paymentid) => {
     const request = {
         methodname: 'paygw_paynocchio_check_payment_confirmation',
         args: {
-            paymentId
+            paymentid
         },
     };
 

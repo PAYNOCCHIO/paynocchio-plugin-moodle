@@ -122,4 +122,13 @@ $functions = [
         'ajax'        => true,
         'loginrequired' => false,
     ],
+
+    'paygw_paynocchio_check_payment_confirmation' => [
+        'classname'   => 'paygw_paynocchio\external\check_payment_confirmation',
+        'classpath'   => '',
+        'description' => 'Checks if payment was confirmed.',
+        'type'        => 'read',
+        'ajax'        => true,
+        'loginrequired' => false,
+    ],
 ];

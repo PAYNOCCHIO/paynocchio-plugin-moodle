@@ -13,7 +13,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-
 import {checkPaymentConfirmation} from "./repository";
 
 /**
@@ -25,8 +24,12 @@ import {checkPaymentConfirmation} from "./repository";
  */
 
 export const init = (paymentid) => {
-    checkPaymentConfirmation(paymentid)
-        .then((data) => {
-            window.console.log(data);
-        });
+    setInterval(() => {
+        checkPaymentConfirmation(paymentid)
+            .then((data) => {
+                if(data.confirmed) {
+                    window.location.reload();
+                }
+            });
+    }, 1000);
 };
