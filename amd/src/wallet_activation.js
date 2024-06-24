@@ -22,8 +22,6 @@
  */
 
 import {handleWalletActivationClick} from "./repository";
-//import {exception as displayException} from 'core/notification';
-//import Templates from 'core/templates';
 
 export const init = (user_id) => {
     const paynocchio_activation_button = document.getElementById('paynocchio_activation_button');
@@ -36,19 +34,9 @@ export const init = (user_id) => {
             const response = handleWalletActivationClick(user_id);
             spinner.classList.add('active');
             response.then(data => {
-                /*window.console.log(data);*/
                 if(data.success) {
                     spinner.classList.remove('active');
                     message.classList.remove('hidden');
-                    /*Templates.renderForPromise('paygw_paynocchio/paynocchio_payment_wallet', {
-                        wallet_balance: 0,
-                        wallet_bonuses: 0,
-                    })
-                        .then(({html, js}) => {
-                            Templates.replaceNodeContents('.paynocchio-wallet-wrapper', html, js);
-                        })
-                        .catch((error) => displayException(error));*/
-                    //window.location.reload();
 
                     document.getElementById('congratz').classList.add('shown');
                     document.getElementById('card_number').innerText = data.card_number;
@@ -59,7 +47,6 @@ export const init = (user_id) => {
                         document.getElementById('page-payment-gateway-paynocchio-my_paynocchio_wallet').style.overflow = 'hidden';
                     }
                 } else {
-                    window.alert('There is an Error occurred. Please try again later.');
                     window.console.log(data);
                 }
             });

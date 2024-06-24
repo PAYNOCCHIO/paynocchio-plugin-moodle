@@ -75,30 +75,43 @@ class activate_wallet extends external_api {
                 $record->walletuuid = $json_response->wallet;
                 $record->status = 'Active';
                 $record->timecreated = time();
-                $DB->insert_record('paygw_paynocchio_wallets', $record);
-                notification::success('Your rewarding wallet has been activated');
 
-                $wallet_balance_response = $wallet->getWalletBalance($json_response->wallet);
+                if(!$DB->record_exists('paygw_paynocchio_wallets', ['userid' => $userId])) {
+                    $DB->insert_record('paygw_paynocchio_wallets', $record);
 
-                try{
-                    $paymentuser = $DB->get_record('user', ['id' => $userId]);
-                    $supportuser = core_user::get_support_user();
+                    notification::success('Your rewarding wallet has been activated');
 
-                    email_to_user($paymentuser, $supportuser, get_string('paynocchio_activation_subject', 'paygw_paynocchio'), get_string('paynocchio_activation_message', 'paygw_paynocchio', ['username' => $paymentuser->firstname . ' ' . $paymentuser->lastname ]));
+                    $wallet_balance_response = $wallet->getWalletBalance($json_response->wallet);
 
-                } catch (\Exception $e) {
+                    try{
+                        $paymentuser = $DB->get_record('user', ['id' => $userId]);
+                        $supportuser = core_user::get_support_user();
+
+                        email_to_user($paymentuser, $supportuser, get_string('paynocchio_activation_subject', 'paygw_paynocchio'), get_string('paynocchio_activation_message', 'paygw_paynocchio', ['username' => $paymentuser->firstname . ' ' . $paymentuser->lastname ]));
+
+                    } catch (\Exception $e) {
+                        // On localhost email sending fails
+                        return [
+                            'success' => true,
+                            'wallet_uuid' => $json_response->wallet,
+                            'card_number' => chunk_split(strval($wallet_balance_response['number']), 4, ' '),
+                        ];
+                    }
+                    // SUCCESS
                     return [
                         'success' => true,
                         'wallet_uuid' => $json_response->wallet,
                         'card_number' => chunk_split(strval($wallet_balance_response['number']), 4, ' '),
                     ];
+                } else {
+                    // Database record already exists
+                    return [
+                        'success' => false,
+                        'wallet_uuid' => $json_response->code,
+                        'card_number' => 'Database error while writing, please reload and try again',
+                    ];
                 }
-
-                return [
-                    'success' => true,
-                    'wallet_uuid' => $json_response->wallet,
-                    'card_number' => chunk_split(strval($wallet_balance_response['number']), 4, ' '),
-                ];
+                // Error response from backend
             } else {
                 return [
                     'success' => false,

@@ -54,14 +54,12 @@ export const init = (pay, minimum_topup_amount, card_balance_limit, balance) => 
                         if (parseFloat(evt.target.value) + balance > card_balance_limit) {
                             message.text(`When replenishing the amount ${evt.target.value}, 
                             the balance limit will exceed the set value ${card_balance_limit}`);
-                            button.addClass('disabled');
                         } else if (evt.target.value >= minimum_topup_amount) {
                             message.text(`You will get ${parseInt(parseInt(evt.target.value) * 0.1)} bonuses`);
-                            button.removeClass('disabled');
                         } else {
                             message.text('Please enter amount more than minimum replenishment amount.');
-                            button.addClass('disabled');
                         }
+                        button.addClass('disabled');
                     });
 
                     button.click(() => {
