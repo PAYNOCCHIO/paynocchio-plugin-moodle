@@ -84,4 +84,11 @@ $systemcontext = \context_system::instance();
 $node = new admin_category('paynocchio', get_config('paygw_paynocchio', 'brandname'));
 $ADMIN->add('root', $node);
 
+$ADMIN->add(
+    'paynocchio', new admin_externalpage(
+        'managepayments',
+        get_string('manage', 'paygw_paynocchio'),
+        new moodle_url('/payment/gateway/paynocchio/manage.php'), 'paygw/paynocchio:managepayments'
+    )
+);
 
