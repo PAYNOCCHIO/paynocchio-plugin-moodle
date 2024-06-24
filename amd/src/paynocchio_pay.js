@@ -73,7 +73,7 @@ const changeBonusesValue = (balance, bonuses) => {
     }
 };
 
-export const init = (component, paymentArea, itemid, fullAmount, balance, bonuses_conversion_rate) => {
+export const init = (component, paymentArea, description, itemid, fullAmount, balance, bonuses_conversion_rate) => {
 
     const paynocchio_pay_button = document.getElementById('paynocchio_pay_button');
 
@@ -125,7 +125,7 @@ export const init = (component, paymentArea, itemid, fullAmount, balance, bonuse
             paynocchio_pay_button.classList.add('disabled');
 
             spinner.classList.add('active');
-            makePayment(component, paymentArea, itemid, fullAmount, bonuses)
+            makePayment(component, paymentArea, description, itemid, fullAmount, bonuses)
                 .then(data => {
                     if(data.success) {
                         spinner.classList.remove('active');

@@ -47,6 +47,7 @@ class make_payment extends external_api {
         return new external_function_parameters([
             'component' => new external_value(PARAM_COMPONENT, 'The component name'),
             'paymentarea' => new external_value(PARAM_AREA, 'Payment area in the component'),
+            'description' => new external_value(PARAM_AREA, 'Payment description'),
             'itemid' => new external_value(PARAM_INT, 'The item id in the context of the component area'),
             'fullAmount' => new external_value(PARAM_FLOAT, 'Full order amount'),
             'bonuses' => new external_value(PARAM_FLOAT, 'Bonuses used to pay for the Order'),
@@ -60,7 +61,7 @@ class make_payment extends external_api {
      * @throws \dml_exception
      * @throws \invalid_parameter_exception
      */
-    public static function execute(string $component, string $paymentarea, int $itemid, float $fullAmount, float $bonuses): array
+    public static function execute(string $component, string $paymentarea, string $description, int $itemid, float $fullAmount, float $bonuses): array
     {
         global $DB, $USER;
 
@@ -69,6 +70,7 @@ class make_payment extends external_api {
         self::validate_parameters(self::execute_parameters(), [
             'component' => $component,
             'paymentarea' => $paymentarea,
+            'description' => $description,
             'itemid' => $itemid,
             'fullAmount' => $fullAmount,
             'bonuses' => $bonuses,
@@ -122,7 +124,7 @@ class make_payment extends external_api {
                 $paymentid = payment_helper::save_payment($payable->get_account_id(), $component, $paymentarea,
                     $itemid, $userid, $originalAmount, $currency, 'paynocchio');
 
-                paynocchio_helper::registerPayment($paymentid, $component, $paymentarea, $itemid, $orderuuid, $userid, $originalAmount, $amount, $bonusAmount, 'P');
+                paynocchio_helper::registerPayment($paymentid, $component, $paymentarea, $description, $itemid, $orderuuid, $userid, $originalAmount, $amount, $bonusAmount, 'P');
 
                 if($wallet_balance_response) {
                     return [

@@ -98,3 +98,4 @@ $string['cost'] = 'Cost';
 $string['total_cost'] = 'Total cost';
 $string['paynocchio_integrated'] = 'Integration status';
 $string['paynocchio_integrated_help'] = 'True if integration with Paynocchio was successful';
+$string['noentriesfound'] = 'No entries found';

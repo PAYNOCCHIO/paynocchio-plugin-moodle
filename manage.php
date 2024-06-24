@@ -49,9 +49,8 @@ if (!$bank_entries) {
     $table = new html_table();
     $table->head = array(
         get_string('date'), get_string('code', 'paygw_paynocchio'), get_string('username'),  get_string('email'),
-        get_string('concept', 'paygw_paynocchio'), get_string('total_cost', 'paygw_paynocchio'), get_string('currency'), get_string('hasfiles', 'paygw_paynocchio'), get_string('actions')
+        get_string('concept', 'paygw_paynocchio'), get_string('total_cost', 'paygw_paynocchio'), get_string('currency'), get_string('actions')
     );
-    //$headarray=array(get_string('date'),get_string('code', 'paygw_paynocchio'), get_string('concept', 'paygw_paynocchio'),get_string('amount', 'paygw_paynocchio'),get_string('currency'));
 
     foreach ($bank_entries as $bank_entry) {
         $config = (object) helper::get_gateway_configuration($bank_entry->component, $bank_entry->paymentarea, $bank_entry->itemid, 'bank');
@@ -61,7 +60,7 @@ if (!$bank_entries) {
         $fullname = fullname($customer, true);
 
         // Add surcharge if there is any.
-        $surcharge = helper::get_gateway_surcharge('paypal');
+        $surcharge = helper::get_gateway_surcharge('paynocchio');
         $amount = helper::get_rounded_cost($payable->get_amount(), $currency, $surcharge);
         $buttonaprobe = '<form name="formapprovepay' . $bank_entry->id . '" method="POST">
         <input type="hidden" name="sesskey" value="' .sesskey(). '">

@@ -222,17 +222,19 @@ export const showModalWithPlaceholder = async() => {
  *
  * @param {string} component Name of the component that the itemId belongs to
  * @param {string} paymentArea The area of the component that the itemId belongs to
+ * @param {string} description The area of the component that the itemId belongs to
  * @param {number} itemid An internal identifier that is used by the component
  * @param {number} fullAmount Full amount of the order
  * @param {number} bonuses Boneses used to pay Paynocchio
  * @returns {*}
  */
-export const makePayment = (component, paymentArea, itemid, fullAmount, bonuses) => {
+export const makePayment = (component, paymentArea, description, itemid, fullAmount, bonuses) => {
     const request = {
         methodname: 'paygw_paynocchio_make_payment',
         args: {
             component,
             paymentarea: paymentArea,
+            description,
             itemid,
             fullAmount,
             bonuses

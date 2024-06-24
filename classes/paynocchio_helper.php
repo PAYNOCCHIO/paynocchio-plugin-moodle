@@ -466,6 +466,7 @@ class paynocchio_helper {
         $paymentid,
         $component,
         $paymentarea,
+        $description,
         $itemid,
         $orderuuid,
         $user_id,
@@ -484,6 +485,7 @@ class paynocchio_helper {
         $record->paymentid = $paymentid;
         $record->component = $component;
         $record->paymentarea = $paymentarea;
+        $record->description = $description;
         $record->itemid = $itemid;
         $record->orderuuid = $orderuuid;
         $record->userid = $user_id;

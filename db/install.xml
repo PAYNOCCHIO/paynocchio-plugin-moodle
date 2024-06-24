@@ -10,6 +10,7 @@
         <FIELD NAME="paymentid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="component" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="paymentarea" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="description" TYPE="char" LENGTH="1000" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="itemid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="orderuuid" TYPE="char" LENGTH="36" NOTNULL="true" SEQUENCE="false" />
         <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>

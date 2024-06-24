@@ -97,6 +97,7 @@ if(paynocchio_helper::user_has_payed($itemid, (int) $USER->id)) {
         $PAGE->requires->js_call_amd('paygw_paynocchio/paynocchio_pay', 'init', [
             'component' => $component,
             'paymentarea' => $paymentarea,
+            'description' => $description,
             'itemid' => $itemid,
             'fullAmount' => $amount,
             'balance' => $wallet_balance,
