@@ -54,7 +54,7 @@ if (!$payments) {
     );
 
     foreach ($payments as $payment) {
-        $config = (object) helper::get_gateway_configuration($payment->component, $payment->paymentarea, $payment->itemid, 'bank');
+        $config = (object) helper::get_gateway_configuration($payment->component, $payment->paymentarea, $payment->itemid, 'paynocchio');
         $payable = helper::get_payable($payment->component, $payment->paymentarea, $payment->itemid);
         $currency = $payable->get_currency();
         $customer = $DB->get_record('user', array('id' => $payment->userid));
