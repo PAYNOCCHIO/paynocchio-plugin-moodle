@@ -108,16 +108,7 @@ class transaction_complete extends external_api {
                 $order->status = 'C';
                 $order->timeupdated = time();
 
-                paynocchio_helper::registerTransaction((int) $order->userid, 'payment', $amount, 0, (int)$order->paymentid);
-                payment_helper::deliver_order($order->component, $order->paymentarea, (int) $order->itemid, (int) $order->paymentid, (int) $order->userid);
-
-                $DB->update_record('paygw_paynocchio_payments', $order);
-
-                $paymentuser = $DB->get_record('user', ['id' => $order->userid]);
-                $supportuser = core_user::get_support_user();
-
-                email_to_user($paymentuser, $supportuser, get_string('paynocchio_transaction_subject', 'paygw_paynocchio'), get_string('paynocchio_transaction_message', 'paygw_paynocchio', ['username' => $paymentuser->firstname . ' ' . $paymentuser->lastname, 'sum' => $amount ]));
-                email_to_user($paymentuser, $supportuser, get_string('paynocchio_confirmation_subject', 'paygw_paynocchio'), get_string('paynocchio_confirmation_message', 'paygw_paynocchio', ['username' => $paymentuser->firstname . ' ' . $paymentuser->lastname ]));
+                paynocchio_helper::processPayment($order);
 
                 return [
                     'success' => true,

@@ -26,10 +26,8 @@ declare(strict_types=1);
 
 namespace paygw_paynocchio\external;
 
-use core\notification;
 use core\uuid;
 use core_payment\helper as payment_helper;
-use core_user;
 use paygw_paynocchio\paynocchio_helper;
 use core_external\external_api;
 use core_external\external_function_parameters;
@@ -47,7 +45,7 @@ class make_payment extends external_api {
         return new external_function_parameters([
             'component' => new external_value(PARAM_COMPONENT, 'The component name'),
             'paymentarea' => new external_value(PARAM_AREA, 'Payment area in the component'),
-            'description' => new external_value(PARAM_AREA, 'Payment description'),
+            'description' => new external_value(PARAM_TEXT, 'Payment description'),
             'itemid' => new external_value(PARAM_INT, 'The item id in the context of the component area'),
             'fullAmount' => new external_value(PARAM_FLOAT, 'Full order amount'),
             'bonuses' => new external_value(PARAM_FLOAT, 'Bonuses used to pay for the Order'),

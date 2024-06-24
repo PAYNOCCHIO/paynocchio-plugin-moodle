@@ -24,7 +24,9 @@
 
 namespace paygw_paynocchio;
 
+use core_payment\helper as payment_helper;
 use core_reportbuilder\local\filters\number;
+use core_user;
 use curl;
 use JetBrains\PhpStorm\ArrayShape;
 use moodle_url;
@@ -540,6 +542,70 @@ class paynocchio_helper {
         global $DB;
         $record = $DB->get_record('paygw_paynocchio_payments', ['paymentid' => $paymentid]);
         return $record->status === 'C';
+    }
+
+    /**
+     * Aprobe payment manually
+     */
+    public static function aprobe_pay($id)
+    {
+        global $DB;
+        $order = $DB->get_record('paygw_paynocchio_payments', ['id' => $id]);
+
+        if($order) {
+                $order->status = 'C';
+                $order->timeupdated = time();
+
+                if(self::processPayment($order)) {
+                    return [
+                        'success' => true,
+                        'message' => 'Order updated as completed',
+                    ];
+                } else {
+                    return [
+                        'success' => false,
+                        'message' => 'Something went wrong',
+                    ];
+                }
+        }
+    }
+
+    /**
+     * Deny payment manually
+     */
+    public static function deny_pay($id): bool
+    {
+        global $DB;
+        return $DB->delete_records('paygw_paynocchio_payments', ['id' => $id]);
+    }
+
+    /**
+     * Processing payment
+     * @param $order
+     * @return bool
+     * @throws \dml_exception
+     */
+    public static function processPayment($order)
+    {
+        global $DB;
+
+        paynocchio_helper::registerTransaction((int) $order->userid, 'payment', $order->totalamount, $order->bonuses_used, (int)$order->paymentid);
+        payment_helper::deliver_order($order->component, $order->paymentarea, (int) $order->itemid, (int) $order->paymentid, (int) $order->userid);
+
+        $DB->update_record('paygw_paynocchio_payments', $order);
+
+        $paymentuser = $DB->get_record('user', ['id' => $order->userid]);
+        $supportuser = core_user::get_support_user();
+
+        try{
+            email_to_user($paymentuser, $supportuser, get_string('paynocchio_transaction_subject', 'paygw_paynocchio'), get_string('paynocchio_transaction_message', 'paygw_paynocchio', ['username' => $paymentuser->firstname . ' ' . $paymentuser->lastname, 'sum' => $amount ]));
+            email_to_user($paymentuser, $supportuser, get_string('paynocchio_confirmation_subject', 'paygw_paynocchio'), get_string('paynocchio_confirmation_message', 'paygw_paynocchio', ['username' => $paymentuser->firstname . ' ' . $paymentuser->lastname ]));
+        } catch (\Exception $e) {
+            // On localhost email sending fails
+            return false;
+        }
+
+        return true;
     }
 
 }
