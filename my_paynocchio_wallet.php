@@ -25,7 +25,7 @@ echo $OUTPUT->header();
 $user = $DB->get_record('paygw_paynocchio_wallets', ['userid'  => $USER->id]);
 
 if($success) {
-    \core\notification::success('Topped up.');
+    \core\notification::success('You have successfully replenished your wallet!');
 }
 
 if($user && $user->useruuid && $user->walletuuid) {

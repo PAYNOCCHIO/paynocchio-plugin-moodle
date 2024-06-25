@@ -69,7 +69,18 @@ export const init = (pay, minimum_topup_amount, card_balance_limit, balance) => 
                             button.addClass('disabled');
                             modal.body.find('.paynocchio-spinner').toggleClass('active');
                             modal.body.find('#topup_message').text('Working...');
-                            handleTopUpClick(input.val(), window.location.href + '?success=1')
+
+                            let redirectLink = window.location.href;
+                            let regex = new RegExp('[?&](success=)[^&]+');
+                            redirectLink = redirectLink.replace( regex , '');
+                            if (redirectLink.indexOf('?') != -1) {
+                                redirectLink = redirectLink + '&success=1';
+                            } else {
+                                redirectLink = redirectLink + '?success=1';
+                            }
+                            window.console.log(redirectLink);
+
+                            handleTopUpClick(input.val(), redirectLink)
                                 .then(data => {
                                     if (!data.is_error && data.url) {
                                         modal.body.find('#topup_message').text('OK... Sending to Stripe...');

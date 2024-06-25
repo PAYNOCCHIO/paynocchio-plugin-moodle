@@ -40,7 +40,7 @@ $payable = helper::get_payable($component, $paymentarea, $itemid);
 $currency = $payable->get_currency();
 
 if($success) {
-    \core\notification::success('Topped up.');
+    \core\notification::success('You have successfully replenished your wallet!');
 }
 
 // Add surcharge if there is any.
