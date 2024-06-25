@@ -570,7 +570,7 @@ button.disabled {
     margin-left: auto;
 }
 
-#congratz .paynocchio-wallet-card .paynocchio-wallet-card-footer {
+.paynocchio-wallet-card .paynocchio-wallet-card-footer {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.5rem;

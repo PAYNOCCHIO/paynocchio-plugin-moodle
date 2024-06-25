@@ -156,6 +156,7 @@ if(paynocchio_helper::user_has_payed($itemid, (int) $USER->id)) {
             'wallet_activated' => true,
             'cardBg' => $cardBg,
             'brandname' => get_config('paygw_paynocchio', 'brandname'),
+            'username' => $USER->firstname . ' ' . $USER->lastname,
         ];
         echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet_all_in_one_payment', $data);
         $PAGE->requires->js_call_amd('paygw_paynocchio/terms_and_conditions', 'init', []);
