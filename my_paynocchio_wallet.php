@@ -18,10 +18,15 @@ $PAGE->set_pagelayout('standard');
 $PAGE->set_title($brandName);
 $PAGE->navbar->add(get_string('profile'), new moodle_url('/user/profile.php', array('id' => $USER->id)));
 $PAGE->navbar->add($brandName);
+$success = optional_param('success', 0, PARAM_BOOL);
 
 echo $OUTPUT->header();
 
 $user = $DB->get_record('paygw_paynocchio_wallets', ['userid'  => $USER->id]);
+
+if($success) {
+    \core\notification::success('Topped up.');
+}
 
 if($user && $user->useruuid && $user->walletuuid) {
 

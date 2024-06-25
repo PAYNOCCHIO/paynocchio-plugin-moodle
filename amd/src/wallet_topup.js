@@ -67,7 +67,7 @@ export const init = (pay, minimum_topup_amount, card_balance_limit, balance) => 
                             button.addClass('disabled');
                             modal.body.find('.paynocchio-spinner').toggleClass('active');
                             modal.body.find('#topup_message').text('Working...');
-                            handleTopUpClick(input.val(), window.location.href)
+                            handleTopUpClick(input.val(), window.location.href + '?success=1')
                                 .then(data => {
                                     if (!data.is_error && data.url) {
                                         modal.body.find('#topup_message').text('OK... Sending to Stripe...');

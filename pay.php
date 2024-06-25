@@ -16,6 +16,7 @@ $paymentarea = required_param('paymentarea', PARAM_AREA);
 $itemid = required_param('itemid', PARAM_INT);
 $cardBg = get_config('paygw_paynocchio', 'paynocchiocardbg');
 $description = required_param('description', PARAM_TEXT);
+$success = required_param('success', PARAM_BOOL);
 $description = json_decode('"'.$description.'"');
 $params = [
     'component' => $component,
@@ -37,6 +38,10 @@ $config = (object) helper::get_gateway_configuration($component, $paymentarea, $
 $payable = helper::get_payable($component, $paymentarea, $itemid);
 
 $currency = $payable->get_currency();
+
+if($success) {
+    \core\notification::success('Topped up.');
+}
 
 // Add surcharge if there is any.
 $surcharge = helper::get_gateway_surcharge('paynocchio');
