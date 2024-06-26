@@ -39,6 +39,10 @@ export const init = (user_id) => {
                     message.classList.remove('hidden');
 
                     document.getElementById('congratz').classList.add('shown');
+                    let delay = 5000;
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, delay);
                     document.getElementById('card_number').innerText = data.card_number;
                     if (document.getElementById('page-payment-gateway-paynocchio-pay')) {
                         document.getElementById('page-payment-gateway-paynocchio-pay').style.overflow = 'hidden';
@@ -51,5 +55,13 @@ export const init = (user_id) => {
                 }
             });
         });
+    }
+
+    const paynocchio_congratz_button = document.getElementById('paynocchio_congratz_button');
+    if(paynocchio_congratz_button) {
+        paynocchio_congratz_button.onclick = function () {
+            document.getElementById('congratz_spinner').classList.add('shown');
+            window.location.reload();
+        };
     }
 };

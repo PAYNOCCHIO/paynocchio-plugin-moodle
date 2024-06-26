@@ -96,7 +96,9 @@ if($user && $user->useruuid && $user->walletuuid) {
         echo 'Card balance limit: '. $wallet->getEnvironmentStructure()['card_balance_limit']. '<br/>';
         //echo '-->';
 
+        echo '<pre>';
         print_r($wallet->getEnvironmentStructure()['rewarding_group']);
+        echo '</pre>';
     }
 
 } else {
