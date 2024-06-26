@@ -78,7 +78,6 @@ export const init = (pay, minimum_topup_amount, card_balance_limit, balance) => 
                             } else {
                                 redirectLink = redirectLink + '?success=1';
                             }
-                            window.console.log(redirectLink);
 
                             handleTopUpClick(input.val(), redirectLink)
                                 .then(data => {

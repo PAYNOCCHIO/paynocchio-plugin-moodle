@@ -365,8 +365,30 @@ class paynocchio_helper {
                 'minimum_topup_amount' => $json_response->minimum_topup_amount,
                 'bonus_conversion_rate' => $json_response->bonus_conversion_rate,
                 'allow_withdraw' => $json_response->allow_withdraw,
+                'rewarding_group' => self::filterEnvRewardingGroups($json_response->rewarding_groups)[0],
             ];
         }
+    }
+
+    /**
+     * Filter the rewarding groups array to return only active and not expired campaigns
+     * @param $groups
+     * @return array
+     */
+
+    static function filterEnvRewardingGroups($groups): array
+    {
+        return array_values(array_filter($groups, [__CLASS__, 'checkFilter']));
+    }
+
+    /**
+     * Filter rule for campaign filtering
+     * @param $group
+     * @return bool
+     */
+    static function checkFilter($group): bool
+    {
+        return $group->active && strtotime($group->date_to) >= time();
     }
 
     /**

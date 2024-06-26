@@ -83,17 +83,20 @@ if($user && $user->useruuid && $user->walletuuid) {
     echo $OUTPUT->render_from_template('paygw_paynocchio/wallet_transactions', $wallet_transactions_data);
 
     if(is_siteadmin($USER->id)) {
-        echo '<!--';
+        //echo '<!--';
+
+        echo 'env_uuid: '. $wallet->get_env(). '<br/>';
         echo 'user_uuid: '. $user->useruuid. '<br/>';
         echo 'wallet_uuid: '. $user->walletuuid. '<br/>';
         echo 'secret: '. $wallet->get_secret(). '<br/>';
-        echo 'env_uuid: '. $wallet->get_env(). '<br/>';
         echo 'wallet signature: '. $wallet->getSignature(). '<br/>';
         echo 'company signature: '. $wallet->getSignature(true). '<br/>';
         echo 'generated signature: '. hash("sha256", $wallet->get_secret() . "|" . $wallet->get_env() . "|" . $user->useruuid). '<br/>';
         echo '<br/>';
         echo 'Card balance limit: '. $wallet->getEnvironmentStructure()['card_balance_limit']. '<br/>';
-        echo '-->';
+        //echo '-->';
+
+        print_r($wallet->getEnvironmentStructure()['rewarding_group']);
     }
 
 } else {
