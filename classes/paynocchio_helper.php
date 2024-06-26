@@ -25,10 +25,7 @@
 namespace paygw_paynocchio;
 
 use core_payment\helper as payment_helper;
-use core_reportbuilder\local\filters\number;
 use core_user;
-use curl;
-use JetBrains\PhpStorm\ArrayShape;
 use moodle_url;
 use stdClass;
 
@@ -93,7 +90,15 @@ class paynocchio_helper {
         $this->simpleSignature = $this->createSimpleSignature();
     }
 
-    #[ArrayShape(['status_code' => "mixed", 'response' => "bool|string"])]
+    /**
+     * Main cURL worker
+     * @param string $method
+     * @param string $url
+     * @param string $body
+     * @param bool $simple
+     * @return array
+     * @throws \dml_exception
+     */
     private function sendRequest(string $method, string $url, string $body = "", bool $simple = false): array {
         $headers = [
             'X-API-KEY: X-API-KEY',
@@ -388,7 +393,7 @@ class paynocchio_helper {
      */
     static function checkFilter($group): bool
     {
-        return $group->active && strtotime($group->date_to) >= time();
+        return $group->active && strtotime($group->date_from) <= time() && strtotime($group->date_to) >= time();
     }
 
     /**

@@ -37,6 +37,7 @@ if($user && $user->useruuid && $user->walletuuid) {
     $wallet_response_code = $wallet_balance_response['code'];
     $minimum_topup_amount = $wallet->getEnvironmentStructure()['minimum_topup_amount'];
     $card_balance_limit = $wallet->getEnvironmentStructure()['card_balance_limit'];
+    $rewarding_rules = $wallet->getEnvironmentStructure()['rewarding_group']->rewarding_rules;
 
     if($wallet_response_code === "ACTIVE") {
         $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_topup', 'init', [
@@ -44,6 +45,7 @@ if($user && $user->useruuid && $user->walletuuid) {
             'minimum_topup_amount' => $minimum_topup_amount,
             'card_balance_limit' => $card_balance_limit,
             'balance' => $wallet_balance,
+            'rewarding_rules' => $rewarding_rules,
         ]);
 
         $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_withdraw', 'init', [

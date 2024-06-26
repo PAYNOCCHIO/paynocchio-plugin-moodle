@@ -23,7 +23,46 @@
 
 import {handleTopUpClick, showModalWithTopup} from "./repository";
 
-export const init = (pay, minimum_topup_amount, card_balance_limit, balance) => {
+/**
+ * Adapt rewarding rules
+ * @param {object} data
+ * @return {*[]}
+ */
+const rewardingAdaptation = (data) => {
+    const result = [];
+
+    data.forEach(item => {
+        let existing = result.find(el =>
+            el.operation_type === item.operation_type &&
+            el.min_amount === item.min_amount &&
+            el.max_amount === item.max_amount
+        );
+
+        if (existing) {
+            existing.value += item.value;
+        } else {
+            result.push({ ...item });
+        }
+    });
+
+    return result;
+};
+
+/**
+ * Find eligible Operations
+ * @param {object} data
+ * @param {number} amount
+ * @param {string} operation_type
+ * @return {*}
+ */
+const findOperationTypes = (data, amount, operation_type) => {
+    return data.filter(item => operation_type === item.operation_type && amount > item.min_amount && amount < item.max_amount);
+};
+
+export const init = (pay, minimum_topup_amount, card_balance_limit, balance, rewarding_rules) => {
+    const reducedRules = rewardingAdaptation(rewarding_rules);
+    // Демо работы фильтра
+    window.console.log(findOperationTypes(reducedRules, 25, "payment_operation_add_money"));
     const paynocchio_wallet_topup_button = document.getElementById('paynocchio_topup_button');
 
     let need_to_top_up = 0;
