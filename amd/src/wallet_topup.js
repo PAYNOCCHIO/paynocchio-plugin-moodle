@@ -24,11 +24,11 @@
 import {handleTopUpClick, showModalWithTopup} from "./repository";
 
 /**
- * Adapt rewarding rules
+ * Adapt rewarding rules to sum values of the same rules
  * @param {object} data
  * @return {*[]}
  */
-const rewardingAdaptation = (data) => {
+const transformRewardingRules = (data) => {
     const result = [];
 
     data.forEach(item => {
@@ -50,19 +50,54 @@ const rewardingAdaptation = (data) => {
 
 /**
  * Find eligible Operations
- * @param {object} data
- * @param {number} amount
- * @param {string} operation_type
+ * @param {object} obj
+ * @param {number} num
+ * @param {string} operationType
  * @return {*}
  */
-const findOperationTypes = (data, amount, operation_type) => {
-    return data.filter(item => operation_type === item.operation_type && amount > item.min_amount && amount < item.max_amount);
+const calculateFinalRule = (obj, num, operationType) => {
+    let totalValue = 0;
+    let minAmount = Infinity;
+    let maxAmount = -Infinity;
+
+    obj.forEach(item => {
+        if (item.operation_type === operationType && num > item.min_amount && num < item.max_amount) {
+            totalValue += item.value;
+            if (item.min_amount < minAmount) {
+                minAmount = item.min_amount;
+            }
+            if (item.max_amount > maxAmount) {
+                maxAmount = item.max_amount;
+            }
+        }
+    });
+
+    // Проверка, если ни одно правило не подошло
+    if (totalValue === 0) {
+        return null;
+    }
+
+    return {
+        totalValue,
+        minAmount,
+        maxAmount
+    };
 };
 
 export const init = (pay, minimum_topup_amount, card_balance_limit, balance, rewarding_rules) => {
-    const reducedRules = rewardingAdaptation(rewarding_rules);
+    const reducedRules = transformRewardingRules(rewarding_rules);
+
+    window.console.log(reducedRules);
+
     // Демо работы фильтра
-    window.console.log(findOperationTypes(reducedRules, 25, "payment_operation_add_money"));
+    // Replenishment
+    window.console.log(calculateFinalRule(reducedRules, 6, "payment_operation_add_money"));
+    window.console.log(calculateFinalRule(reducedRules, 90, "payment_operation_add_money"));
+    window.console.log(calculateFinalRule(reducedRules, 103, "payment_operation_add_money"));
+    // Payment
+    window.console.log(calculateFinalRule(reducedRules, 90, "payment_operation_for_services"));
+    window.console.log(calculateFinalRule(reducedRules, 500, "payment_operation_for_services"));
+
     const paynocchio_wallet_topup_button = document.getElementById('paynocchio_topup_button');
 
     let need_to_top_up = 0;
