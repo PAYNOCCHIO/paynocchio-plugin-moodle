@@ -72,11 +72,6 @@
                 {{#wallet_suspend}}
                     <h3>1 step. Your wallet is suspended</h3>
                     <p class="paynocchio-mb8">Please reactivate it.</p>
-                    <!--<p>
-                        <a href="/payment/gateway/paynocchio/my_paynocchio_wallet.php" class="paynocchio_activation_button">
-                            Reactivate wallet
-                        </a>
-                    </p>-->
                     <button id="activate_wallet_button" type="button" class="paynocchio_activation_button">Reactivate wallet</button>
                     <div id="wallet_status_message" class="paynocchio-center"></div>
                 {{/wallet_suspend}}
@@ -127,7 +122,7 @@
             <div class="">
                 <strong>${{wallet_balance}}</strong> / {{wallet_bonuses}} bonuses
             </div>
-            <div class="paynocchio-wallet-card {{^wallet_active}}inactive{{/wallet_active}}">
+            <div class="paynocchio-wallet-card {{^wallet_active}}inactive{{/wallet_active}}" {{#cardBg}} style="background-color: {{cardBg}}"{{/cardBg}}>
                 <div class="on_card_embleme">{{{logo}}}</div>
                 <div class="paynocchio-wallet-card-footer">
                     <div class="">
