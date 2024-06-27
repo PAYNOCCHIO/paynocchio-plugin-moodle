@@ -363,6 +363,7 @@ class paynocchio_helper {
         $response = $this->sendRequest('GET', $url);
         $json_response = json_decode($response['response']);
         if($response['status_code'] === 200) {
+            $filtered_rewards = self::filterEnvRewardingGroups($json_response->rewarding_groups);
             return [
                 'card_balance_limit' => $json_response->card_balance_limit,
                 'daily_transaction_limit' => $json_response->daily_transaction_limit,
@@ -370,7 +371,7 @@ class paynocchio_helper {
                 'minimum_topup_amount' => $json_response->minimum_topup_amount,
                 'bonus_conversion_rate' => $json_response->bonus_conversion_rate,
                 'allow_withdraw' => $json_response->allow_withdraw,
-                'rewarding_group' => self::filterEnvRewardingGroups($json_response->rewarding_groups)[0],
+                'rewarding_group' => end($filtered_rewards),
             ];
         }
     }

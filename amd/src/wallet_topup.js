@@ -55,14 +55,16 @@ const transformRewardingRules = (data) => {
  * @param {string} operationType
  * @return {*}
  */
-const calculateFinalRule = (obj, num, operationType) => {
+const getCurrentRewardRule = (obj, num, operationType) => {
     let totalValue = 0;
     let minAmount = Infinity;
     let maxAmount = -Infinity;
+    let value_type;
 
     obj.forEach(item => {
         if (item.operation_type === operationType && num > item.min_amount && num < item.max_amount) {
             totalValue += item.value;
+            value_type = item.value_type;
             if (item.min_amount < minAmount) {
                 minAmount = item.min_amount;
             }
@@ -72,31 +74,22 @@ const calculateFinalRule = (obj, num, operationType) => {
         }
     });
 
-    // Проверка, если ни одно правило не подошло
-    if (totalValue === 0) {
-        return null;
-    }
-
     return {
         totalValue,
         minAmount,
-        maxAmount
+        maxAmount,
+        value_type,
     };
+};
+
+const calculateReward = (amount, rules, type) => {
+    const total_value = getCurrentRewardRule(rules, amount, type).totalValue;
+    const value_type = getCurrentRewardRule(rules, amount, type).value_type;
+    return value_type === 'percentage' ? parseInt(amount * (total_value / 100)) : total_value;
 };
 
 export const init = (pay, minimum_topup_amount, card_balance_limit, balance, rewarding_rules) => {
     const reducedRules = transformRewardingRules(rewarding_rules);
-
-    window.console.log(reducedRules);
-
-    // Демо работы фильтра
-    // Replenishment
-    window.console.log(calculateFinalRule(reducedRules, 6, "payment_operation_add_money"));
-    window.console.log(calculateFinalRule(reducedRules, 90, "payment_operation_add_money"));
-    window.console.log(calculateFinalRule(reducedRules, 103, "payment_operation_add_money"));
-    // Payment
-    window.console.log(calculateFinalRule(reducedRules, 90, "payment_operation_for_services"));
-    window.console.log(calculateFinalRule(reducedRules, 500, "payment_operation_for_services"));
 
     const paynocchio_wallet_topup_button = document.getElementById('paynocchio_topup_button');
 
@@ -120,8 +113,10 @@ export const init = (pay, minimum_topup_amount, card_balance_limit, balance, rew
                         const top_up_default_input = need_to_top_up <= minimum_topup_amount ? minimum_topup_amount: need_to_top_up;
                         input.val(top_up_default_input);
 
-                        if(parseInt(need_to_top_up * 0.1) > 0) {
-                            message.text(`You will get ${parseInt(need_to_top_up * 0.1)} bonuses`);
+                        if(calculateReward(need_to_top_up,
+                            reducedRules, 'payment_operation_add_money') > 0) {
+                            message.text(`You will get ${calculateReward(need_to_top_up,
+                                reducedRules, 'payment_operation_add_money')} bonuses`);
                         }
                     }
                     input.on('keyup change', (evt) => {
@@ -130,7 +125,9 @@ export const init = (pay, minimum_topup_amount, card_balance_limit, balance, rew
                             the balance limit will exceed the set value ${card_balance_limit}`);
                             button.addClass('disabled');
                         } else if (evt.target.value >= minimum_topup_amount) {
-                            message.text(`You will get ${parseInt(parseInt(evt.target.value) * 0.1)} bonuses`);
+                            message.text(`You will get ${
+                                calculateReward(evt.target.value, reducedRules, 'payment_operation_add_money')
+                            } bonuses`);
                             button.removeClass('disabled');
                         } else {
                             message.text('Please enter amount more than minimum replenishment amount.');
