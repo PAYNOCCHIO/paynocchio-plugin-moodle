@@ -130,9 +130,13 @@ export const init = (pay, minimum_topup_amount, card_balance_limit, balance, rew
                             the balance limit will exceed the set value ${card_balance_limit}`);
                             button.addClass('disabled');
                         } else if (evt.target.value >= minimum_topup_amount) {
-                            message.text(`You will get ${
-                                calculateReward(evt.target.value, reducedRules, 'payment_operation_add_money')
-                            } bonuses`);
+                            if(calculateReward(evt.target.value, reducedRules, 'payment_operation_add_money') > 0) {
+                                message.text(`You will get ${
+                                    calculateReward(evt.target.value, reducedRules, 'payment_operation_add_money')
+                                } bonuses`);
+                            } else {
+                                message.text('');
+                            }
                             button.removeClass('disabled');
                         } else {
                             message.text('Please enter amount more than minimum replenishment amount.');

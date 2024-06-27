@@ -39,6 +39,11 @@ if($user && $user->useruuid && $user->walletuuid) {
     $card_balance_limit = $wallet->getEnvironmentStructure()['card_balance_limit'];
     $rewarding_rules = $wallet->getEnvironmentStructure()['rewarding_group']->rewarding_rules;
 
+    $amount = 100;
+    echo '<pre>';
+    print_r($wallet->getCurrentRewardRule($amount, 'payment_operation_add_money'));
+    echo '</pre>';
+
     if($wallet_response_code === "ACTIVE") {
         $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_topup', 'init', [
             'pay' => false,

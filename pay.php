@@ -81,11 +81,11 @@ if(paynocchio_helper::user_has_payed($itemid, (int) $USER->id)) {
     $conversion_rate = $wallet->getEnvironmentStructure()['bonus_conversion_rate'] ?: 1;
     $minimum_topup_amount = $wallet->getEnvironmentStructure()['minimum_topup_amount'];
     $card_balance_limit = $wallet->getEnvironmentStructure()['card_balance_limit'];
-    $current_topup_rules = $wallet->getCurrentRewardRule($amount, 'payment_operation_add_money');
-
+    $rewarding_rules_topup = $wallet->getCurrentRewardRule($amount, 'payment_operation_add_money');
+    $rewarding_rules_payment = $wallet->getCurrentRewardRule($amount, 'payment_operation_for_services');
     echo '<pre>';
-    print_r($amount);
-    print_r($current_topup_rules);
+    print_r($rewarding_rules_topup);
+    print_r($rewarding_rules_payment);
     echo '</pre>';
 
     if($user && $user->useruuid && $user->walletuuid) {

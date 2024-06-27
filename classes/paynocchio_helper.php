@@ -423,12 +423,14 @@ class paynocchio_helper {
         $minAmount = INF;
         $maxAmount = -INF;
         $value_type = null;
+        $conversion_rate = 0;
 
         if ($obj) {
             foreach ($obj as $item) {
+                $conversion_rate = $item->conversion_rate;
+                $value_type = $item->value_type;
                 if ($item->operation_type === $operationType && $num >= $item->min_amount && $num <= $item->max_amount) {
                     $totalValue += $item->value;
-                    $value_type = $item->value_type;
                     if ($item->min_amount < $minAmount) {
                         $minAmount = $item->min_amount;
                     }
@@ -443,6 +445,8 @@ class paynocchio_helper {
             'minAmount' => $minAmount,
             'maxAmount' => $maxAmount,
             'value_type' => $value_type,
+            'conversion_rate' => $conversion_rate,
+            'operationType' => $operationType,
         ];
     }
 
