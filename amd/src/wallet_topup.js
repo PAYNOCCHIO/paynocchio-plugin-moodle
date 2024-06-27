@@ -62,7 +62,7 @@ const getCurrentRewardRule = (obj, num, operationType) => {
     let value_type;
 
     obj.forEach(item => {
-        if (item.operation_type === operationType && num > item.min_amount && num < item.max_amount) {
+        if (item.operation_type === operationType && num >= item.min_amount && num <= item.max_amount) {
             totalValue += item.value;
             value_type = item.value_type;
             if (item.min_amount < minAmount) {
