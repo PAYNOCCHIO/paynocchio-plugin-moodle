@@ -39,8 +39,18 @@ export const init = (user_id) => {
                     message.classList.remove('hidden');
 
                     document.getElementById('congratz').classList.add('shown');
+
+                    let $i = 5;
+                    let $interval = setInterval(function() {
+                            if (--$i === 1) {
+                                clearInterval($interval);
+                            }
+                            document.getElementById('congratz_countdown').innerHTML = $i + '';
+                        }, 1000);
+
                     let delay = 5000;
                     setTimeout(function() {
+                        document.getElementById('congratz_countdown').classList.add('paynocchio-hidden');
                         window.location.reload();
                     }, delay);
                     document.getElementById('card_number').innerText = data.card_number;

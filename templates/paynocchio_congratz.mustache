@@ -40,6 +40,7 @@
             <img src="/payment/gateway/paynocchio/pix/girl_with_dudu.webp" alt="Congratz, img" width="609" height="435" />
             <div class="paynocchio-wallet-card" {{#cardBg}}style="background-color: {{cardBg}}"{{/cardBg}}>
                 <div class="on_card_embleme">{{{logo}}}</div>
+                <div class="countdown" id="congratz_countdown">5</div>
                 <div class="paynocchio-wallet-card-footer">
                     <div class="">
                         {{username}}
@@ -60,6 +61,7 @@
         </div>
         <a id="paynocchio_congratz_button" class="paynocchio_done">
             Great!
+
             <div class="spinner" id="congratz_spinner">
                 <svg class="paynocchio-spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle class="spinner-circle" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
