@@ -31,21 +31,24 @@ import {handleTopUpClick, showModalWithTopup} from "./repository";
 const transformRewardingRules = (data) => {
     const result = [];
 
-    data.forEach(item => {
-        let existing = result.find(el =>
-            el.operation_type === item.operation_type &&
-            el.min_amount === item.min_amount &&
-            el.max_amount === item.max_amount
-        );
+    if(data) {
+        data.forEach(item => {
+            let existing = result.find(el =>
+                el.operation_type === item.operation_type &&
+                el.min_amount === item.min_amount &&
+                el.max_amount === item.max_amount
+            );
 
-        if (existing) {
-            existing.value += item.value;
-        } else {
-            result.push({ ...item });
-        }
-    });
+            if (existing) {
+                existing.value += item.value;
+            } else {
+                result.push({ ...item });
+            }
+        });
 
-    return result;
+        return result;
+    }
+    return null;
 };
 
 /**
@@ -61,25 +64,27 @@ const getCurrentRewardRule = (obj, num, operationType) => {
     let maxAmount = -Infinity;
     let value_type;
 
-    obj.forEach(item => {
-        if (item.operation_type === operationType && num >= item.min_amount && num <= item.max_amount) {
-            totalValue += item.value;
-            value_type = item.value_type;
-            if (item.min_amount < minAmount) {
-                minAmount = item.min_amount;
+    if(obj) {
+        obj.forEach(item => {
+            if (item.operation_type === operationType && num >= item.min_amount && num <= item.max_amount) {
+                totalValue += item.value;
+                value_type = item.value_type;
+                if (item.min_amount < minAmount) {
+                    minAmount = item.min_amount;
+                }
+                if (item.max_amount > maxAmount) {
+                    maxAmount = item.max_amount;
+                }
             }
-            if (item.max_amount > maxAmount) {
-                maxAmount = item.max_amount;
-            }
-        }
-    });
-
+        });
+    }
     return {
         totalValue,
         minAmount,
         maxAmount,
         value_type,
     };
+
 };
 
 const calculateReward = (amount, rules, type) => {

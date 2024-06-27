@@ -264,7 +264,7 @@ class paynocchio_helper {
             self::PAYNOCCHIO_WALLET_KEY => $walletId,
             "currency" => "USD",
             'amount' => $amount,
-            'status_type' => 'ae1b841f-2e56-4fb9-a935-2064304f8639', // TODO Check if in't needed
+            'status_type' => 'ae1b841f-2e56-4fb9-a935-2064304f8639', // TODO Check if isn't needed
         ];
 
         return $this->sendRequest('POST', '/operation/withdraw', json_encode($data));
@@ -374,6 +374,76 @@ class paynocchio_helper {
                 'rewarding_group' => end($filtered_rewards),
             ];
         }
+    }
+
+    /**
+     * Transform and merge identical rules
+     * @param $data
+     * @return array|null
+     */
+    public function transformRewardingRules($data)
+    {
+    $result = [];
+
+    if ($data) {
+        foreach ($data as $item) {
+            $existing = null;
+
+            foreach ($result as &$el) {
+                if ($el->operation_type === $item->operation_type &&
+                    $el->min_amount === $item->min_amount &&
+                    $el->max_amount === $item->max_amount) {
+                    $existing = &$el;
+                    break;
+                }
+            }
+
+            if ($existing) {
+                $existing['value'] += $item->value;
+            } else {
+                $result[] = $item;
+            }
+        }
+
+        return $result;
+    }
+
+    return null;
+    }
+
+    /**
+     * Calculate Rewarding rule for static data
+     * @param $num
+     * @param $operationType
+     * @return array
+     */
+    public function getCurrentRewardRule($num, $operationType) {
+        $obj = $this->transformRewardingRules($this->getEnvironmentStructure()['rewarding_group']->rewarding_rules);
+        $totalValue = 0;
+        $minAmount = INF;
+        $maxAmount = -INF;
+        $value_type = null;
+
+        if ($obj) {
+            foreach ($obj as $item) {
+                if ($item->operation_type === $operationType && $num >= $item->min_amount && $num <= $item->max_amount) {
+                    $totalValue += $item->value;
+                    $value_type = $item->value_type;
+                    if ($item->min_amount < $minAmount) {
+                        $minAmount = $item->min_amount;
+                    }
+                    if ($item->max_amount > $maxAmount) {
+                        $maxAmount = $item->max_amount;
+                    }
+                }
+            }
+        }
+        return [
+            'totalValue' => $totalValue,
+            'minAmount' => $minAmount,
+            'maxAmount' => $maxAmount,
+            'value_type' => $value_type,
+        ];
     }
 
     /**

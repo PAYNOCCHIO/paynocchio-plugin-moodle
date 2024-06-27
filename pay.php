@@ -81,6 +81,12 @@ if(paynocchio_helper::user_has_payed($itemid, (int) $USER->id)) {
     $conversion_rate = $wallet->getEnvironmentStructure()['bonus_conversion_rate'] ?: 1;
     $minimum_topup_amount = $wallet->getEnvironmentStructure()['minimum_topup_amount'];
     $card_balance_limit = $wallet->getEnvironmentStructure()['card_balance_limit'];
+    $current_topup_rules = $wallet->getCurrentRewardRule($amount, 'payment_operation_add_money');
+
+    echo '<pre>';
+    print_r($amount);
+    print_r($current_topup_rules);
+    echo '</pre>';
 
     if($user && $user->useruuid && $user->walletuuid) {
 
@@ -89,6 +95,7 @@ if(paynocchio_helper::user_has_payed($itemid, (int) $USER->id)) {
         $max_bonuses_to_spend = $wallet_balance_response['bonuses'];
         $money_bonuses_equivalent = $max_bonuses_to_spend * $conversion_rate;
         $wallet_response_code = $wallet_balance_response['code'];
+        $rewarding_rules = $wallet->getEnvironmentStructure()['rewarding_group']->rewarding_rules;
 
         if($wallet_response_code === "ACTIVE") {
             $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_topup', 'init', [
@@ -96,6 +103,7 @@ if(paynocchio_helper::user_has_payed($itemid, (int) $USER->id)) {
                 'minimum_topup_amount' => $minimum_topup_amount,
                 'card_balance_limit' => $card_balance_limit,
                 'balance' => $wallet_balance,
+                'rewarding_rules' => $rewarding_rules,
             ]);
         }
 
@@ -169,8 +177,6 @@ if(paynocchio_helper::user_has_payed($itemid, (int) $USER->id)) {
         $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_activation', 'init', ['user_id' => $USER->id]);
 
         $rewarding_rate = 0.1;
-        $rewarding_for_topup = 1 + $rewarding_rate * $conversion_rate;
-        $need_to_topup = ceil($amount / $rewarding_for_topup);
 
         $data = [
             'user_id' => $USER->id,

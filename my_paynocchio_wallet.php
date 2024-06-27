@@ -86,7 +86,6 @@ if($user && $user->useruuid && $user->walletuuid) {
 
     if(is_siteadmin($USER->id)) {
         //echo '<!--';
-
         echo 'env_uuid: '. $wallet->get_env(). '<br/>';
         echo 'user_uuid: '. $user->useruuid. '<br/>';
         echo 'wallet_uuid: '. $user->walletuuid. '<br/>';
@@ -96,11 +95,12 @@ if($user && $user->useruuid && $user->walletuuid) {
         echo 'generated signature: '. hash("sha256", $wallet->get_secret() . "|" . $wallet->get_env() . "|" . $user->useruuid). '<br/>';
         echo '<br/>';
         echo 'Card balance limit: '. $wallet->getEnvironmentStructure()['card_balance_limit']. '<br/>';
-        //echo '-->';
+
 
         echo '<pre>';
         print_r($wallet->getEnvironmentStructure()['rewarding_group']);
         echo '</pre>';
+        //echo '-->';
     }
 
 } else {
