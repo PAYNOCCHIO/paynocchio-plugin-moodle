@@ -727,7 +727,7 @@ button.disabled {
 .paynocchio-pay-button #discount {
     border-radius: 0.25rem;
     background: #66d165;
-    color: white;
+    color: black;
     padding: 0.25rem;
     font-size: 0.75rem;
     margin: -0.25rem 0;
