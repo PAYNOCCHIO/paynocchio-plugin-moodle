@@ -50,8 +50,8 @@
         <div class="paynocchio-wallet-tab-head">
             <h2>How to pay?</h2>
         </div>
-        <div class="paynocchio-lgray paynocchio-rounded {{^wallet_activated}}active{{/wallet_activated}} {{#wallet_suspend}}issue{{/wallet_suspend}} {{#wallet_blocked}}issue{{/wallet_blocked}} paynocchio-p4" id="paynocchio-step1">
-            {{^wallet_activated}}
+        <div class="paynocchio-lgray paynocchio-rounded {{^wallet_active}}active{{/wallet_active}} {{#wallet_suspend}}issue{{/wallet_suspend}} {{#wallet_blocked}}issue{{/wallet_blocked}} paynocchio-p4" id="paynocchio-step1">
+            {{^wallet_active}}
                 <img class="paynocchio-flright" src="/payment/gateway/paynocchio/pix/rocket.png" alt="Rocket, image" width="93" height="115" />
                 <h3>1 step. Activate wallet</h3>
                 <p class="paynocchio-mb8">Activate our secure wallet to become a member of the loyalty program, get rewards and pay for all our products with bonuses.</p>
@@ -67,8 +67,8 @@
                 <div class="topup-description hidden">
                     Activating...
                 </div>
-            {{/wallet_activated}}
-            {{#wallet_activated}}
+            {{/wallet_active}}
+            {{#wallet_active}}
                 {{#wallet_suspend}}
                     <h3>1 step. Your wallet is suspended</h3>
                     <p class="paynocchio-mb8">Please reactivate it.</p>
@@ -89,21 +89,21 @@
                     <h3>1 step. Your wallet is activated</h3>
                     <p>Great! Now you can enjoy all the benefits of your secure wallet!</p>
                 {{/wallet_active}}
-            {{/wallet_activated}}
+            {{/wallet_active}}
         </div>
         <div class="paynocchio-lgray paynocchio-rounded paynocchio-p4 {{#wallet_active}}{{^can_pay}}active{{/can_pay}}{{/wallet_active}}" id="paynocchio-step2">
             <h3>2 step. Add money</h3>
-            {{#wallet_activated}}
+            {{#wallet_active}}
                 {{^can_pay}}
-                    <div>Top up your wallet by $<span id="need_to_top_up">{{need_to_topup}}</span> and get {{bonuses_amount}} bonuses{{^bonus_conversion_rate_equal}} (that equals to ${{bonuses_amount_in_dollar}}){{/bonus_conversion_rate_equal}}, and you can pay for your chosen course. Additionally, you will receive up to {{bonuses_to_get}} bonuses for your purchase.</div>
+                    <div>Top up your wallet by $<span id="need_to_top_up">{{need_to_topup}}</span> and get {{bonuses_for_topup}} bonuses{{^bonus_conversion_rate_equal}} (that equals to ${{bonuses_for_topup_in_dollar}}){{/bonus_conversion_rate_equal}}, and you can pay for your chosen course. Additionally, you will receive up to {{bonuses_for_payment}} bonuses for your purchase.</div>
                 {{/can_pay}}
                 {{#can_pay}}
                     <div><strong>Well done!</strong> Your wallet balance is enough to make a purchase!</div>
                 {{/can_pay}}
-            {{/wallet_activated}}
-            {{^wallet_activated}}
-                <div>Top up your wallet by $<span id="need_to_top_up">{{need_to_topup}}</span> and get {{bonuses_amount}} bonus points{{^bonus_conversion_rate_equal}} (that equals to ${{bonuses_amount_in_dollar}}){{/bonus_conversion_rate_equal}}, and you can pay for your chosen course. Additionally, you will receive up to {{bonuses_to_get}} bonuses for your purchase.</div>
-            {{/wallet_activated}}
+            {{/wallet_active}}
+            {{^wallet_active}}
+                <div>Top up your wallet by $<span id="need_to_top_up">{{need_to_topup}}</span> and get {{bonuses_for_topup}} bonuses{{^bonus_conversion_rate_equal}} (that equals to ${{bonuses_for_topup_in_dollar}}){{/bonus_conversion_rate_equal}}, and you can pay for your chosen course. Additionally, you will receive up to {{bonuses_for_payment}} bonuses for your purchase.</div>
+            {{/wallet_active}}
         </div>
         <div class="paynocchio-lgray paynocchio-rounded paynocchio-p4 {{#wallet_active}}{{#can_pay}}active{{/can_pay}}{{/wallet_active}}" id="paynocchio-step3">
             <h3>3 step. Spend bonuses and pay</h3>
@@ -147,7 +147,7 @@
                     Add money
                 </button>
             </div>
-            {{#bonus_to_spend}}
+            {{#wallet_bonuses}}
             <div class="paynocchio-bonuses-conversion-rate">
                 <div>
                     <nobr>Spend bonuses</nobr>
@@ -160,7 +160,7 @@
                     <div class="bonuses_value_cont"><input id="bonuses-value" type="number" readonly="readonly" value="0" min="0" max="{{max_bonus}}" {{^wallet_active}}disabled{{/wallet_active}}><span id="money_equivalent" class="paynocchio-hidden"></span></div>
                 </div>
             </div>
-            {{/bonus_to_spend}}
+            {{/wallet_bonuses}}
             <div class="paynocchio-topup-message paynocchio-hidden" id="topup_message"></div>
             <div class="paynocchio-pay-button-container">
                 <button type="button" id="paynocchio_pay_button" class="paynocchio-pay-button {{^wallet_active}}inactive disabled{{/wallet_active}}" {{^wallet_active}}disabled{{/wallet_active}}>
@@ -180,7 +180,7 @@
             </div>
             {{/wallet_active}}
             {{#wallet_active}}
-            <div class="paynocchio-topup-message paynocchio-hidden" id="paynocchio_gaining_bonuses">And get additional <span id="bonuses_to_get">{{bonuses_to_get}}</span> bonuses!
+            <div class="paynocchio-topup-message paynocchio-hidden" id="paynocchio_gaining_bonuses">And get additional <span id="bonuses_to_get">{{bonuses_for_payment}}</span> bonuses!
                 <i class="fa-regular fa-circle-question" type="button" tabindex="0" data-trigger="click" data-container="body" data-toggle="popover" data-placement="top" data-title="How it works" data-content="Earn 10% for each payment! Keep earning rewards and pay with bonuses!"></i>
             </div>
             {{/wallet_active}}
