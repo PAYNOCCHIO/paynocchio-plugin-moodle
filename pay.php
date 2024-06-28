@@ -91,7 +91,6 @@ if(paynocchio_helper::user_has_payed($itemid, (int) $USER->id)) {
     $rewarding_rules_topup = $wallet->getCurrentRewardRule($course_rounded_cost, 'payment_operation_add_money');
     $rewarding_value_for_topup = $rewarding_rules_topup['totalValue'];
     $rewarding_rules_payment = $wallet->getCurrentRewardRule($course_rounded_cost, 'payment_operation_for_services');
-    $conversion_rate_rewarding_payment = $rewarding_rules_payment['conversion_rate'];
     $rewarding_value_for_payment = $rewarding_rules_payment['totalValue'];
     $rewarding_for_topup = 1 + $rewarding_value_for_topup * $conversion_rate_when_payment;
 
@@ -112,7 +111,7 @@ if(paynocchio_helper::user_has_payed($itemid, (int) $USER->id)) {
         $need_to_topup = ceil(($course_rounded_cost - floor($wallet_balance) - floor($money_bonuses_equivalent)) / $rewarding_for_topup);
         $bonuses_for_topup = intval($need_to_topup * $rewarding_value_for_topup);
         $bonuses_for_topup_in_dollar = $bonuses_for_topup * $conversion_rate_when_payment;
-        $bonuses_for_payment = intval($need_to_topup * $rewarding_value_for_payment);
+        $bonuses_for_payment = $need_to_topup > 0 ? intval($need_to_topup * $rewarding_value_for_payment) : intval($course_rounded_cost * $rewarding_value_for_payment);
     } else {
         $need_to_topup = ceil(($course_rounded_cost - floor($wallet_balance) - floor($money_bonuses_equivalent) - $rewarding_for_topup + 1));
         $bonuses_for_topup = $rewarding_value_for_topup;
@@ -184,6 +183,7 @@ if(paynocchio_helper::user_has_payed($itemid, (int) $USER->id)) {
             'fullAmount' => $course_rounded_cost,
             'balance' => $wallet_balance,
             'bonuses_conversion_rate' => $conversion_rate_when_payment,
+            'rewarding_rules_payment' => $rewarding_rules_payment,
         ]);
 
 

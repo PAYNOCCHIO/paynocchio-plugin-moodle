@@ -13,7 +13,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-import {makePayment} from "./repository";
+import {makePayment, getCurrentRules} from "./repository";
 import {exception as displayException} from 'core/notification';
 import Templates from 'core/templates';
 
@@ -24,6 +24,13 @@ import Templates from 'core/templates';
  * @copyright  2024 Paynocchio <ceo@paynocchio.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+let debounceTimer;
+const debounceTime = 100;
+
+const debounce = (callback, time) => {
+    window.clearTimeout(debounceTimer);
+    debounceTimer = window.setTimeout(callback, time);
+};
 
 const checkPayability = (bonuses, fullAmount, balance = '0', element, bonuses_conversion_rate) => {
     if(parseFloat(bonuses) * parseFloat(bonuses_conversion_rate) + parseFloat(balance) < parseFloat(fullAmount)) {
@@ -61,19 +68,34 @@ const changePayButtonValues = (fullAmount, bonuses, bonuses_conversion_rate) => 
     }
 };
 
-const changeBonusesValue = (balance, bonuses) => {
-    const element = document.getElementById('bonuses_to_get');
-    const paynocchio_gaining_bonuses = document.getElementById('paynocchio_gaining_bonuses');
-    let bonuses_to_get_value = parseInt((balance - bonuses) * 0.1);
-    if (bonuses_to_get_value > 0) {
-        paynocchio_gaining_bonuses.classList.remove('paynocchio-hidden');
-        element.innerText = bonuses_to_get_value;
-    } else {
-        paynocchio_gaining_bonuses.classList.add('paynocchio-hidden');
-    }
+const changeBonusesValue = (fullAmount, bonuses) => {
+    const input = fullAmount - bonuses;
+    getCurrentRules(input, "payment_operation_for_services")
+        .then(rules => {
+            let bonuses_to_get_value;
+            if(rules.value_type === "percentage") {
+                bonuses_to_get_value = parseInt(input * rules.totalValue);
+            } else {
+                bonuses_to_get_value = rules.totalValue;
+            }
+            const element = document.getElementById('bonuses_to_get');
+            const paynocchio_gaining_bonuses = document.getElementById('paynocchio_gaining_bonuses');
+            if (bonuses_to_get_value > 0) {
+                paynocchio_gaining_bonuses.classList.remove('paynocchio-hidden');
+                element.innerText = bonuses_to_get_value;
+            } else {
+                paynocchio_gaining_bonuses.classList.add('paynocchio-hidden');
+            }
+        });
 };
 
-export const init = (component, paymentArea, description, itemid, fullAmount, balance, bonuses_conversion_rate) => {
+export const init = (component,
+                     paymentArea,
+                     description,
+                     itemid,
+                     fullAmount,
+                     balance,
+                     bonuses_conversion_rate) => {
 
     const paynocchio_pay_button = document.getElementById('paynocchio_pay_button');
 
@@ -98,14 +120,14 @@ export const init = (component, paymentArea, description, itemid, fullAmount, ba
                 bonuses = range.value;
                 input.value = range.value;
                 checkPayability(bonuses, fullAmount, balance, paynocchio_pay_button, bonuses_conversion_rate);
-                changeBonusesValue(fullAmount, bonuses * bonuses_conversion_rate);
                 changePayButtonValues(fullAmount, bonuses, bonuses_conversion_rate);
+                debounce(() => changeBonusesValue(fullAmount, bonuses * bonuses_conversion_rate), debounceTime);
             });
             range.addEventListener('input', () => {
                 bonuses = range.value;
                 input.value = range.value;
                 checkPayability(bonuses, fullAmount, balance, paynocchio_pay_button, bonuses_conversion_rate);
-                changeBonusesValue(fullAmount, bonuses * bonuses_conversion_rate);
+                debounce(() => changeBonusesValue(fullAmount, bonuses * bonuses_conversion_rate), debounceTime);
                 changePayButtonValues(fullAmount, bonuses, bonuses_conversion_rate);
             });
         } else {

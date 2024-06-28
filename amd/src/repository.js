@@ -262,6 +262,25 @@ export const checkPaymentConfirmation = (paymentid) => {
 };
 
 /**
+ * Get calculated rules from Server according to sum
+ *
+ * @param {number} amount id of the Payment to check
+ * @param {string} operationType type for Rule
+ * @returns {*}
+ */
+export const getCurrentRules = (amount, operationType) => {
+    const request = {
+        methodname: 'paygw_paynocchio_calculate_current_rewards',
+        args: {
+            amount,
+            operationType,
+        },
+    };
+
+    return Ajax.call([request])[0];
+};
+
+/**
  * Call server to get conf.
  *
  * @param {string} conf_name Name of the conf

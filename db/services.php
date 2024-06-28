@@ -131,4 +131,13 @@ $functions = [
         'ajax'        => true,
         'loginrequired' => false,
     ],
+
+    'paygw_paynocchio_calculate_current_rewards' => [
+        'classname'   => 'paygw_paynocchio\external\calculate_current_rewards',
+        'classpath'   => '',
+        'description' => 'Get current rewarding rule.',
+        'type'        => 'read',
+        'ajax'        => true,
+        'loginrequired' => false,
+    ],
 ];
