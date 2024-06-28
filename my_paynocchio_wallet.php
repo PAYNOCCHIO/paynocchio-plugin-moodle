@@ -114,7 +114,7 @@ if($user && $user->useruuid && $user->walletuuid) {
     $data = [
         'wallet_balance' => 0,
         'wallet_bonuses' => 0,
-        'wallet_card' => '',
+        'wallet_card' => false,
         'wallet_status' => '',
         'wallet_code' => '',
         'wallet_uuid' => '',

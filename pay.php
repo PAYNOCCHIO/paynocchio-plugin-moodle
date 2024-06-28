@@ -128,12 +128,18 @@ if(paynocchio_helper::user_has_payed($itemid, (int) $USER->id)) {
         $wallet_status_readable = 'Wallet activated';
     }
 
+    if ($wallet_balance_response['number']) {
+        $wallet_card = chunk_split($wallet_balance_response['number'], 4, ' ');
+    } else {
+        $wallet_card = false;
+    }
+
     $data = [
         'wallet_balance' => $wallet_balance ?? 0,
         'wallet_bonuses' => $max_bonuses_to_spend ?? 0,
         'bonus_conversion_rate' => $wallet->getEnvironmentStructure()['bonus_conversion_rate'],
         'bonus_conversion_rate_equal' => $wallet->getEnvironmentStructure()['bonus_conversion_rate'] === 1,
-        'wallet_card' => chunk_split($wallet_balance_response['number'], 4, ' '),
+        'wallet_card' => $wallet_card,
         'wallet_status' => $wallet_balance_response['status'],
         'wallet_status_readable' => $wallet_status_readable,
         'wallet_code' => $wallet_response_code,
