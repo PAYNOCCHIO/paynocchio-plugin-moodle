@@ -112,7 +112,7 @@ if(paynocchio_helper::user_has_payed($itemid, (int) $USER->id)) {
         $need_to_topup = ceil(($course_rounded_cost - floor($wallet_balance) - floor($money_bonuses_equivalent)) / $rewarding_for_topup);
         $bonuses_for_topup = intval($need_to_topup * $rewarding_value_for_topup);
         $bonuses_for_topup_in_dollar = $bonuses_for_topup * $conversion_rate_when_payment;
-        $bonuses_for_payment = intval($course_rounded_cost * $rewarding_value_for_payment);
+        $bonuses_for_payment = intval($need_to_topup * $rewarding_value_for_payment);
     } else {
         $need_to_topup = ceil(($course_rounded_cost - floor($wallet_balance) - floor($money_bonuses_equivalent) - $rewarding_for_topup + 1));
         $bonuses_for_topup = $rewarding_value_for_topup;
@@ -126,12 +126,6 @@ if(paynocchio_helper::user_has_payed($itemid, (int) $USER->id)) {
         $wallet_status_readable = 'Wallet blocked';
     } else {
         $wallet_status_readable = 'Wallet activated';
-    }
-
-    if ($wallet_balance_response['number']) {
-        $wallet_card = chunk_split($wallet_balance_response['number'], 4, ' ');
-    } else {
-        $wallet_card = false;
     }
 
     $data = [
