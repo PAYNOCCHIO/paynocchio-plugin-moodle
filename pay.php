@@ -1,5 +1,6 @@
 <?php
 
+use core\notification;
 use core\uuid;
 use core_payment\helper;
 use paygw_paynocchio\pay_form;
@@ -40,13 +41,13 @@ $payable = helper::get_payable($component, $paymentarea, $itemid);
 $currency = $payable->get_currency();
 
 if($success) {
-    \core\notification::success('You have successfully replenished your wallet!');
+    notification::success('You have successfully replenished your wallet!');
 }
 
 // Add surcharge if there is any.
 $surcharge = helper::get_gateway_surcharge('paynocchio');
 
-$amount = helper::get_rounded_cost($payable->get_amount(), $currency, $surcharge);
+$course_rounded_cost = helper::get_rounded_cost($payable->get_amount(), $currency, $surcharge);
 
 echo $OUTPUT->header();
 
@@ -72,30 +73,92 @@ if(paynocchio_helper::user_has_payed($itemid, (int) $USER->id)) {
 
     $user = $DB->get_record('paygw_paynocchio_wallets', ['userid'  => $USER->id]);
 
-    if($user && $user->useruuid) {
+    if($user && $user->useruuid && $user->walletuuid) {
         $wallet = new paynocchio_helper($user->useruuid);
+        $wallet_uuid = $user->walletuuid;
+        $useruuid = $user->useruuid;
     } else {
-        $wallet = new paynocchio_helper(uuid::generate());
+        $useruuid = uuid::generate();
+        $wallet = new paynocchio_helper($useruuid);
+        $wallet_uuid = 0;
     }
 
-    $conversion_rate = $wallet->getEnvironmentStructure()['bonus_conversion_rate'] ?: 1;
+    $conversion_rate_when_payment = $wallet->getEnvironmentStructure()['bonus_conversion_rate'] ?: 1;
     $minimum_topup_amount = $wallet->getEnvironmentStructure()['minimum_topup_amount'];
     $card_balance_limit = $wallet->getEnvironmentStructure()['card_balance_limit'];
-    $rewarding_rules_topup = $wallet->getCurrentRewardRule($amount, 'payment_operation_add_money');
-    $rewarding_rules_payment = $wallet->getCurrentRewardRule($amount, 'payment_operation_for_services');
-    echo '<pre>';
-    print_r($rewarding_rules_topup);
-    print_r($rewarding_rules_payment);
-    echo '</pre>';
+    
+    // Calculation for need to topup
+    $rewarding_rules_topup = $wallet->getCurrentRewardRule($course_rounded_cost, 'payment_operation_add_money');
+    $rewarding_value_for_topup = $rewarding_rules_topup['totalValue'];
+    $rewarding_rules_payment = $wallet->getCurrentRewardRule($course_rounded_cost, 'payment_operation_for_services');
+    $conversion_rate_rewarding_payment = $rewarding_rules_payment['conversion_rate'];
+    $rewarding_value_for_payment = $rewarding_rules_payment['totalValue'];
+    $rewarding_for_topup = 1 + $rewarding_value_for_topup * $conversion_rate_when_payment;
 
-    if($user && $user->useruuid && $user->walletuuid) {
+    $wallet_balance_response = $wallet->getWalletBalance($wallet_uuid) ?: 0;
+    $wallet_balance = $wallet_balance_response['balance'];
+    $max_bonuses_to_spend = $wallet_balance_response['bonuses'];
+    $money_bonuses_equivalent = $max_bonuses_to_spend * $conversion_rate_when_payment;
+    $wallet_response_code = $wallet_balance_response['code'];
+    $rewarding_rules = $wallet->getEnvironmentStructure()['rewarding_group']->rewarding_rules;
 
-        $wallet_balance_response = $wallet->getWalletBalance($user->walletuuid);
-        $wallet_balance = $wallet_balance_response['balance'];
-        $max_bonuses_to_spend = $wallet_balance_response['bonuses'];
-        $money_bonuses_equivalent = $max_bonuses_to_spend * $conversion_rate;
-        $wallet_response_code = $wallet_balance_response['code'];
-        $rewarding_rules = $wallet->getEnvironmentStructure()['rewarding_group']->rewarding_rules;
+    if($max_bonuses_to_spend && $max_bonuses_to_spend < $course_rounded_cost) {
+        $max_bonus = $max_bonuses_to_spend;
+    } else {
+        $max_bonus = $course_rounded_cost;
+    }
+
+    if($rewarding_rules_topup['value_type'] === 'percentage'){
+        $need_to_topup = ceil(($course_rounded_cost - floor($wallet_balance) - floor($money_bonuses_equivalent)) / $rewarding_for_topup);
+        $bonuses_for_topup = $need_to_topup * $rewarding_value_for_topup;
+        $bonuses_for_topup_in_dollar = $need_to_topup * $rewarding_value_for_topup * $conversion_rate_when_payment;
+        $bonuses_for_payment = $course_rounded_cost * $rewarding_value_for_topup;
+    } else {
+        $need_to_topup = ceil(($course_rounded_cost - floor($wallet_balance) - floor($money_bonuses_equivalent) - $rewarding_for_topup + 1));
+        $bonuses_for_topup = $rewarding_value_for_topup;
+        $bonuses_for_topup_in_dollar = $bonuses_for_topup * $conversion_rate_when_payment;
+        $bonuses_for_payment = $rewarding_value_for_payment;
+    }
+
+    if ($wallet_response_code == 'SUSPEND') {
+        $wallet_status_readable = 'Wallet suspended';
+    } elseif ($wallet_response_code == 'BLOCKED') {
+        $wallet_status_readable = 'Wallet blocked';
+    } else {
+        $wallet_status_readable = 'Wallet activated';
+    }
+
+    $data = [
+        'wallet_balance' => $wallet_balance ?? 0,
+        'wallet_bonuses' => $max_bonuses_to_spend ?? 0,
+        'bonus_conversion_rate' => $wallet->getEnvironmentStructure()['bonus_conversion_rate'],
+        'bonus_conversion_rate_equal' => $wallet->getEnvironmentStructure()['bonus_conversion_rate'] === 1,
+        'wallet_card' => chunk_split($wallet_balance_response['number'], 4, ' '),
+        'wallet_status' => $wallet_balance_response['status'],
+        'wallet_status_readable' => $wallet_status_readable,
+        'wallet_code' => $wallet_response_code,
+        'wallet_uuid' => $wallet_uuid,
+        'user_uuid' => $useruuid,
+        'max_bonus' => $max_bonus ?? 0,
+        'full_amount' => $course_rounded_cost,
+        'bonuses_for_topup' => $bonuses_for_topup,
+        'bonuses_for_topup_in_dollar' => $bonuses_for_topup_in_dollar,
+        'bonuses_for_payment' => $bonuses_for_payment,
+        'need_to_topup' => $need_to_topup,
+        'can_pay' => $wallet_balance + $money_bonuses_equivalent >= $course_rounded_cost,
+        'wallet_active' => $wallet_response_code === "ACTIVE",
+        'wallet_suspend' => $wallet_response_code === "SUSPEND",
+        'wallet_blocked' => $wallet_response_code === "BLOCKED",
+        'logo' => paynocchio_helper::custom_logo(),
+        'description' => $pagetitle,
+        'cardBg' => $cardBg,
+        'brandname' => get_config('paygw_paynocchio', 'brandname'),
+        'username' => $USER->firstname . ' ' . $USER->lastname,
+    ];
+
+    echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet_all_in_one_payment', $data);
+
+    if($user && $useruuid && $wallet_uuid) {
 
         if($wallet_response_code === "ACTIVE") {
             $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_topup', 'init', [
@@ -112,61 +175,13 @@ if(paynocchio_helper::user_has_payed($itemid, (int) $USER->id)) {
             'paymentarea' => $paymentarea,
             'description' => $description,
             'itemid' => $itemid,
-            'fullAmount' => $amount,
+            'fullAmount' => $course_rounded_cost,
             'balance' => $wallet_balance,
-            'bonuses_conversion_rate' => $conversion_rate,
+            'bonuses_conversion_rate' => $conversion_rate_when_payment,
         ]);
 
-        if($max_bonuses_to_spend && $max_bonuses_to_spend < $amount) {
-            $max_bonus = $max_bonuses_to_spend;
-        } else {
-            $max_bonus = $amount;
-        }
 
-        $rewarding_rate = 0.1;
-        $rewarding_for_topup = 1 + $rewarding_rate * $conversion_rate;
-        $need_to_topup = ceil(($amount - floor($wallet_balance) - floor($money_bonuses_equivalent)) / $rewarding_for_topup);
 
-        if ($wallet_response_code == 'SUSPEND') {
-            $wallet_status_readable = 'Wallet suspended';
-        } elseif ($wallet_response_code == 'BLOCKED') {
-            $wallet_status_readable = 'Wallet blocked';
-        } else {
-            $wallet_status_readable = 'Wallet activated';
-        }
-
-        $data = [
-            'wallet_balance' => $wallet_balance ?? 0,
-            'wallet_bonuses' => $max_bonuses_to_spend ?? 0,
-            'bonus_conversion_rate' => $wallet->getEnvironmentStructure()['bonus_conversion_rate'],
-            'bonus_conversion_rate_equal' => $wallet->getEnvironmentStructure()['bonus_conversion_rate'] === 1,
-            'bonus_to_spend' => $max_bonuses_to_spend,
-            'wallet_card' => chunk_split($wallet_balance_response['number'], 4, ' '),
-            'wallet_status' => $wallet_balance_response['status'],
-            'wallet_status_readable' => $wallet_status_readable,
-            'wallet_code' => $wallet_response_code,
-            'wallet_uuid' => $user->walletuuid,
-            'user_uuid' => $user->useruuid,
-            'max_bonus' => $max_bonus ?? 0,
-            'full_amount' => $amount,
-            'bonuses_amount' => $need_to_topup * $rewarding_rate,
-            'bonuses_amount_in_dollar' => $need_to_topup * $rewarding_rate * $conversion_rate,
-            'bonuses_to_get' => $amount * $rewarding_rate,
-            'need_to_topup' => $need_to_topup,
-            'total_with_bonuses' => $need_to_topup + $need_to_topup * $rewarding_rate,
-            'bottom_line' => $amount - $need_to_topup + $need_to_topup * $rewarding_rate,
-            'can_pay' => $wallet_balance + $money_bonuses_equivalent >= $amount,
-            'wallet_active' => $wallet_response_code === "ACTIVE",
-            'wallet_suspend' => $wallet_response_code === "SUSPEND",
-            'wallet_blocked' => $wallet_response_code === "BLOCKED",
-            'logo' => paynocchio_helper::custom_logo(),
-            'description' => $pagetitle,
-            'wallet_activated' => true,
-            'cardBg' => $cardBg,
-            'brandname' => get_config('paygw_paynocchio', 'brandname'),
-            'username' => $USER->firstname . ' ' . $USER->lastname,
-        ];
-        echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet_all_in_one_payment', $data);
         $PAGE->requires->js_call_amd('paygw_paynocchio/terms_and_conditions', 'init', []);
         echo $OUTPUT->render_from_template('paygw_paynocchio/terms_and_conditions', []);
 
@@ -176,29 +191,6 @@ if(paynocchio_helper::user_has_payed($itemid, (int) $USER->id)) {
 
         $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_activation', 'init', ['user_id' => $USER->id]);
 
-        $rewarding_rate = 0.1;
-
-        $data = [
-            'user_id' => $USER->id,
-            'wallet_balance' => 0,
-            'wallet_bonuses' => 0,
-            'wallet_activated' => false,
-            'wallet_active' => false,
-            'can_pay' => false,
-            'full_amount' => $amount,
-            'new_amount' => $amount * $conversion_rate,
-            'need_to_topup' => $amount - $amount * $rewarding_rate * $conversion_rate,
-            'bonuses_amount' => $amount * $rewarding_rate,
-            'bonuses_amount_in_dollar' => $amount * $rewarding_rate * $conversion_rate,
-            'bonuses_to_get' => $amount * $rewarding_rate,
-            'logo' => paynocchio_helper::custom_logo(),
-            'brandname' => get_config('paygw_paynocchio', 'brandname'),
-            'itemid' => $itemid,
-            'description' => $pagetitle,
-            'username' => $USER->firstname . ' ' . $USER->lastname,
-            'cardBg' => $cardBg,
-        ];
-        echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet_all_in_one_payment', $data);
         echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_congratz', $data);
     }
 
