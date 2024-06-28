@@ -39,10 +39,6 @@ if($user && $user->useruuid && $user->walletuuid) {
     $card_balance_limit = $wallet->getEnvironmentStructure()['card_balance_limit'];
     $rewarding_rules = $wallet->getEnvironmentStructure()['rewarding_group']->rewarding_rules;
 
-    $amount = 100;
-    echo '<pre>';
-    print_r($wallet->getCurrentRewardRule($amount, 'payment_operation_add_money'));
-    echo '</pre>';
 
     if($wallet_response_code === "ACTIVE") {
         $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_topup', 'init', [
@@ -90,7 +86,7 @@ if($user && $user->useruuid && $user->walletuuid) {
     echo $OUTPUT->render_from_template('paygw_paynocchio/wallet_transactions', $wallet_transactions_data);
 
     if(is_siteadmin($USER->id)) {
-        //echo '<!--';
+        echo '<!--';
         echo 'env_uuid: '. $wallet->get_env(). '<br/>';
         echo 'user_uuid: '. $user->useruuid. '<br/>';
         echo 'wallet_uuid: '. $user->walletuuid. '<br/>';
@@ -105,7 +101,7 @@ if($user && $user->useruuid && $user->walletuuid) {
         echo '<pre>';
         print_r($wallet->getEnvironmentStructure()['rewarding_group']);
         echo '</pre>';
-        //echo '-->';
+        echo '-->';
     }
 
 } else {
