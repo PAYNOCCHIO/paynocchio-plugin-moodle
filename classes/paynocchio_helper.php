@@ -423,7 +423,7 @@ class paynocchio_helper {
         $minAmount = INF;
         $maxAmount = -INF;
         $value_type = null;
-        $conversion_rate = 0;
+        $conversion_rate = 1;
 
         if ($obj) {
             foreach ($obj as $item) {
@@ -441,7 +441,7 @@ class paynocchio_helper {
             }
         }
         return [
-            'totalValue' => $totalValue,
+            'totalValue' => $value_type === 'percentage' ? $totalValue / $conversion_rate : $value_type,
             'minAmount' => $minAmount,
             'maxAmount' => $maxAmount,
             'value_type' => $value_type,

@@ -63,12 +63,14 @@ const getCurrentRewardRule = (obj, num, operationType) => {
     let minAmount = Infinity;
     let maxAmount = -Infinity;
     let value_type;
+    let conversion_rate = 1;
 
     if(obj) {
         obj.forEach(item => {
             if (item.operation_type === operationType && num >= item.min_amount && num <= item.max_amount) {
                 totalValue += item.value;
                 value_type = item.value_type;
+                conversion_rate = item.conversion_rate;
                 if (item.min_amount < minAmount) {
                     minAmount = item.min_amount;
                 }
@@ -79,10 +81,11 @@ const getCurrentRewardRule = (obj, num, operationType) => {
         });
     }
     return {
-        totalValue,
+        totalValue: value_type === 'percentage' ? parseInt(totalValue / conversion_rate) : totalValue,
         minAmount,
         maxAmount,
         value_type,
+        conversion_rate,
     };
 
 };
