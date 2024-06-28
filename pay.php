@@ -110,7 +110,7 @@ if(paynocchio_helper::user_has_payed($itemid, (int) $USER->id)) {
 
     if($rewarding_rules_topup['value_type'] === 'percentage'){
         $need_to_topup = ceil(($course_rounded_cost - floor($wallet_balance) - floor($money_bonuses_equivalent)) / $rewarding_for_topup);
-        $bonuses_for_topup = $need_to_topup * $rewarding_value_for_topup;
+        $bonuses_for_topup = intval($need_to_topup * $rewarding_value_for_topup);
         $bonuses_for_topup_in_dollar = $need_to_topup * $rewarding_value_for_topup * $conversion_rate_when_payment;
         $bonuses_for_payment = $course_rounded_cost * $rewarding_value_for_topup;
     } else {
