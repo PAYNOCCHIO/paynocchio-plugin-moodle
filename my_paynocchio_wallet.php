@@ -60,7 +60,7 @@ if($user && $user->useruuid && $user->walletuuid) {
         'wallet_card' => chunk_split($wallet_balance_response['number'], 4, ' '),
         'wallet_status' => $wallet_balance_response['status'],
         'wallet_code' => $wallet_response_code,
-        'server_error' => $wallet_response_code === 500,
+        'server_error' => $wallet_response_code === 500 || $wallet_response_code === 404,
         'wallet_blocked' => $wallet_response_code === "BLOCKED",
         'wallet_active' => $wallet_response_code === "ACTIVE",
         'minimum_topup_amount' => $wallet->getEnvironmentStructure()['minimum_topup_amount'],
