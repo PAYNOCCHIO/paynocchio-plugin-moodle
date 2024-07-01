@@ -25,7 +25,7 @@ import Templates from 'core/templates';
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 let debounceTimer;
-const debounceTime = 100;
+const debounceTime = 300;
 
 const debounce = (callback, time) => {
     window.clearTimeout(debounceTimer);
