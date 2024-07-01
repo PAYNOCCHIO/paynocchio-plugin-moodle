@@ -441,7 +441,7 @@ class paynocchio_helper {
             }
         }
         return [
-            'totalValue' => $value_type === 'percentage' ? intval($totalValue / $conversion_rate) / 100 : $totalValue,
+            'totalValue' => $value_type === 'percentage' ? $totalValue / $conversion_rate / 100 : $totalValue,
             'minAmount' => $minAmount,
             'maxAmount' => $maxAmount,
             'value_type' => $value_type,

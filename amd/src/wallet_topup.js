@@ -81,7 +81,7 @@ const getCurrentRewardRule = (obj, num, operationType) => {
         });
     }
     return {
-        totalValue: value_type === 'percentage' ? parseInt(totalValue / conversion_rate) : totalValue,
+        totalValue: value_type === 'percentage' ? totalValue / conversion_rate : totalValue,
         minAmount,
         maxAmount,
         value_type,
@@ -93,6 +93,10 @@ const getCurrentRewardRule = (obj, num, operationType) => {
 const calculateReward = (amount, rules, type) => {
     const total_value = getCurrentRewardRule(rules, amount, type).totalValue;
     const value_type = getCurrentRewardRule(rules, amount, type).value_type;
+
+    window.console.log('amount', amount);
+    window.console.log('total_value', total_value);
+
     return value_type === 'percentage' ? parseInt(amount * (total_value / 100)) : total_value;
 };
 
