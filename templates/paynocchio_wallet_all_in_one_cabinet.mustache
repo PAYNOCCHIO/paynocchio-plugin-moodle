@@ -139,9 +139,17 @@
             </div>
             <div id="paynocchio-wallet-actions-buttons">
                 <button type="button" id="{{#wallet_active}}paynocchio_topup_button{{/wallet_active}}" class="paynocchio_top_up_button {{^wallet_active}}inactive{{/wallet_active}} {{^wallet_active}}disabled{{/wallet_active}}">
-                    <img decoding="async" src="/payment/gateway/paynocchio/pix/plus.png" class="">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                    </svg>
+
                     Add money
                 </button>
+                {{#allow_withdraw}}
+                <button type="button" id="paynocchio_withdraw_button" class="paynocchio_button cfps-rounded-lg">
+                    Withdraw
+                </button>
+                {{/allow_withdraw}}
             </div>
         </div>
     </div>

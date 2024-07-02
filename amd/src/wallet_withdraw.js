@@ -33,7 +33,7 @@ export const init = () => {
         paynocchio_wallet_withdraw_button.addEventListener('click', () => {
             showModalWithWithdraw()
                 .then(modal => {
-                    modal.setTitle('Withdraw from Wallet');
+                    modal.setTitle('Withdraw from the Wallet');
                     const input = document.getElementById('withdraw_amount');
                     const button = document.getElementById('withdraw_button');
                     button.addEventListener('click', () => {

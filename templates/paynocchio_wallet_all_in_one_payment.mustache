@@ -138,8 +138,9 @@
             </div>
             <div id="paynocchio-wallet-actions-buttons">
                 <button type="button" id="paynocchio_topup_button" class="paynocchio_top_up_button {{^wallet_active}}inactive disabled{{/wallet_active}}" {{^wallet_active}}disabled{{/wallet_active}}>
-                    <img decoding="async" src="/payment/gateway/paynocchio/pix/plus.png" class="">
-                    Add money
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                    </svg>                    Add money
                 </button>
             </div>
             {{#wallet_bonuses}}
@@ -176,7 +177,7 @@
             {{/wallet_active}}
             {{#wallet_active}}
             <div class="paynocchio-topup-message paynocchio-hidden" id="paynocchio_gaining_bonuses">And get additional <span id="bonuses_to_get">{{bonuses_for_payment}}</span> bonuses!
-                <i class="fa-regular fa-circle-question" type="button" tabindex="0" data-trigger="click" data-container="body" data-toggle="popover" data-placement="top" data-title="How it works" data-content="Earn 10% for each payment! Keep earning rewards and pay with bonuses!"></i>
+                <i class="fa-regular fa-circle-question" type="button" tabindex="0" data-trigger="click" data-container="body" data-toggle="popover" data-placement="top" data-title="How it works" data-content="Earn bonuses per each payment larger than $10! Keep earning rewards and pay with bonuses!"></i>
             </div>
             {{/wallet_active}}
         </div>

@@ -69,7 +69,9 @@ const changePayButtonValues = (fullAmount, bonuses, bonuses_conversion_rate) => 
 };
 
 const changeBonusesValue = (fullAmount, bonuses) => {
+    const element = document.getElementById('bonuses_to_get');
     const input = fullAmount - bonuses;
+    element.classList.add('loading');
     getCurrentRules(input, "payment_operation_for_services")
         .then(rules => {
             let bonuses_to_get_value;
@@ -78,7 +80,7 @@ const changeBonusesValue = (fullAmount, bonuses) => {
             } else {
                 bonuses_to_get_value = rules.totalValue;
             }
-            const element = document.getElementById('bonuses_to_get');
+
             const paynocchio_gaining_bonuses = document.getElementById('paynocchio_gaining_bonuses');
             if (bonuses_to_get_value > 0) {
                 paynocchio_gaining_bonuses.classList.remove('paynocchio-hidden');
@@ -86,6 +88,8 @@ const changeBonusesValue = (fullAmount, bonuses) => {
             } else {
                 paynocchio_gaining_bonuses.classList.add('paynocchio-hidden');
             }
+
+            element.classList.remove('loading');
         });
 };
 

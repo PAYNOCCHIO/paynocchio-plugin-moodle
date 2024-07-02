@@ -51,7 +51,10 @@
     right: 0.5rem;
     background-color: transparent;
 }
-
+.loading {
+    filter: blur(3px);
+    opacity: 0.5;
+}
 .paynocchio-spinner.active {
     display: block;
 }
@@ -963,6 +966,23 @@ button.disabled {
     transform: translate(-50%, -50%);
     color: white;
     animation: pulse 1s linear infinite;
+}
+
+#paynocchio-wallet-actions-buttons {
+    display: flex;
+    gap: 1rem;
+}
+
+#paynocchio-wallet-actions-buttons svg {
+    max-width: 24px;
+}
+
+#paynocchio-wallet-actions-buttons button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 1;
 }
 
 @keyframes pulse {

@@ -35,4 +35,8 @@ Download the latest version of the plugin and process standard plugin installati
 Sometimes especially when you didn't setup webhooks right, payment may hav Pending status, because user has paid the amount and should be enrolled, but the system didn't receive confirmation webhook.
 If you **100% sure** the payment has been processed you may manually confirm payment via `/payment/gateway/paynocchio/manage.php` section
 
-Be especially careful with denying pending payment because the user may have paid the amount and money have been transferred from his account. By denying the payment you just delete a single row in `paynocchio_payments` table in the Database.
+Be especially careful with denying pending payment because the user may have paid the amount and money have been transferred from his account. By denying the payment you just delete a   single row in `paynocchio_payments` table in the Database.
+
+### Troubleshooting
+
+If you for some reason will change the 
