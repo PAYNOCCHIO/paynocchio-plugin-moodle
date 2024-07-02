@@ -975,3 +975,13 @@ button.disabled {
         opacity: 0;
     }
 }
+
+#page-payment-gateway-paynocchio-pay #page.drawers .main-inner {
+    background: #ccdafd;
+}
+
+#page-payment-gateway-paynocchio-pay #region-main {
+    background: transparent;
+    padding: 0;
+
+}
