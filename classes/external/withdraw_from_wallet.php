@@ -64,35 +64,72 @@ class withdraw_from_wallet extends external_api {
 
         if($wallet_uuid) {
             $wallet = new paynocchio_helper($user_uuid);
+
+            // Check if Withdrawal Allowed
+           if (
+               $wallet->getWalletBalance($wallet_uuid)['balance'] < $amount
+                   || is_null($wallet->getEnvironmentStructure()['allow_withdraw'])
+                   )
+           {
+               return [ // Withdrawal NOT Allowed
+                   'success' => false,
+                   'balance' => 0,
+                   'bonuses' => 0,
+                   'card_number' => 0,
+                   'wallet_status' => 'Operation is not permitted',
+                   'wallet_code' => 0,
+                   'transactions' => null,
+                   'hastransactions' => false,
+               ];
+           }
+
             $wallet_response = $wallet->withdrawFromWallet($wallet_uuid, $amount);
 
+            // Check if server answered 200
             if($wallet_response['status_code'] === 200) {
 
-                $wallet_balance_response = $wallet->getWalletBalance($wallet_uuid);
+                $json_response = json_decode($wallet_response['response']);
 
-                if($wallet_balance_response) {
-                    $transactions = $DB->get_records('paygw_paynocchio_transactions', ['userid'  => $USER->id], 'timecreated DESC', 'id,timecreated,type,totalamount');
-                    $count_transactions = $DB->count_records('paygw_paynocchio_transactions', ['userid'  => $USER->id]);
-                    notification::success('Withdrawal has been successfully changed!');
+                // Check if Stripe answered success.interaction
+                if($json_response->type_interactions === 'success.interaction') {
+                    $wallet_balance_response = $wallet->getWalletBalance($wallet_uuid);
 
+                    if($wallet_balance_response) {
+                        $transactions = $DB->get_records('paygw_paynocchio_transactions', ['userid'  => $USER->id], 'timecreated DESC', 'id,timecreated,type,totalamount');
+                        $count_transactions = $DB->count_records('paygw_paynocchio_transactions', ['userid'  => $USER->id]);
+                        notification::success('Withdrawal accepted!');
+
+                        return [
+                            'success' => true,
+                            'balance' => $wallet_balance_response['balance'],
+                            'bonuses' => $wallet_balance_response['bonuses'],
+                            'card_number' => $wallet_balance_response['number'],
+                            'wallet_status' => $wallet_balance_response['status'],
+                            'wallet_code' => $wallet_balance_response['code'],
+                            'transactions' => json_encode(array_values($transactions)),
+                            'hastransactions' => $count_transactions > 0,
+                        ];
+                    }
+                } else { // Not success.interaction
                     return [
-                        'success' => true,
-                        'balance' => $wallet_balance_response['balance'],
-                        'bonuses' => $wallet_balance_response['bonuses'],
-                        'card_number' => $wallet_balance_response['number'],
-                        'wallet_status' => $wallet_balance_response['status'],
-                        'wallet_code' => $wallet_balance_response['code'],
-                        'transactions' => json_encode(array_values($transactions)),
-                        'hastransactions' => $count_transactions > 0,
+                        'success' => false,
+                        'balance' => 0,
+                        'bonuses' => 0,
+                        'card_number' => 0,
+                        'wallet_status' => $json_response->type_interactions,
+                        'wallet_code' => 0,
+                        'transactions' => null,
+                        'hastransactions' => false,
                     ];
                 }
-            } else {
+
+            } else { // Some server error
                 return [
                     'success' => false,
                     'balance' => 0,
                     'bonuses' => 0,
                     'card_number' => 0,
-                    'wallet_status' => 'ERROR',
+                    'wallet_status' => $wallet_response['status_code'],
                     'wallet_code' => 404,
                     'transactions' => null,
                     'hastransactions' => false,

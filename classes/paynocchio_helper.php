@@ -264,7 +264,6 @@ class paynocchio_helper {
             self::PAYNOCCHIO_WALLET_KEY => $walletId,
             "currency" => "USD",
             'amount' => $amount,
-            'status_type' => 'ae1b841f-2e56-4fb9-a935-2064304f8639', // TODO Check if isn't needed
         ];
 
         return $this->sendRequest('POST', '/operation/withdraw', json_encode($data));

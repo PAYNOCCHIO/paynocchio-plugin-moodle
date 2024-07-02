@@ -22,10 +22,20 @@
  */
 
 import {handleWithdrawClick, showModalWithWithdraw} from "./repository";
-import {exception as displayException} from 'core/notification';
-import Templates from 'core/templates';
 
-export const init = () => {
+const checkAvailability = (inputVal, balance) => {
+
+    if(
+        inputVal === '' ||
+        parseFloat(inputVal) === 0 ||
+        parseFloat(inputVal) > parseFloat(balance)
+    ) {
+        return false;
+    }
+    return true;
+};
+
+export const init = (balance) => {
     const paynocchio_wallet_withdraw_button = document.getElementById('paynocchio_withdraw_button');
 
     if (paynocchio_wallet_withdraw_button) {
@@ -34,43 +44,41 @@ export const init = () => {
             showModalWithWithdraw()
                 .then(modal => {
                     modal.setTitle('Withdraw from the Wallet');
-                    const input = document.getElementById('withdraw_amount');
-                    const button = document.getElementById('withdraw_button');
-                    button.addEventListener('click', () => {
-                        if (input.value) {
-                            button.classList.add('disabled');
+                    const input = modal.body.find('#withdraw_amount');
+                    const button = modal.body.find('#withdraw_button');
+
+                    if(!checkAvailability(input.val(), balance)) {
+                        button.addClass('disabled');
+                    }
+
+                    input.keyup(evt => {
+                        if(!checkAvailability(evt.target.value, balance)) {
+                            button.addClass('disabled');
+                        } else {
+                            button.removeClass('disabled');
+                        }
+                    });
+
+                    button.click(() => {
+                        if(!checkAvailability(input.val(), balance)) {
+                            modal.body.find('#withdraw_message').text('Yeah... right... ;)');
+                        } else {
+                            button.addClass('disabled');
                             modal.body.find('.paynocchio-spinner').toggleClass('active');
                             modal.body.find('#withdraw_message').text('Working...');
-                            handleWithdrawClick(input.value)
+                            handleWithdrawClick(input.val())
                                 .then(data => {
+                                    window.console.log(data);
                                     if (data.success) {
                                         modal.body.find('.paynocchio-spinner').toggleClass('active');
                                         modal.body.find('#withdraw_message').text('Success! Reloading...');
                                         setBalance(data.balance);
                                         setBonus(data.bonuses);
-                                        window.location.reload();
-                                        Templates.renderForPromise('paygw_paynocchio/wallet_transactions', {
-                                            transactions: JSON.parse(data.transactions),
-                                            hastransactions: data.hastransactions,
-                                        })
-                                            .then(({html, js}) => {
-                                                Templates.replaceNodeContents('.paynocchio-transactions', html, js);
-                                            })
-                                            .catch((error) => displayException(error));
-
-                                        // Refresh Card
-                                        Templates.renderForPromise('paygw_paynocchio/paynocchio_wallet_actions_buttons', {
-                                            wallet_balance: data.balance,
-                                            wallet_bonuses: data.bonuses,
-                                        })
-                                            .then(({html, js}) => {
-                                                Templates.replaceNodeContents('#paynocchio_wallet_actions_buttons', html, js);
-                                            })
-                                            .catch((error) => displayException(error));
+                                        //window.location.reload();
                                     } else {
                                         modal.body.find('.paynocchio-spinner').toggleClass('active');
                                         modal.body.find('#withdraw_message')
-                                            .text('Something wrong. Please reload page and try again...');
+                                            .text('Something wrong. Please reload page and try again... ' + data.wallet_status);
                                         button.toggleClass('disabled');
                                     }
                                 });

@@ -50,7 +50,7 @@ if($user && $user->useruuid && $user->walletuuid) {
         ]);
 
         $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_withdraw', 'init', [
-            'pay' => true
+            'balance' => $wallet_balance,
         ]);
     }
 

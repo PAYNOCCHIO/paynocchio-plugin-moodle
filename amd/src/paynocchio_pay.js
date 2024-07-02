@@ -142,7 +142,6 @@ export const init = (component,
 
             const spinner = document.querySelector('.paynocchio-spinner');
             const topup_message = document.getElementById('topup_message');
-
             if(bonuses + balance < fullAmount) {
                 topup_message.innerText = 'Sorry, but no';
                 return;
