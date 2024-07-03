@@ -617,17 +617,38 @@ button.disabled {
     text-align: center;
 }
 
-.paynocchio_top_up_button {
-    width: 100%;
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
-    border: 2px solid #3d3bf5;
-    color: #3d3bf5;
-    background: white;
-    text-align: center;
+#paynocchio-wallet-actions-buttons {
     display: flex;
-    align-items: center;
+    gap: 1rem;
+}
+
+#paynocchio-wallet-actions-buttons svg {
+    max-width: 24px;
+}
+
+#paynocchio-wallet-actions-buttons button {
+    display: flex;
     justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    border-width: 2px;
+    outline: none;
+    border-style: solid;
+}
+
+.paynocchio_top_up_button {
+    border-color: #3d3bf5;
+    color: white;
+    background: #3d3bf5;
+}
+
+.paynocchio_withdraw_button {
+    border-color: #DDDFE3;
+    color: #929394;
+    background-color: #fff;
 }
 
 .paynocchio_top_up_button.inactive {
@@ -966,23 +987,6 @@ button.disabled {
     transform: translate(-50%, -50%);
     color: white;
     animation: pulse 1s linear infinite;
-}
-
-#paynocchio-wallet-actions-buttons {
-    display: flex;
-    gap: 1rem;
-}
-
-#paynocchio-wallet-actions-buttons svg {
-    max-width: 24px;
-}
-
-#paynocchio-wallet-actions-buttons button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 0.5rem;
-    flex: 1;
 }
 
 @keyframes pulse {

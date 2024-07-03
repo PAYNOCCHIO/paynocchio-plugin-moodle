@@ -39,4 +39,4 @@ Be especially careful with denying pending payment because the user may have pai
 
 ### Troubleshooting
 
-If you for some reason will change the 
+If you for some reason will change the Environment and Secret keys the Wallet will throw the error. In this case you may want to reinstall the plugin. This will delete all plugin data including all users wallets.
