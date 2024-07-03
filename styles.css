@@ -652,8 +652,8 @@ button.disabled {
 }
 
 .paynocchio_top_up_button.inactive {
-    border: 2px solid #7a839b;
-    color: #7a839b;
+    opacity: 0.3;
+    color: #ccc;
 }
 
 .paynocchio_top_up_button.inactive img {
