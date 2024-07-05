@@ -207,9 +207,8 @@ class paynocchio_helper {
             self::PAYNOCCHIO_SECRET_KEY => $this->secret,
         ];
 
-        $response = $this->sendRequest('POST', '/healthcheck/', json_encode($data, JSON_UNESCAPED_SLASHES));
+        return $this->sendRequest('POST', '/healthcheck/', json_encode($data, JSON_UNESCAPED_SLASHES));
 
-        return json_encode(['status'=> $response['status_code']]);
     }
 
     /**
@@ -370,7 +369,8 @@ class paynocchio_helper {
                 'minimum_topup_amount' => $json_response->minimum_topup_amount,
                 'bonus_conversion_rate' => $json_response->bonus_conversion_rate,
                 'allow_withdraw' => $json_response->allow_withdraw,
-                'rewarding_group' => end($filtered_rewards),
+                'rewarding_group' => $filtered_rewards[0], // TODO: Test rewarding groups
+                //'rewarding_group' => end($filtered_rewards),
                 'wallet_commission' => 2.9,
             ];
         }
