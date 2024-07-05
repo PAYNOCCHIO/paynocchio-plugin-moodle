@@ -371,6 +371,7 @@ class paynocchio_helper {
                 'bonus_conversion_rate' => $json_response->bonus_conversion_rate,
                 'allow_withdraw' => $json_response->allow_withdraw,
                 'rewarding_group' => end($filtered_rewards),
+                'wallet_commission' => 2.9,
             ];
         }
     }

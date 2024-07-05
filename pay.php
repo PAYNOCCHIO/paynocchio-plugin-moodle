@@ -86,7 +86,8 @@ if(paynocchio_helper::user_has_payed($itemid, (int) $USER->id)) {
     $conversion_rate_when_payment = $wallet->getEnvironmentStructure()['bonus_conversion_rate'] ?: 1;
     $minimum_topup_amount = $wallet->getEnvironmentStructure()['minimum_topup_amount'];
     $card_balance_limit = $wallet->getEnvironmentStructure()['card_balance_limit'];
-    
+    $wallet_commission = $wallet->getEnvironmentStructure()['wallet_commission'];
+
     // Calculation for need to topup
     $rewarding_rules_topup = $wallet->getCurrentRewardRule($course_rounded_cost, 'payment_operation_add_money');
     $rewarding_value_for_topup = $rewarding_rules_topup['totalValue'];
@@ -119,6 +120,8 @@ if(paynocchio_helper::user_has_payed($itemid, (int) $USER->id)) {
         $bonuses_for_payment = $rewarding_value_for_payment;
     }
 
+    $need_to_topup_with_commission = ceil($need_to_topup + ($need_to_topup * $wallet_commission) / 100);
+
     if ($wallet_response_code == 'SUSPEND') {
         $wallet_status_readable = 'Wallet suspended';
     } elseif ($wallet_response_code == 'BLOCKED') {
@@ -149,7 +152,7 @@ if(paynocchio_helper::user_has_payed($itemid, (int) $USER->id)) {
         'bonuses_for_topup' => $bonuses_for_topup,
         'bonuses_for_topup_in_dollar' => $bonuses_for_topup_in_dollar,
         'bonuses_for_payment' => $bonuses_for_payment,
-        'need_to_topup' => $need_to_topup,
+        'need_to_topup' => $need_to_topup_with_commission,
         'can_pay' => $wallet_balance + $money_bonuses_equivalent >= $course_rounded_cost,
         'wallet_active' => $wallet_response_code === "ACTIVE",
         'wallet_suspend' => $wallet_response_code === "SUSPEND",
