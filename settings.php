@@ -54,7 +54,7 @@ if ($ADMIN->fulltree) {
             $wallet = new paynocchio_helper(uuid::generate());
             $wallet_response = $wallet->healtCheck();
             $json_response = json_decode($wallet_response);
-            if($json_response->status === 200) {
+            if($json_response->status_code === 200) {
                 notification::success('Secret key is good. Integrated with Paynocchio successfully.');
                 set_config('paynocchiointegrated', 'true', 'paygw_paynocchio');
             } else {
@@ -69,7 +69,7 @@ if ($ADMIN->fulltree) {
             $wallet = new paynocchio_helper(uuid::generate());
             $wallet_response = $wallet->healtCheck();
             $json_response = json_decode($wallet_response);
-            if($json_response->status === 200) {
+            if($json_response->status_code === 200) {
                 notification::success('Environment ID is good. Integrated with Paynocchio successfully.');
                 set_config('paynocchiointegrated', 'true', 'paygw_paynocchio');
             } else {
