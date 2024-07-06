@@ -371,7 +371,8 @@ class paynocchio_helper {
                 'allow_withdraw' => $json_response->allow_withdraw,
                 'rewarding_group' => $filtered_rewards[0], // TODO: Test rewarding groups
                 //'rewarding_group' => end($filtered_rewards),
-                'wallet_commission' => 2.9,
+                'wallet_percentage_commission' => 2.9,
+                'wallet_fixed_commission' => 0.3,
             ];
         }
     }
