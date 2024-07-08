@@ -97,8 +97,8 @@ class topup_wallet extends external_api {
                 \core\notification::error('An error occurred during the replenishment. Please try again.');
                 return [
                     'success' => false,
-                    'is_error' => true,
-                    'message' => $json_response->detail,
+                    'is_error' => $wallet_response['status_code'],
+                    'message' => $wallet_response['response'],
                     'url' => '',
                     'type_interactions' => $json_response->type_interactions,
                     'interaction' => $json_response->interaction,

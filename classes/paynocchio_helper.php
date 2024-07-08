@@ -24,6 +24,7 @@
 
 namespace paygw_paynocchio;
 
+use core\uuid;
 use core_payment\helper as payment_helper;
 use core_user;
 use moodle_url;
@@ -82,12 +83,15 @@ class paynocchio_helper {
      */
     public function __construct($userId)
     {
+        global $DB;
+        $user = $DB->get_record('paygw_paynocchio_wallets', ['useruuid'  => $userId]);
         $this->baseUrl = get_config('paygw_paynocchio', 'baseurl');
         $this->secret = get_config('paygw_paynocchio', 'paynocchiosecret');
         $this->envId = get_config('paygw_paynocchio', 'environmentuuid');
         $this->userId = $userId;
         $this->signature = $this->createSignature();
         $this->simpleSignature = $this->createSimpleSignature();
+        $this->walletId = $user ? $user->walletuuid : uuid::generate();
     }
 
     /**
@@ -414,11 +418,11 @@ class paynocchio_helper {
 
     /**
      * Calculate Rewarding rule for static data
-     * @param $num
+     * @param $sum
      * @param $operationType
      * @return array
      */
-    public function getCurrentRewardRule($num, $operationType) {
+    public function getCurrentRewardRule($sum, $operationType) {
         $obj = $this->transformRewardingRules($this->getEnvironmentStructure()['rewarding_group']->rewarding_rules);
         $totalValue = 0;
         $minAmount = INF;
@@ -430,7 +434,7 @@ class paynocchio_helper {
             foreach ($obj as $item) {
                 $conversion_rate = $item->conversion_rate;
                 $value_type = $item->value_type;
-                if ($item->operation_type === $operationType && $num >= $item->min_amount && $num <= $item->max_amount) {
+                if ($item->operation_type === $operationType && $sum >= $item->min_amount && $sum <= $item->max_amount) {
                     $totalValue += $item->value;
                     if ($item->min_amount < $minAmount) {
                         $minAmount = $item->min_amount;
@@ -448,6 +452,100 @@ class paynocchio_helper {
             'value_type' => $value_type,
             'conversion_rate' => $conversion_rate,
             'operationType' => $operationType,
+        ];
+    }
+
+    /**
+     * Calculated Rewarding and Commission
+     * @param float $sum
+     * @param string $operationType
+     * @return array
+     */
+    public function calculateRewardsAndCommissions(float $sum, string $operationType): array
+    {
+        $rules = $this->getCurrentRewardRule($sum, $operationType);
+        $sum_with_commission = $this->calculateCommission($sum);
+
+        if($rules['value_type'] === "percentage") {
+            $bonuses_to_get = intval($sum * $rules['totalValue']);
+        } else {
+            $bonuses_to_get = $rules['totalValue'];
+        }
+
+
+        return [
+          'bonuses_to_get' => $bonuses_to_get,
+          'commission' => $sum_with_commission - $sum,
+          'sum_without_commission' => $sum - ($sum_with_commission - $sum),
+          'sum_with_commission' => $sum_with_commission,
+        ];
+
+    }
+
+    /**
+     * Calculate commission
+     */
+    public function calculateCommission($sum)
+    {
+        $wallet_percentage_commission = $this->getEnvironmentStructure()['wallet_percentage_commission'] ?? 0;
+        $wallet_fixed_commission = $this->getEnvironmentStructure()['wallet_fixed_commission'] ?? 0;
+        $wallet_commission_coefficient = 1 - ($wallet_percentage_commission / 100);
+
+        return round(($sum + $wallet_fixed_commission) / $wallet_commission_coefficient, 2);
+    }
+
+    /**
+     * Calculate need to Top up with commission
+     * @param float $cost
+     */
+    public function calculateNeedToTopUpWithCommission($cost): array
+    {
+        $ceil_course_rounded_cost = ceil($cost);
+        $conversion_rate_when_payment = $this->getEnvironmentStructure()['bonus_conversion_rate'] ?: 1;
+
+        $wallet_percentage_commission = $this->getEnvironmentStructure()['wallet_percentage_commission'] ?? 0;
+
+        $rewarding_rules_topup = $this->getCurrentRewardRule($cost, 'payment_operation_add_money');
+        $rewarding_value_for_topup = $rewarding_rules_topup['totalValue'];
+        $rewarding_rules_payment = $this->getCurrentRewardRule($cost, 'payment_operation_for_services');
+        $rewarding_value_for_payment = $rewarding_rules_payment['totalValue'];
+
+        $rewarding_for_topup = 1 + $rewarding_value_for_topup * $conversion_rate_when_payment;
+
+        $wallet_balance_response = $this->getWalletBalance($this->walletId) ?: 0;
+        $wallet_balance = $wallet_balance_response['balance'];
+        $max_bonuses_to_spend = $wallet_balance_response['bonuses'];
+        $money_bonuses_equivalent = $max_bonuses_to_spend * $conversion_rate_when_payment;
+
+        if($max_bonuses_to_spend && $max_bonuses_to_spend < $cost) {
+            $max_bonus = $max_bonuses_to_spend;
+        } else {
+            $max_bonus = $cost;
+        }
+
+        if($rewarding_rules_topup['value_type'] === 'percentage'){
+            $need_to_topup = ceil(($ceil_course_rounded_cost - floor($wallet_balance) - floor($money_bonuses_equivalent)) / $rewarding_for_topup);
+            $bonuses_for_topup = intval($need_to_topup * $rewarding_value_for_topup);
+            $bonuses_for_topup = intval(floor($bonuses_for_topup - floor(($bonuses_for_topup * $wallet_percentage_commission) / 100)));
+            $bonuses_for_topup_in_dollar = $bonuses_for_topup * $conversion_rate_when_payment;
+            $bonuses_for_payment = $need_to_topup > 0 ? intval($need_to_topup * $rewarding_value_for_payment) : intval($cost * $rewarding_value_for_payment);
+        } else {
+            $need_to_topup = ceil(($ceil_course_rounded_cost - floor($wallet_balance) - floor($money_bonuses_equivalent) - $rewarding_for_topup + 1));
+            $bonuses_for_topup = $rewarding_value_for_topup;
+            $bonuses_for_topup_in_dollar = $bonuses_for_topup * $conversion_rate_when_payment;
+            $bonuses_for_payment = $rewarding_value_for_payment;
+        }
+
+        $need_to_topup = ceil($this->calculateCommission($need_to_topup));
+        $need_to_topup_with_commission = ceil($this->calculateCommission($need_to_topup));
+
+        return [
+            'bonuses_for_topup' => $bonuses_for_topup,
+            'bonuses_for_topup_in_dollar' => $bonuses_for_topup_in_dollar,
+            'bonuses_for_payment' => $bonuses_for_payment,
+            'need_to_topup_with_commission' => $need_to_topup_with_commission,
+            'max_bonus' => $max_bonus,
+            'max_bonuses_to_spend' => $max_bonuses_to_spend,
         ];
     }
 

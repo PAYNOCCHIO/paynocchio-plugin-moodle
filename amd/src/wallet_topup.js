@@ -21,84 +21,17 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-import {handleTopUpClick, showModalWithTopup} from "./repository";
+import {handleTopUpClick, showModalWithTopup, calculateReward} from "./repository";
 
-/**
- * Adapt rewarding rules to sum values of the same rules
- * @param {object} data
- * @return {*[]}
- */
-const transformRewardingRules = (data) => {
-    const result = [];
+let debounceTimer;
+const debounceTime = 300;
 
-    if(data) {
-        data.forEach(item => {
-            let existing = result.find(el =>
-                el.operation_type === item.operation_type &&
-                el.min_amount === item.min_amount &&
-                el.max_amount === item.max_amount
-            );
-
-            if (existing) {
-                existing.value += item.value;
-            } else {
-                result.push({ ...item });
-            }
-        });
-
-        return result;
-    }
-    return null;
+const debounce = (callback, time) => {
+    window.clearTimeout(debounceTimer);
+    debounceTimer = window.setTimeout(callback, time);
 };
 
-/**
- * Find eligible Operations
- * @param {object} obj
- * @param {number} num
- * @param {string} operationType
- * @return {*}
- */
-const getCurrentRewardRule = (obj, num, operationType) => {
-    let totalValue = 0;
-    let minAmount = Infinity;
-    let maxAmount = -Infinity;
-    let value_type;
-    let conversion_rate = 1;
-
-    if(obj) {
-        obj.forEach(item => {
-            if (item.operation_type === operationType && num >= item.min_amount && num <= item.max_amount) {
-                totalValue += item.value;
-                value_type = item.value_type;
-                conversion_rate = item.conversion_rate;
-                if (item.min_amount < minAmount) {
-                    minAmount = item.min_amount;
-                }
-                if (item.max_amount > maxAmount) {
-                    maxAmount = item.max_amount;
-                }
-            }
-        });
-    }
-    return {
-        totalValue: value_type === 'percentage' ? totalValue / conversion_rate : totalValue,
-        minAmount,
-        maxAmount,
-        value_type,
-        conversion_rate,
-    };
-
-};
-
-const calculateReward = (amount, rules, type) => {
-    const total_value = getCurrentRewardRule(rules, amount, type).totalValue;
-    const value_type = getCurrentRewardRule(rules, amount, type).value_type;
-
-    return value_type === 'percentage' ? parseInt(amount * (total_value / 100)) : total_value;
-};
-
-export const init = (pay, minimum_topup_amount, card_balance_limit, balance, rewarding_rules) => {
-    const reducedRules = transformRewardingRules(rewarding_rules);
+export const init = (pay, minimum_topup_amount, card_balance_limit, balance) => {
 
     const paynocchio_wallet_topup_button = document.getElementById('paynocchio_topup_button');
 
@@ -118,15 +51,19 @@ export const init = (pay, minimum_topup_amount, card_balance_limit, balance, rew
                     const button = modal.body.find('#topup_button');
                     const input = modal.body.find('#top_up_amount');
                     const message = modal.body.find('#topup_message');
+                    const commission_message = modal.body.find('#commission_message');
                     if(need_to_top_up) {
                         const top_up_default_input = need_to_top_up <= minimum_topup_amount ? minimum_topup_amount: need_to_top_up;
                         input.val(top_up_default_input);
 
-                        if(calculateReward(need_to_top_up,
-                            reducedRules, 'payment_operation_add_money') > 0) {
-                            message.text(`You will get ${calculateReward(need_to_top_up,
-                                reducedRules, 'payment_operation_add_money')} bonuses`);
-                        }
+                        calculateReward(top_up_default_input, 'payment_operation_add_money')
+                            .then(rewards => {
+                                window.console.log(rewards);
+                                if(rewards.bonuses_to_get > 0) {
+                                    message.text(`You will get ${rewards.bonuses_to_get} bonuses`);
+                                    commission_message.text(`You will receive $${rewards.sum_without_commission}`);
+                                }
+                            });
                     }
                     input.on('keyup change', (evt) => {
                         if (parseFloat(evt.target.value) + balance > card_balance_limit) {
@@ -134,13 +71,24 @@ export const init = (pay, minimum_topup_amount, card_balance_limit, balance, rew
                             the balance limit will exceed the set value ${card_balance_limit}`);
                             button.addClass('disabled');
                         } else if (evt.target.value >= minimum_topup_amount) {
-                            if(calculateReward(evt.target.value, reducedRules, 'payment_operation_add_money') > 0) {
-                                message.text(`You will get ${
-                                    calculateReward(evt.target.value, reducedRules, 'payment_operation_add_money')
-                                } bonuses`);
-                            } else {
-                                message.text('');
-                            }
+                            commission_message.addClass('loading');
+                            debounce(() => {
+                                calculateReward(evt.target.value, 'payment_operation_add_money')
+                                    .then(rewards => {
+                                        window.console.log(rewards);
+                                        if(rewards.bonuses_to_get > 0) {
+                                            message.text(`You will get ${rewards.bonuses_to_get} bonuses`);
+                                            commission_message.text(
+                                                `You will receive $${rewards.sum_without_commission}.`
+                                            );
+                                        } else {
+                                            message.text('');
+                                            commission_message.text('');
+                                        }
+                                        commission_message.removeClass('loading');
+                                    });
+                            }, debounceTime);
+
                             button.removeClass('disabled');
                         } else {
                             message.text('Please enter amount more than minimum replenishment amount.');

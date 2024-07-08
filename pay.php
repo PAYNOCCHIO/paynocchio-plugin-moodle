@@ -81,54 +81,23 @@ if(paynocchio_helper::user_has_payed($itemid, (int) $USER->id)) {
         $wallet_uuid = 0;
     }
 
-    $conversion_rate_when_payment = $wallet->getEnvironmentStructure()['bonus_conversion_rate'] ?: 1;
-    $minimum_topup_amount = $wallet->getEnvironmentStructure()['minimum_topup_amount'];
-    $card_balance_limit = $wallet->getEnvironmentStructure()['card_balance_limit'];
+    $environment_structure = $wallet->getEnvironmentStructure();
 
-    $wallet_percentage_commission = $wallet->getEnvironmentStructure()['wallet_percentage_commission'] ?? 0;
-    $wallet_fixed_commission = $wallet->getEnvironmentStructure()['wallet_fixed_commission'] ?? 0;
+    $conversion_rate_when_payment = $environment_structure['bonus_conversion_rate'] ?: 1;
+    $minimum_topup_amount = $environment_structure['minimum_topup_amount'];
+    $card_balance_limit = $environment_structure['card_balance_limit'];
 
     $course_rounded_cost = helper::get_rounded_cost($payable->get_amount(), $currency, $surcharge);
-    $ceil_course_rounded_cost = ceil($course_rounded_cost);
 
-    // Calculation for need to topup
-    $rewarding_rules_topup = $wallet->getCurrentRewardRule($course_rounded_cost, 'payment_operation_add_money');
-    $rewarding_value_for_topup = $rewarding_rules_topup['totalValue'];
-    $rewarding_rules_payment = $wallet->getCurrentRewardRule($course_rounded_cost, 'payment_operation_for_services');
-    $rewarding_value_for_payment = $rewarding_rules_payment['totalValue'];
-
-    $rewarding_for_topup = 1 + $rewarding_value_for_topup * $conversion_rate_when_payment;
+    $calculateNeedToTopUpWithCommission = $wallet->calculateNeedToTopUpWithCommission($course_rounded_cost);
 
     $wallet_balance_response = $wallet->getWalletBalance($wallet_uuid) ?: 0;
     $wallet_balance = $wallet_balance_response['balance'];
     $max_bonuses_to_spend = $wallet_balance_response['bonuses'];
     $money_bonuses_equivalent = $max_bonuses_to_spend * $conversion_rate_when_payment;
     $wallet_response_code = $wallet_balance_response['code'];
-    $rewarding_rules = $wallet->getEnvironmentStructure()['rewarding_group']->rewarding_rules;
+    $rewarding_rules = $environment_structure['rewarding_group']->rewarding_rules;
 
-    if($max_bonuses_to_spend && $max_bonuses_to_spend < $course_rounded_cost) {
-        $max_bonus = $max_bonuses_to_spend;
-    } else {
-        $max_bonus = $course_rounded_cost;
-    }
-
-    $wallet_commission_coefficient = 1 - ($wallet_percentage_commission / 100);
-
-    if($rewarding_rules_topup['value_type'] === 'percentage'){
-        $need_to_topup = ceil(($ceil_course_rounded_cost - floor($wallet_balance) - floor($money_bonuses_equivalent)) / $rewarding_for_topup);
-        $bonuses_for_topup = intval($need_to_topup * $rewarding_value_for_topup);
-        $bonuses_for_topup = intval(floor($bonuses_for_topup - floor(($bonuses_for_topup * $wallet_percentage_commission) / 100)));
-        $bonuses_for_topup_in_dollar = $bonuses_for_topup * $conversion_rate_when_payment;
-        $bonuses_for_payment = $need_to_topup > 0 ? intval($need_to_topup * $rewarding_value_for_payment) : intval($course_rounded_cost * $rewarding_value_for_payment);
-    } else {
-        $need_to_topup = ceil(($ceil_course_rounded_cost - floor($wallet_balance) - floor($money_bonuses_equivalent) - $rewarding_for_topup + 1));
-        $bonuses_for_topup = $rewarding_value_for_topup;
-        $bonuses_for_topup_in_dollar = $bonuses_for_topup * $conversion_rate_when_payment;
-        $bonuses_for_payment = $rewarding_value_for_payment;
-    }
-
-    $need_to_topup = ceil($need_to_topup / $wallet_commission_coefficient + $wallet_fixed_commission);
-    $need_to_topup_with_commission = ceil($need_to_topup / $wallet_commission_coefficient + $wallet_fixed_commission);;
 
     if ($wallet_response_code == 'SUSPEND') {
         $wallet_status_readable = 'Wallet suspended';
@@ -146,21 +115,21 @@ if(paynocchio_helper::user_has_payed($itemid, (int) $USER->id)) {
 
     $data = [
         'wallet_balance' => $wallet_balance ?? 0,
-        'wallet_bonuses' => $max_bonuses_to_spend ?? 0,
-        'bonus_conversion_rate' => $wallet->getEnvironmentStructure()['bonus_conversion_rate'],
-        'bonus_conversion_rate_equal' => $wallet->getEnvironmentStructure()['bonus_conversion_rate'] === 1,
+        'wallet_bonuses' => $calculateNeedToTopUpWithCommission['max_bonuses_to_spend'] ?? 0,
+        'bonus_conversion_rate' => $environment_structure['bonus_conversion_rate'],
+        'bonus_conversion_rate_equal' => $environment_structure['bonus_conversion_rate'] === 1,
         'wallet_card' => $wallet_card,
         'wallet_status' => $wallet_balance_response['status'],
         'wallet_status_readable' => $wallet_status_readable,
         'wallet_code' => $wallet_response_code,
         'wallet_uuid' => $wallet_uuid,
         'user_uuid' => $useruuid,
-        'max_bonus' => $max_bonus ?? 0,
+        'max_bonus' => $calculateNeedToTopUpWithCommission['max_bonus'] ?? 0,
         'full_amount' => $course_rounded_cost,
-        'bonuses_for_topup' => $bonuses_for_topup,
-        'bonuses_for_topup_in_dollar' => $bonuses_for_topup_in_dollar,
-        'bonuses_for_payment' => $bonuses_for_payment,
-        'need_to_topup' => $need_to_topup_with_commission,
+        'bonuses_for_topup' => $calculateNeedToTopUpWithCommission['bonuses_for_topup'],
+        'bonuses_for_topup_in_dollar' => $calculateNeedToTopUpWithCommission['bonuses_for_topup_in_dollar'],
+        'bonuses_for_payment' => $calculateNeedToTopUpWithCommission['bonuses_for_payment'],
+        'need_to_topup' => $calculateNeedToTopUpWithCommission['need_to_topup_with_commission'],
         'can_pay' => $wallet_balance + $money_bonuses_equivalent >= $course_rounded_cost,
         'wallet_active' => $wallet_response_code === "ACTIVE",
         'wallet_suspend' => $wallet_response_code === "SUSPEND",
@@ -194,7 +163,6 @@ if(paynocchio_helper::user_has_payed($itemid, (int) $USER->id)) {
             'fullAmount' => $course_rounded_cost,
             'balance' => $wallet_balance,
             'bonuses_conversion_rate' => $conversion_rate_when_payment,
-            'rewarding_rules_payment' => $rewarding_rules_payment,
         ]);
 
 

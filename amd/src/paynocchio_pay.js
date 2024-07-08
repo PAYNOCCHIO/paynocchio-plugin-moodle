@@ -13,7 +13,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-import {makePayment, getCurrentRules} from "./repository";
+import {makePayment, calculateReward} from "./repository";
 import {exception as displayException} from 'core/notification';
 import Templates from 'core/templates';
 
@@ -72,14 +72,9 @@ const changeBonusesValue = (fullAmount, bonuses) => {
     const element = document.getElementById('bonuses_to_get');
     const input = fullAmount - bonuses;
     element.classList.add('loading');
-    getCurrentRules(input, "payment_operation_for_services")
+    calculateReward(input, "payment_operation_for_services")
         .then(rules => {
-            let bonuses_to_get_value;
-            if(rules.value_type === "percentage") {
-                bonuses_to_get_value = parseInt(input * rules.totalValue);
-            } else {
-                bonuses_to_get_value = rules.totalValue;
-            }
+            let bonuses_to_get_value = rules.bonuses_to_get;
 
             const paynocchio_gaining_bonuses = document.getElementById('paynocchio_gaining_bonuses');
             if (bonuses_to_get_value > 0) {

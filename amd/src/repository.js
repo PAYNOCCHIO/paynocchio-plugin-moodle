@@ -268,7 +268,7 @@ export const checkPaymentConfirmation = (paymentid) => {
  * @param {string} operationType type for Rule
  * @returns {*}
  */
-export const getCurrentRules = (amount, operationType) => {
+export const calculateReward = (amount, operationType) => {
     const request = {
         methodname: 'paygw_paynocchio_calculate_current_rewards',
         args: {

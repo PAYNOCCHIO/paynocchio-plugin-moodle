@@ -58,21 +58,24 @@ class calculate_current_rewards extends external_api {
      */
     public static function execute(float $amount, string $operationType): array
     {
+        global $DB, $USER;
         self::validate_parameters(self::execute_parameters(), [
             'amount' => $amount,
             'operationType' => $operationType,
         ]);
 
-        $user_uuid = uuid::generate();
+        $paynocchio_data = $DB->get_record('paygw_paynocchio_wallets', ['userid'  => $USER->id]);
+        $user_uuid = $paynocchio_data->useruuid;
 
         $wallet = new paynocchio_helper($user_uuid);
-        $rules = $wallet->getCurrentRewardRule($amount, $operationType);
+        $data = $wallet->calculateRewardsAndCommissions($amount, $operationType);
 
         return [
-            'value_type' => $rules['value_type'],
-            'totalValue' => $rules['totalValue'],
+            'bonuses_to_get' => $data['bonuses_to_get'],
+            'commission' => $data['commission'],
+            'sum_without_commission' => $data['sum_without_commission'],
+            'sum_with_commission' => $data['sum_with_commission'],
         ];
-
     }
 
     /**
@@ -82,8 +85,10 @@ class calculate_current_rewards extends external_api {
      */
     public static function execute_returns(): external_single_structure {
         return new external_single_structure([
-            'value_type' => new external_value(PARAM_TEXT, 'Type'),
-            'totalValue' => new external_value(PARAM_TEXT, 'Value'),
+            'bonuses_to_get' => new external_value(PARAM_TEXT, 'Type'),
+            'commission' => new external_value(PARAM_TEXT, 'Commission'),
+            'sum_without_commission' => new external_value(PARAM_TEXT, 'Sum without commission'),
+            'sum_with_commission' => new external_value(PARAM_TEXT, 'Sum with commission'),
         ]);
     }
 }
