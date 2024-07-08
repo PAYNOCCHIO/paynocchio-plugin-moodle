@@ -90,6 +90,9 @@ if(paynocchio_helper::user_has_payed($itemid, (int) $USER->id)) {
     $course_rounded_cost = helper::get_rounded_cost($payable->get_amount(), $currency, $surcharge);
 
     $calculateNeedToTopUpWithCommission = $wallet->calculateNeedToTopUpWithCommission($course_rounded_cost);
+    $calculateRewardsAndCommissions = $wallet->calculateRewardsAndCommissions($calculateNeedToTopUpWithCommission['need_to_topup_with_commission'], 'payment_operation_add_money');
+
+    print_r($calculateNeedToTopUpWithCommission);
 
     $wallet_balance_response = $wallet->getWalletBalance($wallet_uuid) ?: 0;
     $wallet_balance = $wallet_balance_response['balance'];
@@ -126,8 +129,8 @@ if(paynocchio_helper::user_has_payed($itemid, (int) $USER->id)) {
         'user_uuid' => $useruuid,
         'max_bonus' => $calculateNeedToTopUpWithCommission['max_bonus'] ?? 0,
         'full_amount' => $course_rounded_cost,
-        'bonuses_for_topup' => $calculateNeedToTopUpWithCommission['bonuses_for_topup'],
-        'bonuses_for_topup_in_dollar' => $calculateNeedToTopUpWithCommission['bonuses_for_topup_in_dollar'],
+        'bonuses_for_topup' => $calculateRewardsAndCommissions['bonuses_to_get'],
+        'bonuses_for_topup_in_dollar' => $calculateRewardsAndCommissions['bonuses_in_dollar'],
         'bonuses_for_payment' => $calculateNeedToTopUpWithCommission['bonuses_for_payment'],
         'need_to_topup' => $calculateNeedToTopUpWithCommission['need_to_topup_with_commission'],
         'can_pay' => $wallet_balance + $money_bonuses_equivalent >= $course_rounded_cost,

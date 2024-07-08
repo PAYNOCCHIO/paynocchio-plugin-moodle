@@ -55,13 +55,16 @@ export const init = (pay, minimum_topup_amount, card_balance_limit, balance) => 
                     if(need_to_top_up) {
                         const top_up_default_input = need_to_top_up <= minimum_topup_amount ? minimum_topup_amount: need_to_top_up;
                         input.val(top_up_default_input);
-
                         calculateReward(top_up_default_input, 'payment_operation_add_money')
                             .then(rewards => {
-                                window.console.log(rewards);
                                 if(rewards.bonuses_to_get > 0) {
-                                    message.text(`You will get ${rewards.bonuses_to_get} bonuses`);
-                                    commission_message.text(`You will receive $${rewards.sum_without_commission}`);
+                                    message.text(
+                                        `You will get ${rewards.bonuses_to_get} bonuses (which equals to 
+                                        $${rewards.bonuses_in_dollar})`
+                                    );
+                                    commission_message.text(
+                                        `You will receive $${rewards.sum_without_commission}. Commission: $${rewards.commission}`
+                                    );
                                 }
                             });
                     }
@@ -75,7 +78,6 @@ export const init = (pay, minimum_topup_amount, card_balance_limit, balance) => 
                             debounce(() => {
                                 calculateReward(evt.target.value, 'payment_operation_add_money')
                                     .then(rewards => {
-                                        window.console.log(rewards);
                                         if(rewards.bonuses_to_get > 0) {
                                             message.text(`You will get ${rewards.bonuses_to_get} bonuses`);
                                             commission_message.text(

@@ -75,6 +75,7 @@ class calculate_current_rewards extends external_api {
             'commission' => $data['commission'],
             'sum_without_commission' => $data['sum_without_commission'],
             'sum_with_commission' => $data['sum_with_commission'],
+            'bonuses_in_dollar' => $data['bonuses_in_dollar'],
         ];
     }
 
@@ -89,6 +90,7 @@ class calculate_current_rewards extends external_api {
             'commission' => new external_value(PARAM_TEXT, 'Commission'),
             'sum_without_commission' => new external_value(PARAM_TEXT, 'Sum without commission'),
             'sum_with_commission' => new external_value(PARAM_TEXT, 'Sum with commission'),
+            'bonuses_in_dollar' => new external_value(PARAM_TEXT, 'bonuses_in_dollar'),
         ]);
     }
 }
