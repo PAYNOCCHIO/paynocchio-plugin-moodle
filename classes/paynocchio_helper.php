@@ -464,6 +464,8 @@ class paynocchio_helper {
     public function calculateRewardsAndCommissions(float $sum, string $operationType): array
     {
         $rules = $this->getCurrentRewardRule($sum, $operationType);
+        $wallet_structure = $this->getEnvironmentStructure();
+        $conversion_rate_when_payment = $wallet_structure['bonus_conversion_rate'] ?: 1;
         $sum_with_commission = $this->calculateCommission($sum);
 
         if($rules['value_type'] === "percentage") {
@@ -474,7 +476,7 @@ class paynocchio_helper {
 
         return [
           'bonuses_to_get' => $bonuses_to_get,
-          'bonuses_in_dollar' => round($bonuses_to_get * $rules['conversion_rate'], 2),
+          'bonuses_in_dollar' => round($bonuses_to_get * $conversion_rate_when_payment, 2),
           'commission' => $sum_with_commission - $sum,
           'sum_without_commission' => $sum - ($sum_with_commission - $sum),
           'sum_with_commission' => $sum_with_commission,

@@ -95,7 +95,6 @@ export const init = (component,
                      fullAmount,
                      balance,
                      bonuses_conversion_rate) => {
-
     const paynocchio_pay_button = document.getElementById('paynocchio_pay_button');
 
     if (paynocchio_pay_button) {
