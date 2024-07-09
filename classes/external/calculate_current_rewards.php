@@ -87,12 +87,12 @@ class calculate_current_rewards extends external_api {
      */
     public static function execute_returns(): external_single_structure {
         return new external_single_structure([
-            'bonuses_to_get' => new external_value(PARAM_TEXT, 'Type'),
-            'commission' => new external_value(PARAM_TEXT, 'Commission'),
-            'sum_without_commission' => new external_value(PARAM_TEXT, 'Sum without commission'),
-            'sum_with_commission' => new external_value(PARAM_TEXT, 'Sum with commission'),
-            'sum_with_commission_minus_commission' => new external_value(PARAM_TEXT, 'sum_with_commission_minus_commission'),
-            'bonuses_in_dollar' => new external_value(PARAM_TEXT, 'bonuses_in_dollar'),
+            'bonuses_to_get' => new external_value(PARAM_FLOAT, 'Type'),
+            'commission' => new external_value(PARAM_FLOAT, 'Commission'),
+            'sum_without_commission' => new external_value(PARAM_FLOAT, 'Sum without commission'),
+            'sum_with_commission' => new external_value(PARAM_FLOAT, 'Sum with commission'),
+            'sum_with_commission_minus_commission' => new external_value(PARAM_FLOAT, 'sum_with_commission_minus_commission'),
+            'bonuses_in_dollar' => new external_value(PARAM_FLOAT, 'bonuses_in_dollar'),
         ]);
     }
 }

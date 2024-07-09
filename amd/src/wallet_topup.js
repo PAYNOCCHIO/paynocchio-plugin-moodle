@@ -31,14 +31,14 @@ const debounce = (callback, time) => {
     debounceTimer = window.setTimeout(callback, time);
 };
 
-export const init = (pay, minimum_topup_amount, card_balance_limit, balance) => {
+export const init = (pay, minimum_topup_amount, card_balance_limit, balance, cost, topupamount) => {
 
     const paynocchio_wallet_topup_button = document.getElementById('paynocchio_topup_button');
 
     if (paynocchio_wallet_topup_button) {
 
         paynocchio_wallet_topup_button.addEventListener('click', () => {
-            showModalWithTopup(minimum_topup_amount, card_balance_limit)
+            showModalWithTopup(minimum_topup_amount, card_balance_limit, cost, topupamount)
                 .then(modal => {
                     modal.setTitle('Topup your Wallet');
                     const button = modal.body.find('#topup_button');
@@ -46,21 +46,38 @@ export const init = (pay, minimum_topup_amount, card_balance_limit, balance) => 
                     const message = modal.body.find('#topup_message');
                     const commission_message = modal.body.find('#commission_message');
 
+                    if(cost) {
+                        debounce(() => {
+                            calculateReward(cost, 'payment_operation_add_money')
+                                .then(rewards => {
+                                    if(rewards.bonuses_to_get > 0) {
+                                        message.text(`You will get ${rewards.bonuses_to_get} bonuses`);
+                                        commission_message.text(
+                                            `You will receive $${rewards.sum_without_commission}. 
+                                                Commission: $${rewards.commission}`
+                                        );
+                                    } else {
+                                        message.text('');
+                                        commission_message.text('');
+                                    }
+                                    commission_message.removeClass('loading');
+                                });
+                        }, debounceTime);
+                    }
+
                     input.on('keyup change', (evt) => {
-                        if (parseFloat(evt.target.value) + balance > card_balance_limit) {
-                            message.text(`When replenishing the amount ${evt.target.value}, 
+                        const inputValue = parseFloat(evt.target.value);
+                        if (inputValue + balance > card_balance_limit) {
+                            message.text(`When replenishing the amount ${inputValue}, 
                             the balance limit will exceed the set value ${card_balance_limit}`);
                             button.addClass('disabled');
-                        } else if (evt.target.value >= minimum_topup_amount) {
+                        } else if (inputValue >= minimum_topup_amount) {
                             commission_message.addClass('loading');
                             debounce(() => {
-                                window.console.log(evt.target.value);
-                                calculateReward(evt.target.value, 'payment_operation_add_money')
+                                calculateReward(inputValue, 'payment_operation_add_money')
                                     .then(rewards => {
-                                        window.console.log(rewards);
                                         if(rewards.bonuses_to_get > 0) {
-                                            message.text(`You will get ${rewards.bonuses_to_get} bonuses (which equals to 
-                                        $${rewards.bonuses_in_dollar})`);
+                                            message.text(`You will get ${rewards.bonuses_to_get} bonuses`);
                                             commission_message.text(
                                                 `You will receive $${rewards.sum_without_commission}. 
                                                 Commission: $${rewards.commission}`
@@ -76,6 +93,7 @@ export const init = (pay, minimum_topup_amount, card_balance_limit, balance) => 
                             button.removeClass('disabled');
                         } else {
                             message.text('Please enter amount more than minimum replenishment amount.');
+                            commission_message.text('');
                             button.addClass('disabled');
                         }
                     });

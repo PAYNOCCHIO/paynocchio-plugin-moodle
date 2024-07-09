@@ -117,10 +117,12 @@ export const handleDeleteButtonClick = async (wallet_uuid) => {
  *
  * @param {string} minimum_topup_amount
  * @param {string} card_balance_limit
+ * @param {number} cost
+ * @param {number} topupamount
  * @returns {Promise<Modal>}
  */
-export const showModalWithTopup = async(minimum_topup_amount, card_balance_limit) => await Modal.create({
-    body: await Templates.render('paygw_paynocchio/topup_modal', {minimum_topup_amount, card_balance_limit }),
+export const showModalWithTopup = async(minimum_topup_amount, card_balance_limit, cost, topupamount) => await Modal.create({
+    body: await Templates.render('paygw_paynocchio/topup_modal', {minimum_topup_amount, card_balance_limit, cost, topupamount }),
     show: true,
     removeOnClose: true,
 });

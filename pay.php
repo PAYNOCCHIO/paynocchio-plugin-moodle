@@ -91,9 +91,6 @@ if(paynocchio_helper::user_has_payed($itemid, (int) $USER->id)) {
 
     $calculateNeedToTopUpWithCommission = $wallet->calculateNeedToTopUpWithCommission($course_rounded_cost);
 
-    // Bonuses only counts for the sum without commissions
-    $calculateRewardsAndCommissions = $wallet->calculateRewardsAndCommissions($course_rounded_cost, 'payment_operation_add_money');
-
     $wallet_balance_response = $wallet->getWalletBalance($wallet_uuid) ?: 0;
     $wallet_balance = $wallet_balance_response['balance'];
     $max_bonuses_to_spend = $wallet_balance_response['bonuses'];
@@ -119,8 +116,6 @@ if(paynocchio_helper::user_has_payed($itemid, (int) $USER->id)) {
     $data = [
         'wallet_balance' => $wallet_balance ?? 0,
         'wallet_bonuses' => $calculateNeedToTopUpWithCommission['max_bonuses_to_spend'] ?? 0,
-        'bonus_conversion_rate' => $environment_structure['bonus_conversion_rate'],
-        'bonus_conversion_rate_equal' => $environment_structure['bonus_conversion_rate'] === 1,
         'wallet_card' => $wallet_card,
         'wallet_status' => $wallet_balance_response['status'],
         'wallet_status_readable' => $wallet_status_readable,
@@ -129,10 +124,6 @@ if(paynocchio_helper::user_has_payed($itemid, (int) $USER->id)) {
         'user_uuid' => $useruuid,
         'max_bonus' => $calculateNeedToTopUpWithCommission['max_bonus'] ?? 0,
         'full_amount' => $course_rounded_cost,
-        'bonuses_for_topup' => $calculateRewardsAndCommissions['bonuses_to_get'],
-        'bonuses_for_topup_in_dollar' => $calculateRewardsAndCommissions['bonuses_in_dollar'],
-        'bonuses_for_payment' => $calculateNeedToTopUpWithCommission['bonuses_for_payment'],
-        'need_to_topup' => $calculateNeedToTopUpWithCommission['need_to_topup_with_commission'],
         'can_pay' => $wallet_balance + $money_bonuses_equivalent >= $course_rounded_cost,
         'wallet_active' => $wallet_response_code === "ACTIVE",
         'wallet_suspend' => $wallet_response_code === "SUSPEND",
@@ -154,8 +145,8 @@ if(paynocchio_helper::user_has_payed($itemid, (int) $USER->id)) {
                 'minimum_topup_amount' => $minimum_topup_amount,
                 'card_balance_limit' => $card_balance_limit,
                 'balance' => $wallet_balance,
-                'cost' => $course_rounded_cost,
-                'cost_with_commission' => $wallet->calculateSumWithCommission($course_rounded_cost),
+                'cost' => $course_rounded_cost ?? null,
+                'topupamount' => $minimum_topup_amount < $course_rounded_cost ? $course_rounded_cost : $minimum_topup_amount,
             ]);
         }
 
@@ -168,12 +159,6 @@ if(paynocchio_helper::user_has_payed($itemid, (int) $USER->id)) {
             'balance' => $wallet_balance,
             'bonuses_conversion_rate' => $conversion_rate_when_payment,
         ]);
-
-        echo '<br/><pre>';
-        print_r($course_rounded_cost);
-        echo '</pre><br/><pre>';
-        print_r($wallet->calculateRewardsAndCommissions($course_rounded_cost, 'payment_operation_add_money'));
-        echo '<br/><pre>';
 
         $PAGE->requires->js_call_amd('paygw_paynocchio/terms_and_conditions', 'init', []);
         echo $OUTPUT->render_from_template('paygw_paynocchio/terms_and_conditions', []);
@@ -192,3 +177,4 @@ if(paynocchio_helper::user_has_payed($itemid, (int) $USER->id)) {
 }
 
 echo $OUTPUT->footer();
+
