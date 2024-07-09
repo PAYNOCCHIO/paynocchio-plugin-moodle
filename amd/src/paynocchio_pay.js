@@ -74,7 +74,7 @@ const changeBonusesValue = (fullAmount, bonuses) => {
     element.classList.add('loading');
     calculateReward(input, "payment_operation_for_services")
         .then(rules => {
-            let bonuses_to_get_value = rules.bonuses_to_get;
+            let bonuses_to_get_value = parseFloat(rules.bonuses_to_get);
 
             const paynocchio_gaining_bonuses = document.getElementById('paynocchio_gaining_bonuses');
             if (bonuses_to_get_value > 0) {

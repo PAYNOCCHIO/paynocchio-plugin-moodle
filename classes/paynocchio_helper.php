@@ -466,10 +466,12 @@ class paynocchio_helper {
         $rules = $this->getCurrentRewardRule($sum, $operationType);
         $wallet_structure = $this->getEnvironmentStructure();
         $conversion_rate_when_payment = $wallet_structure['bonus_conversion_rate'] ?: 1;
-        $sum_with_commission = $this->calculateCommission($sum);
+        $sum_with_commission = $this->calculateSumWithCommission($sum);
+        $commission = $sum_with_commission - $sum;
+        $sum_without_commission = $sum - $commission;
 
         if($rules['value_type'] === "percentage") {
-            $bonuses_to_get = intval($sum * $rules['totalValue']);
+            $bonuses_to_get = intval($sum_without_commission * $rules['totalValue']);
         } else {
             $bonuses_to_get = $rules['totalValue'];
         }
@@ -477,9 +479,10 @@ class paynocchio_helper {
         return [
           'bonuses_to_get' => $bonuses_to_get,
           'bonuses_in_dollar' => round($bonuses_to_get * $conversion_rate_when_payment, 2),
-          'commission' => $sum_with_commission - $sum,
-          'sum_without_commission' => $sum - ($sum_with_commission - $sum),
+          'commission' => $commission,
+          'sum_without_commission' => $sum_without_commission,
           'sum_with_commission' => $sum_with_commission,
+          'sum_with_commission_minus_commission' => $sum_with_commission - $commission,
         ];
 
     }
@@ -487,7 +490,7 @@ class paynocchio_helper {
     /**
      * Calculate commission
      */
-    public function calculateCommission($sum)
+    public function calculateSumWithCommission($sum)
     {
         $wallet_structure = $this->getEnvironmentStructure();
         $wallet_percentage_commission = $wallet_structure['wallet_percentage_commission'] ?? 0;
@@ -540,8 +543,8 @@ class paynocchio_helper {
             $bonuses_for_payment = $rewarding_value_for_payment;
         }
 
-        $need_to_topup = ceil($this->calculateCommission($need_to_topup));
-        $need_to_topup_with_commission = ceil($this->calculateCommission($need_to_topup));
+        $need_to_topup = ceil($this->calculateSumWithCommission($need_to_topup));
+        $need_to_topup_with_commission = ceil($this->calculateSumWithCommission($need_to_topup));
 
         return [
             'bonuses_for_topup' => $bonuses_for_topup,
@@ -549,7 +552,7 @@ class paynocchio_helper {
             'bonuses_for_payment' => $bonuses_for_payment,
             'need_to_topup' => ceil(($ceil_course_rounded_cost - floor($wallet_balance) - floor($money_bonuses_equivalent)) / $rewarding_for_topup),
             'need_to_topup_with_commission' => $need_to_topup_with_commission,
-            'need_to_topup_with_commission_without_bonuses' => $this->calculateCommission($cost),
+            'need_to_topup_with_commission_without_bonuses' => $this->calculateSumWithCommission($cost),
             'max_bonus' => $max_bonus,
             'max_bonuses_to_spend' => $max_bonuses_to_spend,
         ];

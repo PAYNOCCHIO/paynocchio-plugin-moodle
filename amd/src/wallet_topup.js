@@ -35,13 +35,6 @@ export const init = (pay, minimum_topup_amount, card_balance_limit, balance) => 
 
     const paynocchio_wallet_topup_button = document.getElementById('paynocchio_topup_button');
 
-    let need_to_top_up = 0;
-    if(pay && document.getElementById('need_to_top_up')) {
-        need_to_top_up = parseFloat(document.getElementById('need_to_top_up').innerText);
-    } else {
-        need_to_top_up = minimum_topup_amount;
-    }
-
     if (paynocchio_wallet_topup_button) {
 
         paynocchio_wallet_topup_button.addEventListener('click', () => {
@@ -52,22 +45,7 @@ export const init = (pay, minimum_topup_amount, card_balance_limit, balance) => 
                     const input = modal.body.find('#top_up_amount');
                     const message = modal.body.find('#topup_message');
                     const commission_message = modal.body.find('#commission_message');
-                    if(need_to_top_up) {
-                        const top_up_default_input = need_to_top_up <= minimum_topup_amount ? minimum_topup_amount: need_to_top_up;
-                        input.val(top_up_default_input);
-                        calculateReward(top_up_default_input, 'payment_operation_add_money')
-                            .then(rewards => {
-                                if(rewards.bonuses_to_get > 0) {
-                                    message.text(
-                                        `You will get ${rewards.bonuses_to_get} bonuses (which equals to 
-                                        $${rewards.bonuses_in_dollar})`
-                                    );
-                                    commission_message.text(
-                                        `You will receive $${rewards.sum_without_commission}. Commission: $${rewards.commission}`
-                                    );
-                                }
-                            });
-                    }
+
                     input.on('keyup change', (evt) => {
                         if (parseFloat(evt.target.value) + balance > card_balance_limit) {
                             message.text(`When replenishing the amount ${evt.target.value}, 
@@ -76,12 +54,16 @@ export const init = (pay, minimum_topup_amount, card_balance_limit, balance) => 
                         } else if (evt.target.value >= minimum_topup_amount) {
                             commission_message.addClass('loading');
                             debounce(() => {
+                                window.console.log(evt.target.value);
                                 calculateReward(evt.target.value, 'payment_operation_add_money')
                                     .then(rewards => {
+                                        window.console.log(rewards);
                                         if(rewards.bonuses_to_get > 0) {
-                                            message.text(`You will get ${rewards.bonuses_to_get} bonuses`);
+                                            message.text(`You will get ${rewards.bonuses_to_get} bonuses (which equals to 
+                                        $${rewards.bonuses_in_dollar})`);
                                             commission_message.text(
-                                                `You will receive $${rewards.sum_without_commission}.`
+                                                `You will receive $${rewards.sum_without_commission}. 
+                                                Commission: $${rewards.commission}`
                                             );
                                         } else {
                                             message.text('');

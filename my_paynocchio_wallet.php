@@ -46,7 +46,6 @@ if($user && $user->useruuid && $user->walletuuid) {
             'minimum_topup_amount' => $minimum_topup_amount,
             'card_balance_limit' => $card_balance_limit,
             'balance' => $wallet_balance,
-            'rewarding_rules' => $rewarding_rules,
         ]);
 
         $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_withdraw', 'init', [

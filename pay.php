@@ -90,7 +90,9 @@ if(paynocchio_helper::user_has_payed($itemid, (int) $USER->id)) {
     $course_rounded_cost = helper::get_rounded_cost($payable->get_amount(), $currency, $surcharge);
 
     $calculateNeedToTopUpWithCommission = $wallet->calculateNeedToTopUpWithCommission($course_rounded_cost);
-    $calculateRewardsAndCommissions = $wallet->calculateRewardsAndCommissions($calculateNeedToTopUpWithCommission['need_to_topup_with_commission'], 'payment_operation_add_money');
+
+    // Bonuses only counts for the sum without commissions
+    $calculateRewardsAndCommissions = $wallet->calculateRewardsAndCommissions($course_rounded_cost, 'payment_operation_add_money');
 
     $wallet_balance_response = $wallet->getWalletBalance($wallet_uuid) ?: 0;
     $wallet_balance = $wallet_balance_response['balance'];
@@ -152,7 +154,8 @@ if(paynocchio_helper::user_has_payed($itemid, (int) $USER->id)) {
                 'minimum_topup_amount' => $minimum_topup_amount,
                 'card_balance_limit' => $card_balance_limit,
                 'balance' => $wallet_balance,
-                'rewarding_rules' => $rewarding_rules,
+                'cost' => $course_rounded_cost,
+                'cost_with_commission' => $wallet->calculateSumWithCommission($course_rounded_cost),
             ]);
         }
 
@@ -166,7 +169,11 @@ if(paynocchio_helper::user_has_payed($itemid, (int) $USER->id)) {
             'bonuses_conversion_rate' => $conversion_rate_when_payment,
         ]);
 
-
+        echo '<br/><pre>';
+        print_r($course_rounded_cost);
+        echo '</pre><br/><pre>';
+        print_r($wallet->calculateRewardsAndCommissions($course_rounded_cost, 'payment_operation_add_money'));
+        echo '<br/><pre>';
 
         $PAGE->requires->js_call_amd('paygw_paynocchio/terms_and_conditions', 'init', []);
         echo $OUTPUT->render_from_template('paygw_paynocchio/terms_and_conditions', []);

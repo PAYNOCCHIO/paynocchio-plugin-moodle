@@ -68,13 +68,12 @@ export const init = (balance) => {
                             modal.body.find('#withdraw_message').text('Working...');
                             handleWithdrawClick(input.val())
                                 .then(data => {
-                                    window.console.log(data);
                                     if (data.success) {
                                         modal.body.find('.paynocchio-spinner').toggleClass('active');
                                         modal.body.find('#withdraw_message').text('Success! Reloading...');
                                         setBalance(data.balance);
                                         setBonus(data.bonuses);
-                                        //window.location.reload();
+                                        window.location.reload();
                                     } else {
                                         modal.body.find('.paynocchio-spinner').toggleClass('active');
                                         modal.body.find('#withdraw_message')
