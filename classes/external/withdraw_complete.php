@@ -105,7 +105,7 @@ class withdraw_complete extends external_api {
         $user = $DB->get_record('paygw_paynocchio_wallets', ['useruuid' => $user_uuid]);
 
         if($user) {
-            paynocchio_helper::registerTransaction((int) $user->id, 'withdrawn', (float)$amount, 0, null);
+            paynocchio_helper::registerTransaction((int) $user->userid, 'withdrawn', (float)$amount, 0, null);
 
             $paymentuser = $DB->get_record('user', ['id' => $user->userid]);
             $supportuser = core_user::get_support_user();
