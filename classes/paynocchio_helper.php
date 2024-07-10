@@ -400,6 +400,16 @@ class paynocchio_helper {
     }
 
     /**
+     *  Wallet information
+     */
+    public function getCurrencies(): array
+    {
+        $data = [];
+
+        return $this->sendRequest('GET', '/currency/', json_encode($data));
+    }
+
+    /**
      * Transform and merge identical rules
      * @param $data
      * @return array|null
