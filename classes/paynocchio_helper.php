@@ -238,7 +238,8 @@ class paynocchio_helper {
         $data = [
             self::PAYNOCCHIO_ENV_KEY => $this->envId,
             self::PAYNOCCHIO_USER_UUID_KEY => $this->userId,
-            self::PAYNOCCHIO_CURRENCY_KEY => '970d83de-1dce-47bd-a45b-bb92bf6df964',
+            self::PAYNOCCHIO_CURRENCY_KEY => '248513fc-30b2-48af-b701-0cc673282ea6', // SGD
+            // USD self::PAYNOCCHIO_CURRENCY_KEY => '970d83de-1dce-47bd-a45b-bb92bf6df964',
             self::PAYNOCCHIO_TYPE_KEY => '93ac9017-4960-41bf-be6d-aa123884451d',
             self::PAYNOCCHIO_STATUS_KEY => 'ef8da49e-a9e3-4726-8c26-f8d2bfd6a093',
         ];
