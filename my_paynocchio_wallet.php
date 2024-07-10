@@ -66,7 +66,7 @@ if($user && $user->useruuid && $user->walletuuid) {
         'minimum_topup_amount' => $wallet->getEnvironmentStructure()['minimum_topup_amount'],
         'bonus_conversion_rate' => $wallet->getEnvironmentStructure()['bonus_conversion_rate'],
         'bonus_to_spend' => $wallet_balance * $wallet->getEnvironmentStructure()['bonus_conversion_rate'],
-        'allow_withdraw' => $wallet_response_code === "ACTIVE" && $wallet->getEnvironmentStructure()['allow_withdraw'] && $wallet_balance > 0,
+        'allow_withdraw' => $wallet_response_code === "ACTIVE" && $wallet_balance > 0,
         'cardBg' => $cardBg,
         'logo' => paynocchio_helper::custom_logo(),
         'wallet_activated' => true,

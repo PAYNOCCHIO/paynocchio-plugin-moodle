@@ -43,15 +43,15 @@ class withdraw_complete extends external_api {
     public static function execute_parameters() {
         return new external_function_parameters([
             'uuid' => new external_value(PARAM_TEXT, 'The uuid coming back from Paynocchio'),
-            'external_request_id' => new external_value(PARAM_TEXT, 'The external_request_id coming back from Paynocchio'),
-            'created_at' => new external_value(PARAM_TEXT, 'The created_at coming back from Paynocchio'),
-            'company_id' => new external_value(PARAM_TEXT, 'The company_id coming back from Paynocchio'),
-            'payment_method' => new external_value(PARAM_TEXT, 'The payment_method coming back from Paynocchio'),
-            'amount' => new external_value(PARAM_TEXT, 'The amount coming back from Paynocchio'),
-            'currency_id' => new external_value(PARAM_TEXT, 'The currency_id coming back from Paynocchio'),
-            'wallet_uuid' => new external_value(PARAM_TEXT, 'The wallet_uuid coming back from Paynocchio'),
+            'request_uuid' => new external_value(PARAM_TEXT, 'The external_request_id coming back from Paynocchio'),
+            'environment_uuid' => new external_value(PARAM_TEXT, 'The created_at coming back from Paynocchio'),
             'user_uuid' => new external_value(PARAM_TEXT, 'The user_uuid coming back from Paynocchio'),
-            'status_type' => new external_value(PARAM_TEXT, 'The status type coming back from Paynocchio'),
+            'wallet_uuid' => new external_value(PARAM_TEXT, 'The wallet_uuid coming back from Paynocchio'),
+            'amount' => new external_value(PARAM_TEXT, 'The amount coming back from Paynocchio'),
+            'currency' => new external_value(PARAM_TEXT, 'The currency_id coming back from Paynocchio'),
+            'type_operation' => new external_value(PARAM_TEXT, 'The company_id coming back from Paynocchio'),
+            'order_uuid' => new external_value(PARAM_TEXT, 'The status type coming back from Paynocchio'),
+            'external_order_uuid' => new external_value(PARAM_TEXT, 'The status type coming back from Paynocchio'),
         ]);
     }
 
@@ -60,42 +60,42 @@ class withdraw_complete extends external_api {
      * This function does not take cost as a parameter as we cannot rely on any provided value.
      *
      * @param string $uuid Paynocchio uuid
-     * @param string $external_request_id Paynocchio external_request_id
-     * @param string $created_at Paynocchio created_at
-     * @param string $company_id Paynocchio company_id
-     * @param string $payment_method Paynocchio payment_method
+     * @param string $request_uuid Paynocchio external_request_id
+     * @param string $environment_uuid Paynocchio created_at
+     * @param string $user_uuid Paynocchio company_id
+     * @param string $wallet_uuid Paynocchio payment_method
      * @param string $amount Paynocchio amount
-     * @param string $currency_id Paynocchio currency_id
-     * @param string $wallet_uuid Paynocchio wallet_uuid
-     * @param string $user_uuid Paynocchio user_uuid
-     * @param string $status_type Paynocchio status type
+     * @param string $currency Paynocchio currency_id
+     * @param string $type_operation Paynocchio wallet_uuid
+     * @param string $order_uuid Paynocchio user_uuid
+     * @param string $external_order_uuid Paynocchio status type
      * @return array
      */
     public static function execute(
         string $uuid,
-        string $external_request_id,
-        string $created_at,
-        string $company_id,
-        string $payment_method,
-        string $amount,
-        string $currency_id,
-        string $wallet_uuid,
+        string $request_uuid,
+        string $environment_uuid,
         string $user_uuid,
-        string $status_type
+        string $wallet_uuid,
+        string $amount,
+        string $currency,
+        string $type_operation,
+        string $order_uuid,
+        string $external_order_uuid
     ): array {
         global $DB, $USER;
 
         self::validate_parameters(self::execute_parameters(), [
             'uuid' => $uuid,
-            'external_request_id' => $external_request_id,
-            'created_at' => $created_at,
-            'company_id' => $company_id,
-            'payment_method' => $payment_method,
-            'amount' => $amount,
-            'currency_id' => $currency_id,
-            'wallet_uuid' => $wallet_uuid,
+            'request_uuid' => $request_uuid,
+            'environment_uuid' => $environment_uuid,
             'user_uuid' => $user_uuid,
-            'status_type' => $status_type,
+            'wallet_uuid' => $wallet_uuid,
+            'amount' => $amount,
+            'currency' => $currency,
+            'type_operation' => $type_operation,
+            'order_uuid' => $order_uuid,
+            'external_order_uuid' => $external_order_uuid,
         ]);
 
         $user = $DB->get_record('paygw_paynocchio_wallets', ['useruuid' => $user_uuid]);
@@ -110,7 +110,7 @@ class withdraw_complete extends external_api {
 
             return [
                 'success' => true,
-                'message' => 'Order updated as completed',
+                'message' => 'Withdrawal complete',
             ];
             } else {
                 return [
