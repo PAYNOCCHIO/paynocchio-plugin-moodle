@@ -50,8 +50,8 @@ class withdraw_complete extends external_api {
             'amount' => new external_value(PARAM_TEXT, 'The amount coming back from Paynocchio'),
             'currency' => new external_value(PARAM_TEXT, 'The currency_id coming back from Paynocchio'),
             'type_operation' => new external_value(PARAM_TEXT, 'The company_id coming back from Paynocchio'),
-            'order_uuid' => new external_value(PARAM_TEXT, 'The status type coming back from Paynocchio'),
-            'external_order_uuid' => new external_value(PARAM_TEXT, 'The status type coming back from Paynocchio'),
+            'order_uuid' => new external_value(PARAM_RAW, 'The status type coming back from Paynocchio'),
+            'external_order_uuid' => new external_value(PARAM_RAW, 'The status type coming back from Paynocchio'),
         ]);
     }
 
@@ -72,16 +72,16 @@ class withdraw_complete extends external_api {
      * @return array
      */
     public static function execute(
-        string $uuid,
-        string $request_uuid,
-        string $environment_uuid,
-        string $user_uuid,
-        string $wallet_uuid,
-        string $amount,
-        string $currency,
-        string $type_operation,
-        string $order_uuid,
-        string $external_order_uuid
+        $uuid,
+        $request_uuid,
+        $environment_uuid,
+        $user_uuid,
+        $wallet_uuid,
+        $amount,
+        $currency,
+        $type_operation,
+        $order_uuid,
+        $external_order_uuid
     ): array {
         global $DB, $USER;
 
