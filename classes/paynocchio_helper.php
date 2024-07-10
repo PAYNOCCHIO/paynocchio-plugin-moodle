@@ -216,6 +216,21 @@ class paynocchio_helper {
     }
 
     /**
+     * Healh check helper
+     * @return bool
+     */
+    public function checkHealth()
+    {
+        $wallet_response = $this->healtCheck();
+        $json_response = json_decode($wallet_response['response']);
+        if($json_response->status_code === 200) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      *  Create Wallet
      */
     public function createWallet()

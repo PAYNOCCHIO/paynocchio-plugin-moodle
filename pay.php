@@ -133,6 +133,7 @@ if(paynocchio_helper::user_has_payed($itemid, (int) $USER->id)) {
         'cardBg' => $cardBg,
         'brandname' => get_config('paygw_paynocchio', 'brandname'),
         'username' => $USER->firstname . ' ' . $USER->lastname,
+        'server_error' => $wallet->checkHealth(),
     ];
 
     echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet_all_in_one_payment', $data);

@@ -38,6 +38,7 @@ if($user && $user->useruuid && $user->walletuuid) {
     $minimum_topup_amount = $wallet->getEnvironmentStructure()['minimum_topup_amount'];
     $card_balance_limit = $wallet->getEnvironmentStructure()['card_balance_limit'];
     $rewarding_rules = $wallet->getEnvironmentStructure()['rewarding_group']->rewarding_rules;
+    $healtCheck = $wallet->checkHealth();
 
 
     if($wallet_response_code === "ACTIVE") {
@@ -59,7 +60,7 @@ if($user && $user->useruuid && $user->walletuuid) {
         'wallet_card' => chunk_split($wallet_balance_response['number'], 4, ' '),
         'wallet_status' => $wallet_balance_response['status'],
         'wallet_code' => $wallet_response_code,
-        'server_error' => $wallet_response_code === 500 || $wallet_response_code === 404,
+        'server_error' => !$healtCheck,
         'wallet_blocked' => $wallet_response_code === "BLOCKED",
         'wallet_active' => $wallet_response_code === "ACTIVE",
         'minimum_topup_amount' => $wallet->getEnvironmentStructure()['minimum_topup_amount'],
@@ -106,10 +107,12 @@ if($user && $user->useruuid && $user->walletuuid) {
 
 } else {
     $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_activation', 'init', ['user_id' => $USER->id]);
-
+    $useruuid = \core\uuid::generate();
+    $wallet = new paynocchio_helper($useruuid);
     $data = [
         'wallet_balance' => 0,
         'wallet_bonuses' => 0,
+        'server_error' => !$wallet->checkHealth(),
         'wallet_card' => false,
         'wallet_status' => '',
         'wallet_code' => '',
