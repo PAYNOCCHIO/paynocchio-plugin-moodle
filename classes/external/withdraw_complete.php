@@ -50,6 +50,7 @@ class withdraw_complete extends external_api {
             'amount' => new external_value(PARAM_TEXT, 'The amount coming back from Paynocchio'),
             'currency' => new external_value(PARAM_TEXT, 'The currency_id coming back from Paynocchio'),
             'type_operation' => new external_value(PARAM_TEXT, 'The company_id coming back from Paynocchio'),
+            'status_type' => new external_value(PARAM_TEXT, 'The company_id coming back from Paynocchio'),
             'order_uuid' => new external_value(PARAM_RAW, 'The status type coming back from Paynocchio'),
             'external_order_uuid' => new external_value(PARAM_RAW, 'The status type coming back from Paynocchio'),
         ]);
@@ -67,6 +68,7 @@ class withdraw_complete extends external_api {
      * @param string $amount Paynocchio amount
      * @param string $currency Paynocchio currency_id
      * @param string $type_operation Paynocchio wallet_uuid
+     * @param string $status_type Paynocchio wallet_uuid
      * @param string $order_uuid Paynocchio user_uuid
      * @param string $external_order_uuid Paynocchio status type
      * @return array
@@ -80,6 +82,7 @@ class withdraw_complete extends external_api {
         $amount,
         $currency,
         $type_operation,
+        $status_type,
         $order_uuid,
         $external_order_uuid
     ): array {
@@ -94,6 +97,7 @@ class withdraw_complete extends external_api {
             'amount' => $amount,
             'currency' => $currency,
             'type_operation' => $type_operation,
+            'status_type' => $status_type,
             'order_uuid' => $order_uuid,
             'external_order_uuid' => $external_order_uuid,
         ]);

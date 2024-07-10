@@ -71,8 +71,6 @@ export const init = (balance) => {
                                     if (data.success) {
                                         modal.body.find('.paynocchio-spinner').toggleClass('active');
                                         modal.body.find('#withdraw_message').text('Success! Reloading...');
-                                        setBalance(data.balance);
-                                        setBonus(data.bonuses);
                                         window.location.reload();
                                     } else {
                                         modal.body.find('.paynocchio-spinner').toggleClass('active');
@@ -85,23 +83,5 @@ export const init = (balance) => {
                     });
                 });
         });
-    }
-
-    /**
-     * Setting the Card balance value
-     * @param {number} value
-     */
-    function setBalance(value) {
-        const paynocchio_card_balance_value = document.querySelector('.paynocchio-balance-value');
-        paynocchio_card_balance_value.innerText = value;
-    }
-
-    /**
-     * Setting the Card bonuses value
-     * @param {number} value
-     */
-    function setBonus(value) {
-        const paynocchio_card_bonus_value = document.querySelector('.paynocchio-bonus-value');
-        paynocchio_card_bonus_value.innerText = value;
     }
 };
