@@ -97,6 +97,7 @@ if(paynocchio_helper::user_has_payed($itemid, (int) $USER->id)) {
     $money_bonuses_equivalent = $max_bonuses_to_spend * $conversion_rate_when_payment;
     $wallet_response_code = $wallet_balance_response['code'];
     $rewarding_rules = $environment_structure['rewarding_group']->rewarding_rules;
+    $healtCheck = $wallet->checkHealth();
 
 
     if ($wallet_response_code == 'SUSPEND') {
@@ -133,7 +134,8 @@ if(paynocchio_helper::user_has_payed($itemid, (int) $USER->id)) {
         'cardBg' => $cardBg,
         'brandname' => get_config('paygw_paynocchio', 'brandname'),
         'username' => $USER->firstname . ' ' . $USER->lastname,
-        'server_error' => $wallet->checkHealth(),
+        'server_error' => !$healtCheck,
+        'allow_withdraw' => $wallet_response_code === "ACTIVE" && $wallet_balance > 0,
     ];
 
     echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet_all_in_one_payment', $data);
@@ -148,6 +150,10 @@ if(paynocchio_helper::user_has_payed($itemid, (int) $USER->id)) {
                 'balance' => $wallet_balance,
                 'cost' => $course_rounded_cost ?? null,
                 'topupamount' => $minimum_topup_amount < $course_rounded_cost ? $course_rounded_cost : $minimum_topup_amount,
+            ]);
+
+            $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_withdraw', 'init', [
+                'balance' => $wallet_balance,
             ]);
         }
 

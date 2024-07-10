@@ -32,85 +32,173 @@
 }}
 {{^server_error}}
 <div class="paynocchio-wallet-card-wrapper">
-    <div class="paynocchio-wallet-tab paynocchio-banner">
-        <div class="paynocchio-wallet-tab-head">
-            <h2>Why to pay with {{brandname}}?</h2>
-        </div>
-        <div class="paynocchio-lgray paynocchio-rounded paynocchio-no-of">
-            <div class="paynocchio-lblue paynocchio-p4 paynocchio-center">
-                <img alt="Percent, image" src="/payment/gateway/paynocchio/pix/percent.png" width="20" height="19" class="paynocchio-mr2" /> <strong style="color: #002F67;">Extra discounts - pay with bonuses!</strong>
+    {{^wallet_card}}
+        <div class="paynocchio-wallet-tab paynocchio-banner">
+            <div class="paynocchio-lgray paynocchio-rounded paynocchio-no-of">
+                <div class="paynocchio-lblue paynocchio-p4 paynocchio-center">
+                    <img alt="Percent, image" src="/payment/gateway/paynocchio/pix/percent.png" width="20" height="19" class="paynocchio-mr2" /> <strong style="color: #002F67;">Extra discounts - pay with bonuses!</strong>
+                </div>
+                <div class="paynocchio-flexrowcenter">
+                    <div class="paynocchio-whalf paynocchio-p8">
+                        <h2 class="paynocchio-mb4">
+                            Activate your wallet with bonuses!
+                        </h2>
+                        <div>
+                            <span class="paynocchio-fbig">
+                                {{brandname}} is a complimentary loyalty wallet designed for course payments. By depositing funds into the wallet, you can receive cashback bonuses and even purchase a course for just $1!
+                            </span>
+                            <img class="paynocchio-mxauto paynocchio-my8 paynocchio-block" alt="Campus.Pay promo, image" src="/payment/gateway/paynocchio/pix/edugraph1.png" width="293" height="296" />
+                        </div>
+                    </div>
+                    <div class="paynocchio-whalf paynocchio-p8">
+                        <div class="paynocchio-wallet-card paynocchio-mxauto" {{#cardBg}}style="background-color: {{cardBg}}"{{/cardBg}}>
+                            <div class="on_card_embleme">{{{logo}}}</div>
+                            <div class="paynocchio-wallet-card-footer">
+                                <div class="">
+                                    {{username}}
+                                </div>
+                                <div id="card_number" class="paynocchio-card-number">
+                                    <div>••••</div>
+                                    <div>••••</div>
+                                    <div>••••</div>
+                                    <div>••••</div>
+                                </div>
+                            </div>
+                        </div>
+                        <button id="paynocchio_activation_button"
+                                type="button"
+                                class="paynocchio_activation_button paynocchio-mxauto">
+                            <span>Activate</span>
+                            <svg class="paynocchio-spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="spinner-circle" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="spinner-path" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                        </button>
+                        <div class="topup-description hidden">
+                            Activating...
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="paynocchio-p4">
-                {{brandname}} is a free loyalty wallet for profitable payment of our courses. Add money on wallet, get cashback bonuses and buy courses for $1!
-
-                <img class="paynocchio-wfull paynocchio-my8" alt="Campus.Pay promo, image" src="/payment/gateway/paynocchio/pix/edugraph1.png" width="400" height="395" />
+        </div>
+    {{/wallet_card}}
+    {{#wallet_suspend}}
+        <div class="paynocchio-wallet-tab paynocchio-banner">
+            <div class="paynocchio-lgray paynocchio-rounded paynocchio-no-of">
+                <div class="paynocchio-lblue paynocchio-p4 paynocchio-center">
+                    <img alt="Percent, image" src="/payment/gateway/paynocchio/pix/percent.png" width="20" height="19" class="paynocchio-mr2" /> <strong style="color: #002F67;">Extra discounts - pay with bonuses!</strong>
+                </div>
+                <div class="paynocchio-flexrowcenter">
+                    <div class="paynocchio-whalf paynocchio-p8">
+                        <h2 class="paynocchio-mb4">
+                            Wallet is suspended
+                        </h2>
+                        <div>
+                            <span class="paynocchio-fbig">
+                                Your {{brandname}} is suspended. Please reactivate it.
+                            </span>
+                            <img class="paynocchio-mxauto paynocchio-my8 paynocchio-block" alt="Campus.Pay promo, image" src="/payment/gateway/paynocchio/pix/edugraph1.png" width="293" height="296" />
+                        </div>
+                    </div>
+                    <div class="paynocchio-whalf paynocchio-p8">
+                        <div class="paynocchio-wallet-card paynocchio-mxauto" {{#cardBg}}style="background-color: {{cardBg}}"{{/cardBg}}>
+                            <div class="on_card_embleme">{{{logo}}}</div>
+                            <div class="paynocchio-wallet-card-footer">
+                                <div class="">
+                                    {{username}}
+                                </div>
+                                <div id="card_number" class="paynocchio-card-number">
+                                    {{#wallet_card}}
+                                        {{wallet_card}}
+                                    {{/wallet_card}}
+                                    {{^wallet_card}}
+                                        <div>••••</div>
+                                        <div>••••</div>
+                                        <div>••••</div>
+                                        <div>••••</div>
+                                    {{/wallet_card}}
+                                </div>
+                            </div>
+                        </div>
+                        <button id="activate_wallet_button" type="button" class="paynocchio_activation_button paynocchio-mxauto">Reactivate wallet</button>
+                        <div id="wallet_status_message" class="paynocchio-center"></div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+    {{/wallet_suspend}}
+    {{#wallet_blocked}}
+        <div class="paynocchio-wallet-tab paynocchio-banner">
+            <div class="paynocchio-lgray paynocchio-rounded paynocchio-no-of">
+                <div class="paynocchio-lblue paynocchio-p4 paynocchio-center">
+                    <img alt="Percent, image" src="/payment/gateway/paynocchio/pix/percent.png" width="20" height="19" class="paynocchio-mr2" /> <strong style="color: #002F67;">Extra discounts - pay with bonuses!</strong>
+                </div>
+                <div class="paynocchio-flexrowcenter">
+                    <div class="paynocchio-whalf paynocchio-p8">
+                        <h2 class="paynocchio-mb4">
+                            Wallet is blocked
+                        </h2>
+                        <div>
+                            <span class="paynocchio-fbig">
+                                Your {{brandname}} is blocked. Please contact support. Don't worry, we will definitely figure it out!
+                            </span>
+                            <img class="paynocchio-mxauto paynocchio-my8 paynocchio-block" alt="Campus.Pay promo, image" src="/payment/gateway/paynocchio/pix/support.webp" width="343" height="302" />
+                        </div>
+                    </div>
+                    <div class="paynocchio-whalf paynocchio-p8">
+                        <div class="paynocchio-wallet-card paynocchio-mxauto" {{#cardBg}}style="background-color: {{cardBg}}"{{/cardBg}}>
+                            <div class="on_card_embleme">{{{logo}}}</div>
+                            <div class="paynocchio-wallet-card-footer">
+                                <div class="">
+                                    {{username}}
+                                </div>
+                                <div id="card_number" class="paynocchio-card-number">
+                                    {{#wallet_card}}
+                                        {{wallet_card}}
+                                    {{/wallet_card}}
+                                    {{^wallet_card}}
+                                        <div>••••</div>
+                                        <div>••••</div>
+                                        <div>••••</div>
+                                        <div>••••</div>
+                                    {{/wallet_card}}
+                                </div>
+                            </div>
+                        </div>
+                        <a href="/user/contactsitesupport.php" class="paynocchio_activation_button paynocchio-mxauto">
+                            Contact support
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {{/wallet_blocked}}
+    {{#wallet_active}}
     <div class="paynocchio-wallet-tab paynocchio-instruction">
         <div class="paynocchio-wallet-tab-head">
             <h2>How to pay?</h2>
         </div>
-        <div class="paynocchio-lgray paynocchio-rounded {{^wallet_active}}active{{/wallet_active}} {{#wallet_suspend}}issue{{/wallet_suspend}} {{#wallet_blocked}}issue{{/wallet_blocked}} paynocchio-p4" id="paynocchio-step1">
-            {{^wallet_active}}
-                <img class="paynocchio-flright" src="/payment/gateway/paynocchio/pix/rocket.png" alt="Rocket, image" width="93" height="115" />
-                <h3>1 step. Activate wallet</h3>
-                <p class="paynocchio-mb8">Activate our secure wallet to become a member of the loyalty program, get rewards and pay for all our products with bonuses.</p>
-                <button id="paynocchio_activation_button"
-                        type="button"
-                        class="paynocchio_activation_button">
-                    <span>Activate</span>
-                    <svg class="paynocchio-spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="spinner-circle" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="spinner-path" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                </button>
-                <div class="topup-description hidden">
-                    Activating...
-                </div>
-            {{/wallet_active}}
-            {{#wallet_active}}
-                {{#wallet_suspend}}
-                    <h3>1 step. Your wallet is suspended</h3>
-                    <p class="paynocchio-mb8">Please reactivate it.</p>
-                    <button id="activate_wallet_button" type="button" class="paynocchio_activation_button">Reactivate wallet</button>
-                    <div id="wallet_status_message" class="paynocchio-center"></div>
-                {{/wallet_suspend}}
-                {{#wallet_blocked}}
-                    <h3>1 step. Your wallet is blocked</h3>
-                    <p class="paynocchio-mb8">Please contact support.</p>
-                    <p>
-                        <a href="/user/contactsitesupport.php" class="paynocchio_activation_button">
-                            Contact support
-                        </a>
-                    </p>
-                {{/wallet_blocked}}
-                {{#wallet_active}}
-                    <img class="paynocchio-flright" src="/payment/gateway/paynocchio/pix/rocket.png" alt="Rocket, image" width="93" height="115" />
-                    <h3>1 step. Your wallet is activated</h3>
-                    <p>Great! Now you can enjoy all the benefits of your secure wallet!</p>
-                {{/wallet_active}}
-            {{/wallet_active}}
-        </div>
         <div class="paynocchio-lgray paynocchio-rounded paynocchio-p4 {{#wallet_active}}{{^can_pay}}active{{/can_pay}}{{/wallet_active}}" id="paynocchio-step2">
-            <h3>2 step. Add money</h3>
+            <h3>Step 1. Add money</h3>
             {{^can_pay}}
                 <div>Add money on your wallet with the required amount. You will be able to pay for any of our products and receive bonuses or a discount. Furthermore, you have the flexibility to withdraw money from your wallet at any time..</div>
             {{/can_pay}}
             {{#can_pay}}
                 <div><strong>Well done!</strong> Your wallet balance is enough to make a purchase!</div>
             {{/can_pay}}
+            <img class="paynocchio-block paynocchio-my4 paynocchio-mxauto" src="/payment/gateway/paynocchio/pix/coin.png" width="70" height="70" alt="Dollar, icon" />
         </div>
         <div class="paynocchio-lgray paynocchio-rounded paynocchio-p4 {{#wallet_active}}{{#can_pay}}active{{/can_pay}}{{/wallet_active}}" id="paynocchio-step3">
-            <h3>3 step. Spend bonuses and pay</h3>
-            <div>Select the amount of bonuses to pay for your order.</div>
+            <h3>Step 2. Spend Your Bonus Points And Make Your Payment</h3>
+            <div>Choose course, select the number of bonuses that you want to debit to pay for the order. Specify the number of bonus points you wish to use for the payment of your order.</div>
+            <img class="paynocchio-block paynocchio-my4 paynocchio-mxauto" src="/payment/gateway/paynocchio/pix/percentstar.png" width="70" height="70" alt="Percent, icon" />
         </div>
     </div>
     <div class="paynocchio-wallet-tab paynocchio-wallet-container">
         <div class="enrollment-info">
             <h3>{{description}}</h3>
             <div>
-                Course cost: ${{full_amount}}
+                Course total: ${{full_amount}}
             </div>
         </div>
         <div class="payment-method">
@@ -141,26 +229,33 @@
                 <button type="button" id="paynocchio_topup_button" class="paynocchio_top_up_button {{^wallet_active}}inactive disabled{{/wallet_active}}" {{^wallet_active}}disabled{{/wallet_active}}>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                    </svg>                    Add money
+                    </svg> Add money
                 </button>
+                {{#allow_withdraw}}
+                <button type="button" id="paynocchio_withdraw_button" class="paynocchio_withdraw_button">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                    </svg> Withdraw
+                </button>
+                {{/allow_withdraw}}
             </div>
             {{#wallet_bonuses}}
-            <div class="paynocchio-bonuses-conversion-rate">
-                <div>
-                    <nobr>Spend bonuses</nobr>
+                <div class="paynocchio-bonuses-conversion-rate">
+                    <div>
+                        <nobr>Spend bonuses</nobr>
+                    </div>
+                    <div class="paynocchio-pay-form">
+                        <input id="fullamount-input" type="hidden" value="{{full_amount}}">
+                        <input id="bonuses-range" type="range" min="0" max="{{max_bonus}}" step="1" value="{{max_bonus}}"
+                               class="styled-slider slider-progress" {{^wallet_active}}disabled{{/wallet_active}}
+                            {{^wallet_balance}}disabled{{/wallet_balance}}>
+                        <div class="bonuses_value_cont"><input id="bonuses-value" type="number" readonly="readonly" value="{{max_bonus}}" min="0" max="{{max_bonus}}" {{^wallet_active}}disabled{{/wallet_active}}><span id="money_equivalent" class="paynocchio-hidden"></span></div>
+                    </div>
                 </div>
-                <div class="paynocchio-pay-form">
-                    <input id="fullamount-input" type="hidden" value="{{full_amount}}">
-                    <input id="bonuses-range" type="range" min="0" max="{{max_bonus}}" step="1" value="0"
-                           class="styled-slider slider-progress" {{^wallet_active}}disabled{{/wallet_active}}
-                             {{^wallet_balance}}disabled{{/wallet_balance}}>
-                    <div class="bonuses_value_cont"><input id="bonuses-value" type="number" readonly="readonly" value="0" min="0" max="{{max_bonus}}" {{^wallet_active}}disabled{{/wallet_active}}><span id="money_equivalent" class="paynocchio-hidden"></span></div>
-                </div>
-            </div>
             {{/wallet_bonuses}}
             <div class="paynocchio-topup-message paynocchio-hidden" id="topup_message"></div>
             <div class="paynocchio-pay-button-container">
-                <button type="button" id="paynocchio_pay_button" class="paynocchio-pay-button {{^wallet_active}}inactive disabled{{/wallet_active}}" {{^wallet_active}}disabled{{/wallet_active}}>
+                <button type="button" id="paynocchio_pay_button" class="paynocchio-pay-button {{^wallet_active}}inactive disabled{{/wallet_active}} {{^can_pay}}inactive disabled{{/can_pay}}" {{^wallet_active}}disabled{{/wallet_active}} {{^can_pay}}disabled{{/can_pay}}>
                     <div class="paynocchio-bold">Pay $<span id="current_amount">{{full_amount}}</span></div><div id="old_amount" class="paynocchio-hidden"></div><div id="discount" class="paynocchio-hidden"></div>
                 </button>
                 <div class="spinner">
@@ -172,17 +267,18 @@
                 <div id="status_message"></div>
             </div>
             {{^wallet_active}}
-            <div class="paynocchio-topup-message paynocchio-hidden" id="paynocchio_gaining_bonuses">
-                Check your wallet status to continue.
-            </div>
+                <div class="paynocchio-topup-message paynocchio-hidden" id="paynocchio_gaining_bonuses">
+                    Check your wallet status to continue.
+                </div>
             {{/wallet_active}}
             {{#wallet_active}}
-            <div class="paynocchio-topup-message paynocchio-hidden" id="paynocchio_gaining_bonuses">And get additional <span id="bonuses_to_get">{{bonuses_for_payment}}</span> bonuses!
-                <i class="fa-regular fa-circle-question" type="button" tabindex="0" data-trigger="click" data-container="body" data-toggle="popover" data-placement="top" data-title="How it works" data-content="Earn bonuses per each payment larger than $10! Keep earning rewards and pay with bonuses!"></i>
-            </div>
+                <div class="paynocchio-topup-message paynocchio-hidden" id="paynocchio_gaining_bonuses">And get additional <span id="bonuses_to_get">{{bonuses_for_payment}}</span> bonuses!
+                    <i class="fa-regular fa-circle-question" type="button" tabindex="0" data-trigger="click" data-container="body" data-toggle="popover" data-placement="top" data-title="How it works" data-content="Earn bonuses per each payment larger than $10! Keep earning rewards and pay with bonuses!"></i>
+                </div>
             {{/wallet_active}}
         </div>
     </div>
+    {{/wallet_active}}
 </div>
 {{/server_error}}
 

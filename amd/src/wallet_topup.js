@@ -48,13 +48,13 @@ export const init = (pay, minimum_topup_amount, card_balance_limit, balance, cos
 
                     if(cost) {
                         debounce(() => {
-                            calculateReward(cost, 'payment_operation_add_money')
+                            calculateReward(minimum_topup_amount, 'payment_operation_add_money')
                                 .then(rewards => {
                                     if(rewards.bonuses_to_get > 0) {
                                         message.text(`You will get ${rewards.bonuses_to_get} bonuses`);
                                         commission_message.text(
                                             `You will receive $${rewards.sum_without_commission}. 
-                                                Commission: $${rewards.commission}`
+                                                Commission is $${rewards.commission}`
                                         );
                                     } else {
                                         message.text('');

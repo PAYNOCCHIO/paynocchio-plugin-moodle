@@ -102,6 +102,8 @@ export const init = (component,
         const range = document.getElementById('bonuses-range');
         const input = document.getElementById('bonuses-value');
 
+        changePayButtonValues(fullAmount, range.value, bonuses_conversion_rate);
+
         let bonuses = 0;
 
         if(input) {
