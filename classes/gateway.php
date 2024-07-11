@@ -35,7 +35,8 @@ class gateway extends \core_payment\gateway {
         // See https://developer.Paynocchio.com/docs/api/reference/currency-codes/,
         // 3-character ISO-4217: https://en.wikipedia.org/wiki/ISO_4217#Active_codes.
         return [
-            'USD'
+            'USD',
+            'SGD',
         ];
     }
 
