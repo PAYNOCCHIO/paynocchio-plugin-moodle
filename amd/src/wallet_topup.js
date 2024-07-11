@@ -24,7 +24,7 @@
 import {handleTopUpClick, showModalWithTopup, calculateReward} from "./repository";
 
 let debounceTimer;
-const debounceTime = 300;
+const debounceTime = 500;
 
 const debounce = (callback, time) => {
     window.clearTimeout(debounceTimer);
@@ -47,30 +47,29 @@ export const init = (pay, minimum_topup_amount, card_balance_limit, balance, cos
                     const commission_message = modal.body.find('#commission_message');
 
                     /*if(cost) {*/
-                        debounce(() => {
-                            calculateReward(minimum_topup_amount, 'payment_operation_add_money')
-                                .then(rewards => {
-                                    if(rewards.bonuses_to_get > 0) {
-                                        message.text(`You will get ${rewards.bonuses_to_get} bonuses.`);
-                                        commission_message.text(`You will receive $${rewards.sum_without_commission}. 
+                    calculateReward(minimum_topup_amount, 'payment_operation_add_money')
+                        .then(rewards => {
+                            if(rewards.bonuses_to_get > 0) {
+                                message.text(`You will get ${rewards.bonuses_to_get} bonuses.`);
+                                commission_message.text(`You will receive $${rewards.sum_without_commission}. 
                                         Commission is $${rewards.commission}.`);
-                                    } else {
-                                        message.text('');
-                                        message.addClass('loading');
-                                        commission_message.text('');
-                                        commission_message.addClass('loading');
-                                    }
-                                    message.removeClass('loading');
-                                    commission_message.removeClass('loading');
-                                });
-                        }, debounceTime);
+                            } else {
+                                message.text('');
+                                message.addClass('loading');
+                                commission_message.text('');
+                                commission_message.addClass('loading');
+                            }
+                            message.removeClass('loading');
+                            commission_message.removeClass('loading');
+                        });
                     /*}*/
 
                     input.on('keyup change', (evt) => {
                         const inputValue = parseFloat(evt.target.value);
                         if (inputValue + balance > card_balance_limit) {
-                            message.text(`When replenishing the amount ${inputValue}, 
+                            message.text(`When replenishing the amount ${inputValue},
                             the balance limit will exceed the set value ${card_balance_limit}.`);
+                            commission_message.text('');
                             button.addClass('disabled');
                         } else if (inputValue >= minimum_topup_amount) {
                             message.addClass('loading');
