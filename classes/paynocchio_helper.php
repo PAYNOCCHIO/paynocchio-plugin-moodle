@@ -45,7 +45,7 @@ class paynocchio_helper {
     public const PAYNOCCHIO_CURRENCY_KEY = 'currency_uuid';
     public const PAYNOCCHIO_CURRENCY_VALUE = '248513fc-30b2-48af-b701-0cc673282ea6';
     public const PAYNOCCHIO_CURRENCY_CODE = 'SGD';
-    // USD self::PAYNOCCHIO_CURRENCY_VALUE => '970d83de-1dce-47bd-a45b-bb92bf6df964',
+    // USD public const PAYNOCCHIO_CURRENCY_VALUE = '970d83de-1dce-47bd-a45b-bb92bf6df964';
     public const PAYNOCCHIO_WALLET_KEY = 'wallet_uuid';
     public const PAYNOCCHIO_TYPE_KEY = 'type_uuid';
     public const PAYNOCCHIO_STATUS_KEY = 'status_uuid';

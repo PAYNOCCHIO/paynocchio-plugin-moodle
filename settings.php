@@ -46,12 +46,11 @@ if ($ADMIN->fulltree) {
     $secret = new admin_setting_configtext('paygw_paynocchio/paynocchiosecret', get_string('paynocchio_secret', 'paygw_paynocchio'), get_string('secret_help', 'paygw_paynocchio'), '', PARAM_TEXT);
     $settings->add($secret);
 
-    $wallet = new paynocchio_helper(uuid::generate());
-    $wallet_response = $wallet->getCurrencies();
-    $json_response = json_decode($wallet_response['response']);
-    $currencies = array_map(fn($x) => [$x->alphabetic_code => $x->alphabetic_code], $json_response->currencies);
-
-    $settings->add(new admin_setting_configselect('paygw_paynocchio/currency', 'Currency', '', 'USD', $currencies));
+    //$wallet = new paynocchio_helper(uuid::generate());
+    //$wallet_response = $wallet->getCurrencies();
+    //$json_response = json_decode($wallet_response['response']);
+    //$currencies = array_map(fn($x) => [$x->alphabetic_code => $x->alphabetic_code], $json_response->currencies);
+    //$settings->add(new admin_setting_configselect('paygw_paynocchio/currency', 'Currency', '', 'USD', $currencies));
 
     $settings->add(new admin_setting_configtextarea('paygw_paynocchio/terms', get_string('terms', 'paygw_paynocchio'), '', get_string('terms_help', 'paygw_paynocchio')));
     $settings->add(new admin_setting_configtextarea('paygw_paynocchio/privacy', get_string('privacy', 'paygw_paynocchio'), '', get_string('privacy_help', 'paygw_paynocchio')));
