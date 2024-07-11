@@ -97,6 +97,7 @@ class paynocchio_helper {
         $this->walletId = $user ? $user->walletuuid : uuid::generate();
         $this->currency_code = get_config('paygw_paynocchio', 'currency') ?: 'USD';
         $this->currency_uuid = $this->filterCurrencyByCode($this->currency_code)->uuid;
+        $this->envStructure = $this->getEnvironmentStructure();
     }
 
     /**
@@ -474,7 +475,8 @@ class paynocchio_helper {
      * @return array
      */
     public function getCurrentRewardRule($sum, $operationType) {
-        $obj = $this->transformRewardingRules($this->getEnvironmentStructure()['rewarding_group']->rewarding_rules);
+        $wallet_structure = $this->envStructure;
+        $obj = $this->transformRewardingRules($wallet_structure['rewarding_group']->rewarding_rules);
         $totalValue = 0;
         $minAmount = INF;
         $maxAmount = -INF;
@@ -503,6 +505,7 @@ class paynocchio_helper {
             'value_type' => $value_type,
             'conversion_rate' => $conversion_rate,
             'operationType' => $operationType,
+            'bonus_conversion_rate' => $wallet_structure['bonus_conversion_rate'],
         ];
     }
 
@@ -515,8 +518,7 @@ class paynocchio_helper {
     public function calculateRewardsAndCommissions(float $sum, string $operationType): array
     {
         $rules = $this->getCurrentRewardRule($sum, $operationType);
-        $wallet_structure = $this->getEnvironmentStructure();
-        $conversion_rate_when_payment = $wallet_structure['bonus_conversion_rate'] ?: 1;
+        $conversion_rate_when_payment = $rules['bonus_conversion_rate'] ?: 1;
         $sum_with_commission = $this->calculateSumWithCommission($sum);
         $commission = round($sum_with_commission - $sum, 1);
         $sum_without_commission = round($sum - $commission, 2);
@@ -543,7 +545,7 @@ class paynocchio_helper {
      */
     public function calculateSumWithCommission($sum)
     {
-        $wallet_structure = $this->getEnvironmentStructure();
+        $wallet_structure = $this->envStructure;
         $wallet_percentage_commission = $wallet_structure['wallet_percentage_commission'] ?? 0;
         $wallet_fixed_commission = $wallet_structure['wallet_fixed_commission'] ?? 0;
         $wallet_commission_coefficient = 1 - ($wallet_percentage_commission / 100);
@@ -557,7 +559,7 @@ class paynocchio_helper {
      */
     public function calculateNeedToTopUpWithCommission($cost): array
     {
-        $wallet_structure = $this->getEnvironmentStructure();
+        $wallet_structure = $this->envStructure;
         $wallet_balance_response = $this->getWalletBalance($this->walletId) ?: 0;
         $wallet_balance = $wallet_balance_response['balance'];
         $conversion_rate_when_payment = $wallet_structure['bonus_conversion_rate'] ?: 1;
