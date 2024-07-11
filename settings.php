@@ -46,11 +46,20 @@ if ($ADMIN->fulltree) {
     $secret = new admin_setting_configtext('paygw_paynocchio/paynocchiosecret', get_string('paynocchio_secret', 'paygw_paynocchio'), get_string('secret_help', 'paygw_paynocchio'), '', PARAM_TEXT);
     $settings->add($secret);
 
-    //$wallet = new paynocchio_helper(uuid::generate());
-    //$wallet_response = $wallet->getCurrencies();
-    //$json_response = json_decode($wallet_response['response']);
-    //$currencies = array_map(fn($x) => [$x->alphabetic_code => $x->alphabetic_code], $json_response->currencies);
-    //$settings->add(new admin_setting_configselect('paygw_paynocchio/currency', 'Currency', '', 'USD', $currencies));
+    $wallet = new paynocchio_helper(uuid::generate());
+
+    $wallet_response = $wallet->getCurrencies();
+    //print_r($wallet_response);
+    $json_response = json_decode($wallet_response['response']);
+    $currencies = [];
+    if($wallet_response['status_code'] === 200) {
+        foreach ($json_response->currencies as $obj) {
+            $currencies[$obj->alphabetic_code] = $obj->alphabetic_code;
+        }
+    } else {
+        $currencies = ['USD' => 'USD', 'SGD' => 'SGD'];
+    }
+    $settings->add(new admin_setting_configselect('paygw_paynocchio/currency', 'Currency', '', 'USD', $currencies));
 
     $settings->add(new admin_setting_configtextarea('paygw_paynocchio/terms', get_string('terms', 'paygw_paynocchio'), '', get_string('terms_help', 'paygw_paynocchio')));
     $settings->add(new admin_setting_configtextarea('paygw_paynocchio/privacy', get_string('privacy', 'paygw_paynocchio'), '', get_string('privacy_help', 'paygw_paynocchio')));
@@ -60,10 +69,14 @@ if ($ADMIN->fulltree) {
         if(is_siteadmin($USER->id)){
             $wallet = new paynocchio_helper(uuid::generate());
             $wallet_response = $wallet->healtCheck();
-            $json_response = json_decode($wallet_response['response']);
-            if($json_response->status_code === 200) {
-                notification::success('Secret key is good. Integrated with Paynocchio successfully.');
-                set_config('paynocchiointegrated', 'true', 'paygw_paynocchio');
+            if($wallet_response['status_code'] === 200) {
+                $json_response = json_decode($wallet_response['response']);
+                if($json_response->status_code === 200) {
+                    notification::success('Secret key is good. Integrated with Paynocchio successfully.');
+                    set_config('paynocchiointegrated', 'true', 'paygw_paynocchio');
+                } else {
+                    set_config('paynocchiointegrated', 0, 'paygw_paynocchio');
+                }
             } else {
                 set_config('paynocchiointegrated', 0, 'paygw_paynocchio');
             }
@@ -75,10 +88,14 @@ if ($ADMIN->fulltree) {
         if(is_siteadmin($USER->id)){
             $wallet = new paynocchio_helper(uuid::generate());
             $wallet_response = $wallet->healtCheck();
-            $json_response = json_decode($wallet_response['response']);
-            if($json_response->status_code === 200) {
-                notification::success('Environment ID is good. Integrated with Paynocchio successfully.');
-                set_config('paynocchiointegrated', 'true', 'paygw_paynocchio');
+            if($wallet_response['status_code'] === 200) {
+                $json_response = json_decode($wallet_response['response']);
+                if($json_response->status_code === 200) {
+                    notification::success('Environment ID is good. Integrated with Paynocchio successfully.');
+                    set_config('paynocchiointegrated', 'true', 'paygw_paynocchio');
+                } else {
+                    set_config('paynocchiointegrated', 0, 'paygw_paynocchio');
+                }
             } else {
                 set_config('paynocchiointegrated', 0, 'paygw_paynocchio');
             }

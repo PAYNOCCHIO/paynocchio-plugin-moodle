@@ -95,6 +95,8 @@ if($user && $user->useruuid && $user->walletuuid) {
         echo 'wallet signature: '. $wallet->getSignature(). '<br/>';
         echo 'company signature: '. $wallet->getSignature(true). '<br/>';
         echo 'generated signature: '. hash("sha256", $wallet->get_secret() . "|" . $wallet->get_env() . "|" . $user->useruuid). '<br/>';
+        echo 'currencty code: '. $wallet->get_currency_info()['code']. '<br/>';
+        echo 'currencty info: '. $wallet->get_currency_info()['uuid']. '<br/>';
         echo '<br/>';
         echo 'Card balance limit: '. $wallet->getEnvironmentStructure()['card_balance_limit']. '<br/>';
 
