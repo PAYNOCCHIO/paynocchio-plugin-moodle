@@ -49,7 +49,6 @@ if ($ADMIN->fulltree) {
     $wallet = new paynocchio_helper(uuid::generate());
 
     $wallet_response = $wallet->getCurrencies();
-    //print_r($wallet_response);
     $json_response = json_decode($wallet_response['response']);
     $currencies = [];
     if($wallet_response['status_code'] === 200) {

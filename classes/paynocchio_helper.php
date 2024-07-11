@@ -88,7 +88,7 @@ class paynocchio_helper {
     {
         global $DB;
         $user = $DB->get_record('paygw_paynocchio_wallets', ['useruuid'  => $userId]);
-        $this->baseUrl = get_config('paygw_paynocchio', 'baseurl');
+        $this->baseUrl = get_config('paygw_paynocchio', 'baseurl') ? : 'https://wallet.stage.paynocchio.com';
         $this->secret = get_config('paygw_paynocchio', 'paynocchiosecret');
         $this->envId = get_config('paygw_paynocchio', 'environmentuuid');
         $this->userId = $userId;
@@ -108,7 +108,7 @@ class paynocchio_helper {
      * @return array
      * @throws \dml_exception
      */
-    private function sendRequest(string $method, string $url, string $body = "", bool $simple = false): array {
+    public function sendRequest(string $method, string $url, string $body = "", bool $simple = false): array {
         $headers = [
             'X-API-KEY: X-API-KEY',
             'Content-Type: application/json'
@@ -414,9 +414,7 @@ class paynocchio_helper {
      */
     public function getCurrencies(): array
     {
-        $data = [];
-
-        return $this->sendRequest('GET', '/currency/', json_encode($data));
+        return $this->sendRequest('GET', '/currency/');
     }
 
     /**
