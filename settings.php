@@ -36,7 +36,7 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_heading('paygw_paynocchio_settings', '', get_string('pluginname_desc', 'paygw_paynocchio')));
     $settings->add(new admin_setting_configtext('paygw_paynocchio/baseurl', get_string('baseurl', 'paygw_paynocchio'), get_string('baseurl', 'paygw_paynocchio'), 'https://wallet.stage.paynocchio.com', PARAM_TEXT));
     $settings->add(new admin_setting_configcheckbox('paygw_paynocchio/testmode', get_string('testmode', 'paygw_paynocchio'), get_string('testmode_help', 'paygw_paynocchio'), 0));
-    $settings->add(new admin_setting_configtext('paygw_paynocchio/brandname', get_string('brandname', 'paygw_paynocchio'), get_string('brandname_help', 'paygw_paynocchio'), 'Campus.Pay'));
+    $settings->add(new admin_setting_configtext('paygw_paynocchio/brandname', get_string('brandname', 'paygw_paynocchio'), get_string('brandname_help', 'paygw_paynocchio'), 'Academy.Pay'));
     $settings->add(new admin_setting_configtext('paygw_paynocchio/paynocchiocardbg', get_string('paynocchiocardbg', 'paygw_paynocchio'), get_string('paynocchiocardbg_help', 'paygw_paynocchio'), '#3b82f6', PARAM_TEXT));
 
     $settings->add(new admin_setting_configstoredfile('paygw_paynocchio/brandlogo', get_string('brandlogo', 'paygw_paynocchio'), get_string('brandlogo_help', 'paygw_paynocchio'), 'brandlogoimage'));

@@ -46,46 +46,50 @@ export const init = (pay, minimum_topup_amount, card_balance_limit, balance, cos
                     const message = modal.body.find('#topup_message');
                     const commission_message = modal.body.find('#commission_message');
 
-                    if(cost) {
+                    /*if(cost) {*/
                         debounce(() => {
                             calculateReward(minimum_topup_amount, 'payment_operation_add_money')
                                 .then(rewards => {
                                     if(rewards.bonuses_to_get > 0) {
-                                        message.text(`You will get ${rewards.bonuses_to_get} bonuses`);
-                                        commission_message.text(
-                                            `You will receive $${rewards.sum_without_commission}. 
-                                                Commission is $${rewards.commission}`
-                                        );
+                                        message.text(`You will get ${rewards.bonuses_to_get} bonuses.`);
+                                        commission_message.text(`You will receive $${rewards.sum_without_commission}. 
+                                        Commission is $${rewards.commission}.`);
                                     } else {
                                         message.text('');
+                                        message.addClass('loading');
                                         commission_message.text('');
+                                        commission_message.addClass('loading');
                                     }
+                                    message.removeClass('loading');
                                     commission_message.removeClass('loading');
                                 });
                         }, debounceTime);
-                    }
+                    /*}*/
 
                     input.on('keyup change', (evt) => {
                         const inputValue = parseFloat(evt.target.value);
                         if (inputValue + balance > card_balance_limit) {
                             message.text(`When replenishing the amount ${inputValue}, 
-                            the balance limit will exceed the set value ${card_balance_limit}`);
+                            the balance limit will exceed the set value ${card_balance_limit}.`);
                             button.addClass('disabled');
                         } else if (inputValue >= minimum_topup_amount) {
+                            message.addClass('loading');
                             commission_message.addClass('loading');
                             debounce(() => {
                                 calculateReward(inputValue, 'payment_operation_add_money')
                                     .then(rewards => {
                                         if(rewards.bonuses_to_get > 0) {
-                                            message.text(`You will get ${rewards.bonuses_to_get} bonuses`);
+                                            message.text(`You will get ${rewards.bonuses_to_get} bonuses.`);
                                             commission_message.text(
                                                 `You will receive $${rewards.sum_without_commission}. 
-                                                Commission: $${rewards.commission}`
-                                            );
+                                                Commission: $${rewards.commission}.`);
                                         } else {
                                             message.text('');
+                                            message.addClass('loading');
                                             commission_message.text('');
+                                            commission_message.addClass('loading');
                                         }
+                                        message.removeClass('loading');
                                         commission_message.removeClass('loading');
                                     });
                             }, debounceTime);
@@ -103,7 +107,7 @@ export const init = (pay, minimum_topup_amount, card_balance_limit, balance, cos
                             button.addClass('disabled');
                             modal.body.find('.paynocchio-spinner').toggleClass('active');
                             modal.body.find('#topup_message').text('Working...');
-
+                            modal.body.find('#commission_message').text('');
                             let redirectLink = window.location.href;
                             let regex = new RegExp('[?&](success=)[^&]+');
                             redirectLink = redirectLink.replace( regex , '');
@@ -117,9 +121,11 @@ export const init = (pay, minimum_topup_amount, card_balance_limit, balance, cos
                                 .then(data => {
                                     if (!data.is_error && data.url) {
                                         modal.body.find('#topup_message').text('OK... Sending to Stripe...');
+                                        modal.body.find('#commission_message').text('');
                                         window.location.replace(data.url);
                                     } else {
                                         modal.body.find('.paynocchio-spinner').toggleClass('active');
+                                        modal.body.find('#commission_message').text('');
                                         modal.body.find('#topup_message')
                                             .text(data.message);
                                         button.toggleClass('disabled');

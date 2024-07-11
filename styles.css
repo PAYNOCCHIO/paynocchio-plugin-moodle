@@ -54,9 +54,43 @@
     background-color: transparent;
 }
 .loading {
-    filter: blur(3px);
-    opacity: 0.5;
+    /*filter: blur(3px);
+    opacity: 0.5;*/
+    margin-top: 10px;
+    display: block;
+    height: 22.5px;
+    color: #e2e2e2;
+    background: #e2e2e2;
+    border-radius: 0.25rem;
+    animation: pay_pulse 2s linear infinite;
+    text-indent: 1000px;
+    overflow: hidden;
 }
+
+@keyframes pay_pulse {
+    0% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+#commission_message.loading {
+    width: 60%;
+    height: 21.5px;
+    margin-top: 2px;
+}
+
+#topup_message.loading {
+    height: 21.5px;
+    width: 40%;
+}
+
+
 .paynocchio-spinner.active {
     display: block;
 }
