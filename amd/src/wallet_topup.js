@@ -24,7 +24,7 @@
 import {handleTopUpClick, showModalWithTopup, calculateReward} from "./repository";
 
 let debounceTimer;
-const debounceTime = 300;
+const debounceTime = 500;
 
 const debounce = (callback, time) => {
     window.clearTimeout(debounceTimer);
