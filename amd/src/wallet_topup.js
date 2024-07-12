@@ -22,22 +22,9 @@
  */
 
 import {handleTopUpClick, showModalWithTopup, calculateReward} from "./repository";
+import debounce from "./debounce";
 
 const debounceTime = 500;
-
-/**
- * Debounce
- * @param {function} func
- * @param {number} wait
- * @return {(function(...[*]=): void)|*}
- */
-function debounce(func, wait) {
-    let timeout;
-    return function (...args) {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => func.apply(this, args), wait);
-    };
-}
 
 export const init = (pay, minimum_topup_amount, card_balance_limit, balance, cost, topupamount) => {
 
