@@ -24,12 +24,20 @@ import Templates from 'core/templates';
  * @copyright  2024 Paynocchio <ceo@paynocchio.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-let debounceTimer;
 const debounceTime = 300;
 
 const debounce = (callback, time) => {
-    window.clearTimeout(debounceTimer);
-    debounceTimer = window.setTimeout(callback, time);
+    return function perform(...args) {
+        let previousCall = this.lastCall;
+
+        this.lastCall = Date.now();
+
+        if (previousCall && this.lastCall - previousCall <= time) {
+            clearTimeout(this.lastCallTimer);
+        }
+
+        this.lastCallTimer = setTimeout(() => callback(...args), time);
+    };
 };
 
 const checkPayability = (bonuses, fullAmount, balance = '0', element, bonuses_conversion_rate) => {
