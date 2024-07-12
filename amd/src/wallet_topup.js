@@ -61,7 +61,7 @@ export const init = (pay, minimum_topup_amount, card_balance_limit, balance, cos
                     }, debounceTime); // Adjust the wait time as needed
 
                     debouncedCalculateReward(minimum_topup_amount);
-                    input.on('keyup change', (evt) => {
+                    input.on('keyup', (evt) => {
                         const inputValue = parseFloat(evt.target.value);
                         if (inputValue + balance > card_balance_limit) {
                             message.text(`When replenishing the amount ${inputValue},
