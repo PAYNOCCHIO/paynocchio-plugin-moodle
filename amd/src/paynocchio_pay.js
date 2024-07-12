@@ -16,6 +16,7 @@
 import {makePayment, calculateReward} from "./repository";
 import {exception as displayException} from 'core/notification';
 import Templates from 'core/templates';
+import debounce from "./debounce";
 
 /**
  * Paynocchio repository module to encapsulate all of the AJAX requests that can be sent for bank.
@@ -24,13 +25,7 @@ import Templates from 'core/templates';
  * @copyright  2024 Paynocchio <ceo@paynocchio.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-let debounceTimer;
 const debounceTime = 500;
-
-const debounce = (callback, time) => {
-    window.clearTimeout(debounceTimer);
-    debounceTimer = window.setTimeout(callback, time);
-};
 
 const checkPayability = (bonuses, fullAmount, balance = '0', element, bonuses_conversion_rate) => {
     if(parseFloat(bonuses) * parseFloat(bonuses_conversion_rate) + parseFloat(balance) < parseFloat(fullAmount)) {
@@ -88,6 +83,8 @@ const changeBonusesValue = (fullAmount, bonuses) => {
         });
 };
 
+const debouncedChangeBonusesValue = debounce((fullAmount, bonuses) => changeBonusesValue(fullAmount, bonuses), debounceTime);
+
 export const init = (component,
                      paymentArea,
                      description,
@@ -121,13 +118,13 @@ export const init = (component,
                 input.value = range.value;
                 checkPayability(bonuses, fullAmount, balance, paynocchio_pay_button, bonuses_conversion_rate);
                 changePayButtonValues(fullAmount, bonuses, bonuses_conversion_rate);
-                debounce(() => changeBonusesValue(fullAmount, bonuses * bonuses_conversion_rate), debounceTime);
+                debouncedChangeBonusesValue(fullAmount, bonuses * bonuses_conversion_rate);
             });
             range.addEventListener('input', () => {
                 bonuses = range.value;
                 input.value = range.value;
                 checkPayability(bonuses, fullAmount, balance, paynocchio_pay_button, bonuses_conversion_rate);
-                debounce(() => changeBonusesValue(fullAmount, bonuses * bonuses_conversion_rate), debounceTime);
+                debouncedChangeBonusesValue(fullAmount, bonuses * bonuses_conversion_rate);
                 changePayButtonValues(fullAmount, bonuses, bonuses_conversion_rate);
             });
         } else {
