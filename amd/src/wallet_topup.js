@@ -23,13 +23,21 @@
 
 import {handleTopUpClick, showModalWithTopup, calculateReward} from "./repository";
 
-let debounceTimer;
 const debounceTime = 500;
 
-const debounce = (callback, time) => {
-    window.clearTimeout(debounceTimer);
-    debounceTimer = window.setTimeout(callback, time);
-};
+/**
+ * Debounce
+ * @param {function} func
+ * @param {number} wait
+ * @return {(function(...[*]=): void)|*}
+ */
+function debounce(func, wait) {
+    let timeout;
+    return function (...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), wait);
+    };
+}
 
 export const init = (pay, minimum_topup_amount, card_balance_limit, balance, cost, topupamount) => {
 
@@ -45,25 +53,27 @@ export const init = (pay, minimum_topup_amount, card_balance_limit, balance, cos
                     const input = modal.body.find('#top_up_amount');
                     const message = modal.body.find('#topup_message');
                     const commission_message = modal.body.find('#commission_message');
+                    const debouncedCalculateReward = debounce((inputValue) => {
+                        calculateReward(inputValue, 'payment_operation_add_money')
+                            .then(rewards => {
+                                if (rewards.bonuses_to_get > 0) {
+                                    message.text(`You will get ${rewards.bonuses_to_get} bonuses.`);
+                                    commission_message.text(
+                                        `You will receive $${rewards.sum_without_commission}. 
+                    Commission: $${rewards.commission}.`
+                                    );
+                                } else {
+                                    message.text('');
+                                    message.addClass('loading');
+                                    commission_message.text('');
+                                    commission_message.addClass('loading');
+                                }
+                                message.removeClass('loading');
+                                commission_message.removeClass('loading');
+                            });
+                    }, debounceTime); // Adjust the wait time as needed
 
-                    /*if(cost) {*/
-                    calculateReward(minimum_topup_amount, 'payment_operation_add_money')
-                        .then(rewards => {
-                            if(rewards.bonuses_to_get > 0) {
-                                message.text(`You will get ${rewards.bonuses_to_get} bonuses.`);
-                                commission_message.text(`You will receive $${rewards.sum_without_commission}. 
-                                        Commission is $${rewards.commission}.`);
-                            } else {
-                                message.text('');
-                                message.addClass('loading');
-                                commission_message.text('');
-                                commission_message.addClass('loading');
-                            }
-                            message.removeClass('loading');
-                            commission_message.removeClass('loading');
-                        });
-                    /*}*/
-
+                    debouncedCalculateReward(minimum_topup_amount);
                     input.on('keyup change', (evt) => {
                         const inputValue = parseFloat(evt.target.value);
                         if (inputValue + balance > card_balance_limit) {
@@ -74,24 +84,7 @@ export const init = (pay, minimum_topup_amount, card_balance_limit, balance, cos
                         } else if (inputValue >= minimum_topup_amount) {
                             message.addClass('loading');
                             commission_message.addClass('loading');
-                            debounce(() => {
-                                calculateReward(inputValue, 'payment_operation_add_money')
-                                    .then(rewards => {
-                                        if(rewards.bonuses_to_get > 0) {
-                                            message.text(`You will get ${rewards.bonuses_to_get} bonuses.`);
-                                            commission_message.text(
-                                                `You will receive $${rewards.sum_without_commission}. 
-                                                Commission: $${rewards.commission}.`);
-                                        } else {
-                                            message.text('');
-                                            message.addClass('loading');
-                                            commission_message.text('');
-                                            commission_message.addClass('loading');
-                                        }
-                                        message.removeClass('loading');
-                                        commission_message.removeClass('loading');
-                                    });
-                            }, debounceTime);
+                            debouncedCalculateReward(evt.target.value);
 
                             button.removeClass('disabled');
                         } else {
