@@ -23,20 +23,12 @@
 
 import {handleTopUpClick, showModalWithTopup, calculateReward} from "./repository";
 
+let debounceTimer;
 const debounceTime = 300;
 
 const debounce = (callback, time) => {
-    return function perform(...args) {
-        let previousCall = this.lastCall;
-
-        this.lastCall = Date.now();
-
-        if (previousCall && this.lastCall - previousCall <= time) {
-            clearTimeout(this.lastCallTimer);
-        }
-
-        this.lastCallTimer = setTimeout(() => callback(...args), time);
-    };
+    window.clearTimeout(debounceTimer);
+    debounceTimer = window.setTimeout(callback, time);
 };
 
 export const init = (pay, minimum_topup_amount, card_balance_limit, balance, cost, topupamount) => {
