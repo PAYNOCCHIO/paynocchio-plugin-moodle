@@ -61,7 +61,6 @@ export const init = (pay, minimum_topup_amount, card_balance_limit, balance, cos
                                     } else {
                                         message.text('');
                                         message.addClass('loading');
-                                        commission_message.text('');
                                         commission_message.addClass('loading');
                                     }
                                     button.removeClass('disabled');

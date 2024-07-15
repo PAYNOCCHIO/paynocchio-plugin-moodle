@@ -21,7 +21,10 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-import {handleWithdrawClick, showModalWithWithdraw} from "./repository";
+import {calculateReward, handleWithdrawClick, showModalWithWithdraw} from "./repository";
+import debounce from "./debounce";
+
+const debounceTime = 500;
 
 const checkAvailability = (inputVal, balance) => {
 
@@ -35,7 +38,7 @@ const checkAvailability = (inputVal, balance) => {
     return true;
 };
 
-export const init = (balance) => {
+export const init = (balance, card_balance_limit) => {
     const paynocchio_wallet_withdraw_button = document.getElementById('paynocchio_withdraw_button');
 
     if (paynocchio_wallet_withdraw_button) {
@@ -46,6 +49,7 @@ export const init = (balance) => {
                     modal.setTitle('Withdraw from the Wallet');
                     const input = modal.body.find('#withdraw_amount');
                     const button = modal.body.find('#withdraw_button');
+                    const message = modal.body.find('#withdraw_message');
 
                     if(!checkAvailability(input.val(), balance)) {
                         button.addClass('disabled');
@@ -57,6 +61,34 @@ export const init = (balance) => {
                         } else {
                             button.removeClass('disabled');
                         }
+                        const debouncedCalculateReward = debounce((inputValue) => {
+                            message.addClass('loading');
+                            message.addClass('loading');
+                            calculateReward(inputValue, 'payment_operation_add_money')
+                                .then((rewards) => {
+                                    if (inputValue + balance > card_balance_limit) {
+                                        message.text(`When replenishing the amount ${inputValue},
+                            the balance limit will exceed the set value ${card_balance_limit}.`);
+                                        message.text('');
+                                        button.addClass('disabled');
+                                    } else if (inputValue <= balance) {
+                                        message.addClass('loading');
+                                        message.text(
+                                            `You will receive $${rewards.sum_without_commission}. 
+                    Commission: $${rewards.commission}.`
+                                        );
+                                        button.removeClass('disabled');
+                                    } else {
+                                        message.text('Please enter amount more than minimum replenishment amount.');
+                                        message.text('');
+                                        button.addClass('disabled');
+                                    }
+                                    message.removeClass('loading');
+                                    message.removeClass('loading');
+                                });
+                        }, debounceTime); // Adjust the wait time as needed
+
+                        debouncedCalculateReward(evt.target.value);
                     });
 
                     button.click(() => {
