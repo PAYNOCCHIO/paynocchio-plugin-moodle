@@ -119,24 +119,27 @@ if($user && $user->useruuid && $user->walletuuid) {
     $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_activation', 'init', ['user_id' => $USER->id]);
     $useruuid = \core\uuid::generate();
     $wallet = new paynocchio_helper($useruuid);
-    $data = [
-        'wallet_balance' => 0,
-        'wallet_bonuses' => 0,
-        'server_error' => !$wallet->checkHealth(),
-        'wallet_card' => false,
-        'wallet_status' => '',
-        'wallet_code' => '',
-        'wallet_uuid' => '',
-        'user_uuid' => '',
-        'user_id' => $USER->id,
-        'brandname' => get_config('paygw_paynocchio', 'brandname'),
-        'cardBg' => $cardBg,
-        'logo' => paynocchio_helper::custom_logo(),
-        'username' => $USER->firstname . ' ' . $USER->lastname,
-    ];
+    if($wallet->checkHealth()) {
+        $data = [
+            'wallet_balance' => 0,
+            'wallet_bonuses' => 0,
+            'wallet_card' => false,
+            'wallet_status' => '',
+            'wallet_code' => '',
+            'wallet_uuid' => '',
+            'user_uuid' => '',
+            'user_id' => $USER->id,
+            'brandname' => get_config('paygw_paynocchio', 'brandname'),
+            'cardBg' => $cardBg,
+            'logo' => paynocchio_helper::custom_logo(),
+            'username' => $USER->firstname . ' ' . $USER->lastname,
+        ];
 
-    echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet_all_in_one_cabinet', $data);
-    echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_congratz', $data);
+        echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet_all_in_one_cabinet', $data);
+        echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_congratz', $data);
+    } else {
+        echo $OUTPUT->render_from_template('paygw_paynocchio/server_error', []);
+    }
 }
 
 echo $OUTPUT->footer();
