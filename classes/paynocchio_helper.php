@@ -555,7 +555,7 @@ class paynocchio_helper {
         $wallet_fixed_commission = $wallet_structure['wallet_fixed_commission'] ?? 0;
         $wallet_commission_coefficient = 1 - ($wallet_percentage_commission / 100);
 
-        return round(($sum + $wallet_fixed_commission) / $wallet_commission_coefficient + 0.01, 2);
+        return floor(($sum + $wallet_fixed_commission) / $wallet_commission_coefficient * 10) / 10 + 0.01;
     }
 
     /**

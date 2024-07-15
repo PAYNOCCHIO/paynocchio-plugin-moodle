@@ -76,7 +76,6 @@ if($user && $user->useruuid && $user->walletuuid) {
         'username' => $USER->firstname . ' ' . $USER->lastname,
         ];
 
-
         echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet_all_in_one_cabinet', $data);
 
         $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_status_control', 'init', ['wallet_uuid' => $user->walletuuid]);
