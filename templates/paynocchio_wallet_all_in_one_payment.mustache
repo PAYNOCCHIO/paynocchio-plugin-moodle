@@ -30,7 +30,6 @@
     {}
 
 }}
-{{^server_error}}
 <div class="paynocchio-wallet-card-wrapper">
     {{^wallet_card}}
         <div class="paynocchio-wallet-tab paynocchio-banner">
@@ -280,8 +279,3 @@
     </div>
     {{/wallet_active}}
 </div>
-{{/server_error}}
-
-{{#server_error}}
-    <p class="py-4">Some error has occurred. Please reload the page.</p>
-{{/server_error}}

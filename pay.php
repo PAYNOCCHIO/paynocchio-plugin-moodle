@@ -81,102 +81,105 @@ if(paynocchio_helper::user_has_payed($itemid, (int) $USER->id)) {
         $wallet_uuid = 0;
     }
 
-    $environment_structure = $wallet->getEnvironmentStructure();
+    $walletIsHealthy = $wallet->checkHealth();
 
-    $conversion_rate_when_payment = $environment_structure['bonus_conversion_rate'] ?: 1;
-    $minimum_topup_amount = $environment_structure['minimum_topup_amount'];
-    $card_balance_limit = $environment_structure['card_balance_limit'];
+    if($walletIsHealthy) {
+        $environment_structure = $wallet->getEnvironmentStructure();
 
-    $course_rounded_cost = helper::get_rounded_cost($payable->get_amount(), $currency, $surcharge);
+        $conversion_rate_when_payment = $environment_structure['bonus_conversion_rate'] ?: 1;
+        $minimum_topup_amount = $environment_structure['minimum_topup_amount'];
+        $card_balance_limit = $environment_structure['card_balance_limit'];
 
-    $calculateNeedToTopUpWithCommission = $wallet->calculateNeedToTopUpWithCommission($course_rounded_cost);
+        $course_rounded_cost = helper::get_rounded_cost($payable->get_amount(), $currency, $surcharge);
 
-    $wallet_balance_response = $wallet->getWalletBalance($wallet_uuid) ?: 0;
-    $wallet_balance = $wallet_balance_response['balance'];
-    $max_bonuses_to_spend = $wallet_balance_response['bonuses'];
-    $money_bonuses_equivalent = $max_bonuses_to_spend * $conversion_rate_when_payment;
-    $wallet_response_code = $wallet_balance_response['code'];
-    $rewarding_rules = $environment_structure['rewarding_group']->rewarding_rules;
-    $healtCheck = $wallet->checkHealth();
+        $calculateNeedToTopUpWithCommission = $wallet->calculateNeedToTopUpWithCommission($course_rounded_cost);
 
+        $wallet_balance_response = $wallet->getWalletBalance($wallet_uuid) ?: 0;
+        $wallet_balance = $wallet_balance_response['balance'];
+        $max_bonuses_to_spend = $wallet_balance_response['bonuses'];
+        $money_bonuses_equivalent = $max_bonuses_to_spend * $conversion_rate_when_payment;
+        $wallet_response_code = $wallet_balance_response['code'];
+        $rewarding_rules = $environment_structure['rewarding_group']->rewarding_rules;
 
-    if ($wallet_response_code == 'SUSPEND') {
-        $wallet_status_readable = 'Wallet suspended';
-    } elseif ($wallet_response_code == 'BLOCKED') {
-        $wallet_status_readable = 'Wallet blocked';
-    } else {
-        $wallet_status_readable = 'Wallet activated';
-    }
-
-    if ($wallet_balance_response['number']) {
-        $wallet_card = chunk_split($wallet_balance_response['number'], 4, ' ');
-    } else {
-        $wallet_card = false;
-    }
-
-    $data = [
-        'wallet_balance' => $wallet_balance ?? 0,
-        'wallet_bonuses' => $calculateNeedToTopUpWithCommission['max_bonuses_to_spend'] ?? 0,
-        'wallet_card' => $wallet_card,
-        'wallet_status' => $wallet_balance_response['status'],
-        'wallet_status_readable' => $wallet_status_readable,
-        'wallet_code' => $wallet_response_code,
-        'wallet_uuid' => $wallet_uuid,
-        'user_uuid' => $useruuid,
-        'max_bonus' => $calculateNeedToTopUpWithCommission['max_bonus'] ?? 0,
-        'full_amount' => $course_rounded_cost,
-        'can_pay' => $wallet_balance + $money_bonuses_equivalent >= $course_rounded_cost,
-        'wallet_active' => $wallet_response_code === "ACTIVE",
-        'wallet_suspend' => $wallet_response_code === "SUSPEND",
-        'wallet_blocked' => $wallet_response_code === "BLOCKED",
-        'logo' => paynocchio_helper::custom_logo(),
-        'description' => $pagetitle,
-        'cardBg' => $cardBg,
-        'brandname' => get_config('paygw_paynocchio', 'brandname'),
-        'username' => $USER->firstname . ' ' . $USER->lastname,
-        'server_error' => !$healtCheck,
-        'allow_withdraw' => $wallet_response_code === "ACTIVE" && $wallet_balance > 0,
-    ];
-
-    echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet_all_in_one_payment', $data);
-
-    if($user && $useruuid && $wallet_uuid) {
-
-        if($wallet_response_code === "ACTIVE") {
-            $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_topup', 'init', [
-                'pay' => true,
-                'minimum_topup_amount' => $minimum_topup_amount,
-                'card_balance_limit' => $card_balance_limit,
-                'balance' => $wallet_balance,
-                'cost' => $course_rounded_cost ?? null,
-                'topupamount' => $minimum_topup_amount < $course_rounded_cost ? $course_rounded_cost : $minimum_topup_amount,
-            ]);
-
-            $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_withdraw', 'init', [
-                'balance' => $wallet_balance,
-            ]);
+        if ($wallet_response_code == 'SUSPEND') {
+            $wallet_status_readable = 'Wallet suspended';
+        } elseif ($wallet_response_code == 'BLOCKED') {
+            $wallet_status_readable = 'Wallet blocked';
+        } else {
+            $wallet_status_readable = 'Wallet activated';
         }
 
-        $PAGE->requires->js_call_amd('paygw_paynocchio/paynocchio_pay', 'init', [
-            'component' => $component,
-            'paymentarea' => $paymentarea,
-            'description' => $description,
-            'itemid' => $itemid,
-            'fullAmount' => $course_rounded_cost,
-            'balance' => $wallet_balance,
-            'bonuses_conversion_rate' => $conversion_rate_when_payment,
-        ]);
+        if ($wallet_balance_response['number']) {
+            $wallet_card = chunk_split($wallet_balance_response['number'], 4, ' ');
+        } else {
+            $wallet_card = false;
+        }
 
-        $PAGE->requires->js_call_amd('paygw_paynocchio/terms_and_conditions', 'init', []);
-        echo $OUTPUT->render_from_template('paygw_paynocchio/terms_and_conditions', []);
+        $data = [
+            'wallet_balance' => $wallet_balance ?? 0,
+            'wallet_bonuses' => $calculateNeedToTopUpWithCommission['max_bonuses_to_spend'] ?? 0,
+            'wallet_card' => $wallet_card,
+            'wallet_status' => $wallet_balance_response['status'],
+            'wallet_status_readable' => $wallet_status_readable,
+            'wallet_code' => $wallet_response_code,
+            'wallet_uuid' => $wallet_uuid,
+            'user_uuid' => $useruuid,
+            'max_bonus' => $calculateNeedToTopUpWithCommission['max_bonus'] ?? 0,
+            'full_amount' => $course_rounded_cost,
+            'can_pay' => $wallet_balance + $money_bonuses_equivalent >= $course_rounded_cost,
+            'wallet_active' => $wallet_response_code === "ACTIVE",
+            'wallet_suspend' => $wallet_response_code === "SUSPEND",
+            'wallet_blocked' => $wallet_response_code === "BLOCKED",
+            'logo' => paynocchio_helper::custom_logo(),
+            'description' => $pagetitle,
+            'cardBg' => $cardBg,
+            'brandname' => get_config('paygw_paynocchio', 'brandname'),
+            'username' => $USER->firstname . ' ' . $USER->lastname,
+            'allow_withdraw' => $wallet_response_code === "ACTIVE" && $wallet_balance > 0,
+        ];
 
-        $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_status_control', 'init', ['wallet_uuid' => $user->walletuuid]);
+        echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet_all_in_one_payment', $data);
 
+        if($user && $useruuid && $wallet_uuid) {
+
+            if($wallet_response_code === "ACTIVE") {
+                $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_topup', 'init', [
+                    'pay' => true,
+                    'minimum_topup_amount' => $minimum_topup_amount,
+                    'card_balance_limit' => $card_balance_limit,
+                    'balance' => $wallet_balance,
+                    'cost' => $course_rounded_cost ?? null,
+                    'topupamount' => $minimum_topup_amount < $course_rounded_cost ? $course_rounded_cost : $minimum_topup_amount,
+                ]);
+
+                $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_withdraw', 'init', [
+                    'balance' => $wallet_balance,
+                ]);
+            }
+
+            $PAGE->requires->js_call_amd('paygw_paynocchio/paynocchio_pay', 'init', [
+                'component' => $component,
+                'paymentarea' => $paymentarea,
+                'description' => $description,
+                'itemid' => $itemid,
+                'fullAmount' => $course_rounded_cost,
+                'balance' => $wallet_balance,
+                'bonuses_conversion_rate' => $conversion_rate_when_payment,
+            ]);
+
+            $PAGE->requires->js_call_amd('paygw_paynocchio/terms_and_conditions', 'init', []);
+            echo $OUTPUT->render_from_template('paygw_paynocchio/terms_and_conditions', []);
+
+            $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_status_control', 'init', ['wallet_uuid' => $user->walletuuid]);
+
+        } else {
+
+            $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_activation', 'init', ['user_id' => $USER->id]);
+
+            echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_congratz', $data);
+        }
     } else {
-
-        $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_activation', 'init', ['user_id' => $USER->id]);
-
-        echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_congratz', $data);
+        echo $OUTPUT->render_from_template('paygw_paynocchio/server_error', []);
     }
 
     echo "</div>";

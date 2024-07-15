@@ -31,17 +31,21 @@ if($success) {
 if($user && $user->useruuid && $user->walletuuid) {
 
     $wallet = new paynocchio_helper($user->useruuid);
-    $wallet_balance_response = $wallet->getWalletBalance($user->walletuuid);
-    $wallet_balance = $wallet_balance_response['balance'];
-    $wallet_bonuses = $wallet_balance_response['bonuses'];
-    $wallet_response_code = $wallet_balance_response['code'];
-    $minimum_topup_amount = $wallet->getEnvironmentStructure()['minimum_topup_amount'];
-    $card_balance_limit = $wallet->getEnvironmentStructure()['card_balance_limit'];
-    $rewarding_rules = $wallet->getEnvironmentStructure()['rewarding_group']->rewarding_rules;
-    $healtCheck = $wallet->checkHealth();
+    $walletIsHealthy = $wallet->checkHealth();
+
+    if($walletIsHealthy) {
+
+        $wallet_balance_response = $wallet->getWalletBalance($user->walletuuid);
+        $wallet_balance = $wallet_balance_response['balance'];
+        $wallet_bonuses = $wallet_balance_response['bonuses'];
+        $wallet_response_code = $wallet_balance_response['code'];
+        $minimum_topup_amount = $wallet->getEnvironmentStructure()['minimum_topup_amount'];
+        $card_balance_limit = $wallet->getEnvironmentStructure()['card_balance_limit'];
+        $rewarding_rules = $wallet->getEnvironmentStructure()['rewarding_group']->rewarding_rules;
 
 
-    if($wallet_response_code === "ACTIVE") {
+
+        if($wallet_response_code === "ACTIVE") {
         $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_topup', 'init', [
             'pay' => false,
             'minimum_topup_amount' => $minimum_topup_amount,
@@ -52,15 +56,14 @@ if($user && $user->useruuid && $user->walletuuid) {
         $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_withdraw', 'init', [
             'balance' => $wallet_balance,
         ]);
-    }
+        }
 
-    $data = [
+        $data = [
         'wallet_balance' => $wallet_balance,
         'wallet_bonuses' => $wallet_bonuses,
         'wallet_card' => chunk_split($wallet_balance_response['number'], 4, ' '),
         'wallet_status' => $wallet_balance_response['status'],
         'wallet_code' => $wallet_response_code,
-        'server_error' => !$healtCheck,
         'wallet_blocked' => $wallet_response_code === "BLOCKED",
         'wallet_active' => $wallet_response_code === "ACTIVE",
         'minimum_topup_amount' => $wallet->getEnvironmentStructure()['minimum_topup_amount'],
@@ -71,20 +74,25 @@ if($user && $user->useruuid && $user->walletuuid) {
         'logo' => paynocchio_helper::custom_logo(),
         'wallet_activated' => true,
         'username' => $USER->firstname . ' ' . $USER->lastname,
-    ];
+        ];
 
-    echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet_all_in_one_cabinet', $data);
 
-    $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_status_control', 'init', ['wallet_uuid' => $user->walletuuid]);
-    echo $OUTPUT->render_from_template('paygw_paynocchio/wallet_status_control', $data);
+        echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet_all_in_one_cabinet', $data);
 
-    $transactions = $DB->get_records('paygw_paynocchio_transactions', ['userid'  => $USER->id], 'timecreated DESC');
-    $count_transactions = $DB->count_records('paygw_paynocchio_transactions', ['userid'  => $USER->id]);
-    $wallet_transactions_data = [
-        'transactions' => array_values($transactions),
-        'hastransactions' => $count_transactions > 0,
-    ];
-    echo $OUTPUT->render_from_template('paygw_paynocchio/wallet_transactions', $wallet_transactions_data);
+        $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_status_control', 'init', ['wallet_uuid' => $user->walletuuid]);
+        echo $OUTPUT->render_from_template('paygw_paynocchio/wallet_status_control', $data);
+
+        $transactions = $DB->get_records('paygw_paynocchio_transactions', ['userid'  => $USER->id], 'timecreated DESC');
+        $count_transactions = $DB->count_records('paygw_paynocchio_transactions', ['userid'  => $USER->id]);
+        $wallet_transactions_data = [
+            'transactions' => array_values($transactions),
+            'hastransactions' => $count_transactions > 0,
+        ];
+        echo $OUTPUT->render_from_template('paygw_paynocchio/wallet_transactions', $wallet_transactions_data);
+    } else {
+        echo $OUTPUT->render_from_template('paygw_paynocchio/server_error', []);
+    }
+
 
     if(is_siteadmin($USER->id)) {
         echo '<!--';

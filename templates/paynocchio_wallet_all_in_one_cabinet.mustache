@@ -29,7 +29,6 @@
     Example context (json):
     {}
 }}
-{{^server_error}}
 <div class="paynocchio-account">
     <h1 class="paynocchio-my8 paynocchio-center paynocchio-wfull">Academy.Pay Rewards Wallet</h1>
     {{^wallet_activated}}
@@ -159,8 +158,3 @@
         </div>
     </div>
 </div>
-{{/server_error}}
-
-{{#server_error}}
-    <p class="py-4">Some error has occurred. Please reload the page.</p>
-{{/server_error}}

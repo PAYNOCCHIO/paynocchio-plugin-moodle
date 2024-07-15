@@ -236,9 +236,13 @@ class paynocchio_helper {
     public function checkHealth()
     {
         $wallet_response = $this->healtCheck();
-        $json_response = json_decode($wallet_response['response']);
-        if($json_response->status_code === 200) {
-            return true;
+        if($wallet_response['status_code'] === 200) {
+            $json_response = json_decode($wallet_response['response']);
+            if($json_response->status_code === 200) {
+                return true;
+            } else {
+                return false;
+            }
         } else {
             return false;
         }
@@ -498,6 +502,7 @@ class paynocchio_helper {
                 }
             }
         }
+
         return [
             'totalValue' => $value_type === 'percentage' ? $totalValue / $conversion_rate / 100 : $totalValue,
             'minAmount' => $minAmount,
