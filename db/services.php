@@ -51,6 +51,15 @@ $functions = [
         'loginrequired' => false,
     ],
 
+    'paygw_paynocchio_check_withdrawal' => [
+        'classname'   => 'paygw_paynocchio\external\check_withdrawal',
+        'classpath'   => '',
+        'description' => 'Check if withdrawal is possible.',
+        'type'        => 'write',
+        'ajax'        => true,
+        'loginrequired' => false,
+    ],
+
     'paygw_paynocchio_withdraw_from_wallet' => [
         'classname'   => 'paygw_paynocchio\external\withdraw_from_wallet',
         'classpath'   => '',

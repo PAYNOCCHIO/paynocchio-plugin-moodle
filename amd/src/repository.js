@@ -283,6 +283,23 @@ export const calculateReward = (amount, operationType) => {
 };
 
 /**
+ * Check if Withdrawal is OK and calculate Commission
+ *
+ * @param {number} amount id of the Payment to check
+ * @returns {*}
+ */
+export const checkWithdrawal = (amount) => {
+    const request = {
+        methodname: 'paygw_paynocchio_check_withdrawal',
+        args: {
+            amount,
+        },
+    };
+
+    return Ajax.call([request])[0];
+};
+
+/**
  * Call server to get conf.
  *
  * @param {string} conf_name Name of the conf

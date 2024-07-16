@@ -47,7 +47,7 @@ class topup_complete extends external_api {
             'environment_uuid' => new external_value(PARAM_TEXT, 'The uuid coming back from Paynocchio'),
             'user_uuid' => new external_value(PARAM_TEXT, 'The user_uuid coming back from Paynocchio'),
             'wallet_uuid' => new external_value(PARAM_TEXT, 'The wallet_uuid coming back from Paynocchio'),
-            'amount' => new external_value(PARAM_TEXT, 'The amount coming back from Paynocchio'),
+            'amount' => new external_value(PARAM_FLOAT, 'The amount coming back from Paynocchio'),
             'currency' => new external_value(PARAM_TEXT, 'The currency coming back from Paynocchio'),
             'type_operation' => new external_value(PARAM_TEXT, 'The type_operation coming back from Paynocchio'),
             'status_type' => new external_value(PARAM_TEXT, 'The status type coming back from Paynocchio'),
@@ -65,7 +65,7 @@ class topup_complete extends external_api {
      * @param string $environment_uuid Paynocchio environment_uuid
      * @param string $user_uuid Paynocchio user_uuid
      * @param string $wallet_uuid Paynocchio wallet_uuid
-     * @param string $amount Paynocchio amount
+     * @param float $amount Paynocchio amount
      * @param string $currency Paynocchio currency
      * @param string $type_operation Paynocchio type_operation
      * @param string $status_type Paynocchio status type

@@ -35,13 +35,13 @@ if($user && $user->useruuid && $user->walletuuid) {
 
     if($walletIsHealthy) {
 
+        $envStructure = $wallet->getEnvironmentStructure();
         $wallet_balance_response = $wallet->getWalletBalance($user->walletuuid);
         $wallet_balance = $wallet_balance_response['balance'];
         $wallet_bonuses = $wallet_balance_response['bonuses'];
         $wallet_response_code = $wallet_balance_response['code'];
-        $minimum_topup_amount = $wallet->getEnvironmentStructure()['minimum_topup_amount'];
-        $card_balance_limit = $wallet->getEnvironmentStructure()['card_balance_limit'];
-        $rewarding_rules = $wallet->getEnvironmentStructure()['rewarding_group']->rewarding_rules;
+        $minimum_topup_amount = $envStructure['minimum_topup_amount'];
+        $card_balance_limit = $envStructure['card_balance_limit'];
 
         if($wallet_response_code === "ACTIVE") {
         $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_topup', 'init', [
@@ -65,10 +65,10 @@ if($user && $user->useruuid && $user->walletuuid) {
         'wallet_code' => $wallet_response_code,
         'wallet_blocked' => $wallet_response_code === "BLOCKED",
         'wallet_active' => $wallet_response_code === "ACTIVE",
-        'minimum_topup_amount' => $wallet->getEnvironmentStructure()['minimum_topup_amount'],
-        'bonus_conversion_rate' => $wallet->getEnvironmentStructure()['bonus_conversion_rate'],
-        'bonus_to_spend' => $wallet_balance * $wallet->getEnvironmentStructure()['bonus_conversion_rate'],
-        'allow_withdraw' => $wallet_response_code === "ACTIVE" && $wallet_balance > 0,
+        'minimum_topup_amount' => $envStructure['minimum_topup_amount'],
+        'bonus_conversion_rate' => $envStructure['bonus_conversion_rate'],
+        'bonus_to_spend' => $wallet_balance * $envStructure['bonus_conversion_rate'],
+        'allow_withdraw' => $wallet_response_code === "ACTIVE" && $envStructure['allow_withdraw'] && $wallet_balance > 0,
         'cardBg' => $cardBg,
         'logo' => paynocchio_helper::custom_logo(),
         'wallet_activated' => true,
@@ -104,11 +104,11 @@ if($user && $user->useruuid && $user->walletuuid) {
         echo 'currencty code: '. $wallet->get_currency_info()['code']. '<br/>';
         echo 'currencty info: '. $wallet->get_currency_info()['uuid']. '<br/>';
         echo '<br/>';
-        echo 'Card balance limit: '. $wallet->getEnvironmentStructure()['card_balance_limit']. '<br/>';
+        echo 'Card balance limit: '. $envStructure['card_balance_limit']. '<br/>';
 
 
         echo '<pre>';
-        print_r($wallet->getEnvironmentStructure()['rewarding_group']);
+        print_r($envStructure['rewarding_group']);
         echo '</pre>';
         echo '-->';
     }

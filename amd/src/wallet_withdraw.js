@@ -23,6 +23,7 @@
 
 import {calculateReward, handleWithdrawClick, showModalWithWithdraw} from "./repository";
 import debounce from "./debounce";
+let debouncedCalculateReward;
 
 const debounceTime = 500;
 
@@ -53,42 +54,46 @@ export const init = (balance, card_balance_limit) => {
 
                     if(!checkAvailability(input.val(), balance)) {
                         button.addClass('disabled');
+                        message.text('Operation is not permitted');
                     }
 
                     input.keyup(evt => {
                         if(!checkAvailability(evt.target.value, balance)) {
                             button.addClass('disabled');
+                            message.text('Operation is not permitted');
+                            clearTimeout(debouncedCalculateReward);
                         } else {
                             button.removeClass('disabled');
-                        }
-                        const debouncedCalculateReward = debounce((inputValue) => {
-                            message.addClass('loading');
-                            message.addClass('loading');
-                            calculateReward(inputValue, 'payment_operation_add_money')
-                                .then((rewards) => {
-                                    if (inputValue + balance > card_balance_limit) {
-                                        message.text(`When replenishing the amount ${inputValue},
+                            debouncedCalculateReward = debounce((inputValue) => {
+                                message.addClass('loading');
+                                message.addClass('loading');
+                                calculateReward(inputValue, 'payment_operation_add_money')
+                                    .then((rewards) => {
+                                        if (inputValue + balance > card_balance_limit) {
+                                            message.text(`When replenishing the amount ${inputValue},
                             the balance limit will exceed the set value ${card_balance_limit}.`);
-                                        message.text('');
-                                        button.addClass('disabled');
-                                    } else if (inputValue <= balance) {
-                                        message.addClass('loading');
-                                        message.text(
-                                            `You will receive $${rewards.sum_without_commission}. 
+                                            message.text('');
+                                            button.addClass('disabled');
+                                        } else if (inputValue <= balance) {
+                                            message.addClass('loading');
+                                            message.text(
+                                                `You will receive $${rewards.sum_without_commission}. 
                     Commission: $${rewards.commission}.`
-                                        );
-                                        button.removeClass('disabled');
-                                    } else {
-                                        message.text('Please enter amount more than minimum replenishment amount.');
-                                        message.text('');
-                                        button.addClass('disabled');
-                                    }
-                                    message.removeClass('loading');
-                                    message.removeClass('loading');
-                                });
-                        }, debounceTime); // Adjust the wait time as needed
+                                            );
+                                            button.removeClass('disabled');
+                                        } else {
+                                            message.text('Please enter amount more than minimum replenishment amount.');
+                                            message.text('');
+                                            button.addClass('disabled');
+                                        }
+                                        message.removeClass('loading');
+                                        message.removeClass('loading');
+                                    });
+                            }, debounceTime); // Adjust the wait time as needed
 
-                        debouncedCalculateReward(evt.target.value);
+                            debouncedCalculateReward(evt.target.value);
+                        }
+
                     });
 
                     button.click(() => {

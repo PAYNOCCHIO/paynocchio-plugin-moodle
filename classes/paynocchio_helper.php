@@ -335,7 +335,7 @@ class paynocchio_helper {
         if($user_paynocchio_wallet['status_code'] === 200) {
             $json_response = json_decode($user_paynocchio_wallet['response']);
             return [
-                'balance' => 0.01 * (int)($json_response->balance->current*100),
+                'balance' => 0.01 * (int)($json_response->balance->current * 100),
                 'bonuses' => intval($json_response->rewarding_balance),
                 'number' => $json_response->number,
                 'status' => $json_response->status->code,
@@ -406,7 +406,7 @@ class paynocchio_helper {
                 'minimum_topup_amount' => $json_response->minimum_topup_amount,
                 'bonus_conversion_rate' => $json_response->bonus_conversion_rate,
                 'allow_withdraw' => $json_response->allow_withdraw,
-                'rewarding_group' => $filtered_rewards[0], // TODO: Test rewarding groups
+                'rewarding_group' => $filtered_rewards ? $filtered_rewards[0] : null, // TODO: Test rewarding groups
                 //'rewarding_group' => end($filtered_rewards),
                 'wallet_percentage_commission' => 2.9,
                 'wallet_fixed_commission' => 0.3,
@@ -611,21 +611,27 @@ class paynocchio_helper {
     /**
      * Filter the rewarding groups array to return only active and not expired campaigns
      * @param $groups
-     * @return array
+     * @return array|null
      */
 
-    static function filterEnvRewardingGroups($groups): array
+    static function filterEnvRewardingGroups($groups): ?array
     {
-        return array_values(array_filter($groups, [__CLASS__, 'checkFilter']));
+        if(!empty($groups)) {
+            return array_values(array_filter($groups, [__CLASS__, 'checkFilter']));
+        }
+        return null;
     }
 
     /**
      * Filter rule for campaign filtering
      * @param $group
-     * @return bool
+     * @return bool|null
      */
-    static function checkFilter($group): bool
+    static function checkFilter($group): ?bool
     {
+        if(empty($group->rewarding_rules)) {
+            return null;
+        }
         return $group->active && strtotime($group->date_from) <= time() && strtotime($group->date_to) >= time();
     }
 

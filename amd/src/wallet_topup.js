@@ -54,14 +54,13 @@ export const init = (pay, minimum_topup_amount, card_balance_limit, balance, cos
                                     message.addClass('loading');
                                     if (rewards.bonuses_to_get > 0) {
                                         message.text(`You will get ${rewards.bonuses_to_get} bonuses.`);
+                                    } else {
+                                        message.text('');
+                                        message.addClass('loading');
                                         commission_message.text(
                                             `You will receive $${rewards.sum_without_commission}. 
                     Commission: $${rewards.commission}.`
                                         );
-                                    } else {
-                                        message.text('');
-                                        message.addClass('loading');
-                                        commission_message.addClass('loading');
                                     }
                                     button.removeClass('disabled');
                                 } else {
