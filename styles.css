@@ -156,7 +156,8 @@
 }
 
 .paynocchio-card .on_card_embleme img {
-    max-width: 100%;
+    max-width: 150px;
+    height: 50px;
 }
 
 .paynocchio-balance-bonuses {
@@ -613,7 +614,8 @@ button.disabled {
 }
 
 #congratz .paynocchio-wallet-card .on_card_embleme img {
-    width: 100px;
+    max-width: 150px;
+    height: 50px;
     display: block;
     margin-left: auto;
 }
@@ -647,7 +649,8 @@ button.disabled {
 }
 
 .paynocchio-wallet-card .on_card_embleme img {
-    max-width: 100%;
+    max-width: 150px;
+    height: 50px;
 }
 
 .paynocchio-wallet-card .paynocchio-card-number {
@@ -1023,6 +1026,11 @@ button.disabled {
     padding: 0.25rem;
     background: #0f47ad;
     border-radius: 0.25rem;
+}
+
+.paynocchio_embleme_cont img {
+    max-width: 150px;
+    height: 30px;
 }
 
 @keyframes hideAnima {
