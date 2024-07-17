@@ -92,8 +92,6 @@ if(paynocchio_helper::user_has_payed($itemid, (int) $USER->id)) {
 
         $course_rounded_cost = helper::get_rounded_cost($payable->get_amount(), $currency, $surcharge);
 
-        $calculateNeedToTopUpWithCommission = $wallet->calculateNeedToTopUpWithCommission($course_rounded_cost);
-
         $wallet_balance_response = $wallet->getWalletBalance($wallet_uuid) ?: 0;
         $wallet_balance = $wallet_balance_response['balance'];
         $max_bonuses_to_spend = $wallet_balance_response['bonuses'];
@@ -117,14 +115,14 @@ if(paynocchio_helper::user_has_payed($itemid, (int) $USER->id)) {
 
         $data = [
             'wallet_balance' => $wallet_balance ?? 0,
-            'wallet_bonuses' => $calculateNeedToTopUpWithCommission['max_bonuses_to_spend'] ?? 0,
+            'wallet_bonuses' => $max_bonuses_to_spend ?? 0,
             'wallet_card' => $wallet_card,
             'wallet_status' => $wallet_balance_response['status'],
             'wallet_status_readable' => $wallet_status_readable,
             'wallet_code' => $wallet_response_code,
             'wallet_uuid' => $wallet_uuid,
             'user_uuid' => $useruuid,
-            'max_bonus' => $calculateNeedToTopUpWithCommission['max_bonus'] ?? 0,
+            'max_bonus' => $max_bonuses_to_spend ?? 0,
             'full_amount' => $course_rounded_cost,
             'can_pay' => $wallet_balance + $money_bonuses_equivalent >= $course_rounded_cost,
             'wallet_active' => $wallet_response_code === "ACTIVE",

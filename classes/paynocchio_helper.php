@@ -524,8 +524,8 @@ class paynocchio_helper {
     {
         $rules = $this->getCurrentRewardRule($sum, $operationType);
         $conversion_rate_when_payment = $rules['bonus_conversion_rate'] ?: 1;
-        $sum_with_commission = $this->calculateSumWithCommission($sum);
-        $commission = round($sum_with_commission - $sum, 1);
+        $commission = $this->calculateCommissionForAmount($sum);
+        $sum_with_commission = $sum + $commission;
         $sum_without_commission = round($sum - $commission, 2);
 
         if($rules['value_type'] === "percentage") {
@@ -544,68 +544,16 @@ class paynocchio_helper {
         ];
 
     }
-
     /**
      * Calculate commission
      */
-    public function calculateSumWithCommission($sum)
+    public function calculateCommissionForAmount($amount)
     {
         $wallet_structure = $this->envStructure;
         $wallet_percentage_commission = $wallet_structure['wallet_percentage_commission'] ?? 0;
         $wallet_fixed_commission = $wallet_structure['wallet_fixed_commission'] ?? 0;
-        $wallet_commission_coefficient = 1 - ($wallet_percentage_commission / 100);
 
-        return floor(($sum + $wallet_fixed_commission) / $wallet_commission_coefficient * 10) / 10 + 0.01;
-    }
-
-    /**
-     * Calculate need to Top up with commission
-     * @param float $cost
-     */
-    public function calculateNeedToTopUpWithCommission($cost): array
-    {
-        $wallet_structure = $this->envStructure;
-        $wallet_balance_response = $this->getWalletBalance($this->walletId) ?: 0;
-        $wallet_balance = $wallet_balance_response['balance'];
-        $conversion_rate_when_payment = $wallet_structure['bonus_conversion_rate'] ?: 1;
-        $max_bonuses_to_spend = $wallet_balance_response['bonuses'];
-        $money_bonuses_equivalent = $max_bonuses_to_spend * $conversion_rate_when_payment;
-        $rewarding_rules_topup = $this->getCurrentRewardRule($cost, 'payment_operation_add_money');
-        $rewarding_value_for_topup = $rewarding_rules_topup['totalValue'];
-        $rewarding_for_topup = 1 + $rewarding_value_for_topup * $conversion_rate_when_payment;
-
-        $ceil_course_rounded_cost = ceil($cost);
-
-        $need_to_topup_without_commission = ceil(($ceil_course_rounded_cost - floor($wallet_balance) - floor($money_bonuses_equivalent)) / $rewarding_for_topup);
-        $need_to_topup = ceil($this->calculateSumWithCommission($need_to_topup_without_commission));
-        $need_to_topup_with_commission = ceil($this->calculateSumWithCommission($need_to_topup));
-
-        $rewards_for_topup = $this->calculateRewardsAndCommissions($need_to_topup, 'payment_operation_add_money');
-        $bonuses_for_topup = $rewards_for_topup['bonuses_to_get'];
-        $bonuses_for_topup_in_dollar = $rewards_for_topup['bonuses_in_dollar'];
-
-        $new_cost_after_topup = $cost - $bonuses_for_topup_in_dollar;
-
-        $rewards_for_payment = $this->calculateRewardsAndCommissions($new_cost_after_topup, 'payment_operation_for_services');
-
-        $bonuses_for_payment = $rewards_for_payment['bonuses_to_get'];
-
-        if($max_bonuses_to_spend && $money_bonuses_equivalent < $cost) {
-            $max_bonus = $max_bonuses_to_spend;
-        } else {
-            $max_bonus = $cost;
-        }
-
-        return [
-            'bonuses_for_topup' => $bonuses_for_topup,
-            'bonuses_for_topup_in_dollar' => $bonuses_for_topup_in_dollar,
-            'bonuses_for_payment' => $bonuses_for_payment,
-            'need_to_topup' => $need_to_topup,
-            'need_to_topup_with_commission' => $need_to_topup_with_commission,
-            'need_to_topup_with_commission_without_bonuses' => $this->calculateSumWithCommission($cost),
-            'max_bonus' => $max_bonus,
-            'max_bonuses_to_spend' => $max_bonuses_to_spend,
-        ];
+        return round(($amount * ($wallet_percentage_commission / 100) + $wallet_fixed_commission) + 0.01, 2);
     }
 
     /**
@@ -646,23 +594,6 @@ class paynocchio_helper {
 
         $response = $this->sendRequest('GET', $url);
         return json_decode($response['response'])->item;
-    }
-
-    /** Count current limit
-     *
-     */
-    public function countTodayTransactions(string $wallet_uuid)
-    {
-        $start = strtotime('today midnight');
-        $end = time();
-        $items = $this->getTransactionHistory($wallet_uuid, $start, $end);
-        $sum = '0';
-        foreach ($items as $item) {
-            if($item->status === 'complete') {
-                $sum += $item->amount;
-            }
-        }
-       return $sum;
     }
 
     /**
