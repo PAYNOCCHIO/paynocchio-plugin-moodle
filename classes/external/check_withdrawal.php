@@ -54,7 +54,7 @@ class check_withdrawal extends external_api {
      * Returns the config values required by the Paynocchio JavaScript SDK.
      * @param float $amount
      */
-    public static function execute(float $amount, string $operationType): array
+    public static function execute(float $amount): array
     {
         global $DB, $USER;
         self::validate_parameters(self::execute_parameters(), [
@@ -73,7 +73,7 @@ class check_withdrawal extends external_api {
                 'error' => true,
                 'status' => 'Wallet error. Please contact the support.',
                 'commission' => 0,
-                'sum_without_commission' => 0,
+                'amount_without_commission' => 0,
             ];
         }
 
@@ -86,7 +86,7 @@ class check_withdrawal extends external_api {
                 'error' => true,
                 'status' => 'Insufficient funds. Please check the wallet balance.',
                 'commission' => 0,
-                'sum_without_commission' => 0,
+                'amount_without_commission' => 0,
             ];
         }
 
@@ -98,7 +98,7 @@ class check_withdrawal extends external_api {
                 'error' => true,
                 'status' => 'Withdrawal is not allowed.',
                 'commission' => 0,
-                'sum_without_commission' => 0,
+                'amount_without_commission' => 0,
             ];
         }
 
@@ -109,7 +109,7 @@ class check_withdrawal extends external_api {
                 'error' => true,
                 'status' => 'Insufficient funds. When withdrawing from your wallet, take into account the commission.',
                 'commission' => 0,
-                'sum_without_commission' => 0,
+                'amount_without_commission' => 0,
             ];
         }
 
@@ -118,6 +118,7 @@ class check_withdrawal extends external_api {
 
         return [
             'error' => false,
+            'status' => 'OK',
             'commission' => $commission,
             'amount_without_commission' => $amount_without_commission,
         ];
@@ -131,6 +132,7 @@ class check_withdrawal extends external_api {
     public static function execute_returns(): external_single_structure {
         return new external_single_structure([
             'error' => new external_value(PARAM_BOOL, 'True / False'),
+            'status' => new external_value(PARAM_TEXT, 'Status message'),
             'commission' => new external_value(PARAM_FLOAT, 'Commission'),
             'amount_without_commission' => new external_value(PARAM_FLOAT, 'Sum without commission'),
         ]);

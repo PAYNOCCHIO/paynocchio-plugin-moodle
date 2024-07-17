@@ -69,6 +69,7 @@ class withdraw_from_wallet extends external_api {
            if (
                $wallet->getWalletBalance($wallet_uuid)['balance'] < $amount
                    || is_null($wallet->getEnvironmentStructure()['allow_withdraw'])
+                   || !$wallet->getEnvironmentStructure()['allow_withdraw']
                    )
            {
                return [ // Withdrawal NOT Allowed

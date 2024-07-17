@@ -57,11 +57,11 @@ export const init = (pay, minimum_topup_amount, card_balance_limit, balance, cos
                                     } else {
                                         message.text('');
                                         message.addClass('loading');
-                                        commission_message.text(
-                                            `You will receive $${rewards.sum_without_commission}. 
-                    Commission: $${rewards.commission}.`
-                                        );
                                     }
+                                    commission_message.text(
+                                        `You will receive $${rewards.sum_without_commission}. 
+                    Commission: $${rewards.commission}.`
+                                    );
                                     button.removeClass('disabled');
                                 } else {
                                     message.text('Please enter amount more than minimum replenishment amount.');
