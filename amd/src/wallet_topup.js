@@ -43,38 +43,48 @@ export const init = (pay, minimum_topup_amount, card_balance_limit, balance, cos
                     const debouncedCalculateReward = debounce((inputValue) => {
                         message.addClass('loading');
                         commission_message.addClass('loading');
-                        calculateReward(inputValue, 'payment_operation_add_money')
-                            .then(rewards => {
-                                if (inputValue + balance > card_balance_limit) {
-                                    message.text(`When replenishing the amount ${inputValue},
+                            calculateReward(inputValue, 'payment_operation_add_money')
+                                .then(rewards => {
+                                    if (inputValue + balance > card_balance_limit) {
+                                        message.text(`When replenishing the amount ${inputValue},
                             the balance limit will exceed the set value ${card_balance_limit}.`);
-                                    commission_message.text('');
-                                    button.addClass('disabled');
-                                } else if (inputValue >= minimum_topup_amount &&  inputValue < card_balance_limit) {
-                                    message.addClass('loading');
-                                    if (rewards.bonuses_to_get > 0) {
-                                        message.text(`You will get ${rewards.bonuses_to_get} bonuses.`);
-                                    } else {
-                                        message.text('');
+                                        commission_message.text('');
+                                        button.addClass('disabled');
+                                    } else if (inputValue >= minimum_topup_amount &&  inputValue < card_balance_limit) {
                                         message.addClass('loading');
-                                    }
-                                    commission_message.text(
-                                        `You will receive $${rewards.sum_without_commission}. 
+                                        if (rewards.bonuses_to_get > 0) {
+                                            message.text(`You will get ${rewards.bonuses_to_get} bonuses.`);
+                                        } else {
+                                            message.text('');
+                                            message.addClass('loading');
+                                        }
+                                        commission_message.text(
+                                            `You will receive $${rewards.sum_without_commission}. 
                     Commission: $${rewards.commission}.`
-                                    );
-                                    button.removeClass('disabled');
-                                } else {
-                                    message.text('Please enter amount more than minimum replenishment amount.');
-                                    commission_message.text('');
-                                    button.addClass('disabled');
-                                }
-                                message.removeClass('loading');
-                                commission_message.removeClass('loading');
-                            });
+                                        );
+                                        button.removeClass('disabled');
+                                    } else {
+                                        message.text('Please enter amount more than minimum replenishment amount.');
+                                        commission_message.text('');
+                                        button.addClass('disabled');
+                                    }
+                                    message.removeClass('loading');
+                                    commission_message.removeClass('loading');
+                                });
+
                     }, debounceTime); // Adjust the wait time as needed
 
                     debouncedCalculateReward(minimum_topup_amount);
-                    input.on('keyup', (evt) => debouncedCalculateReward(parseFloat(evt.target.value)));
+
+                    input.on('keyup', (evt) => {
+                        if(!isNaN(parseFloat(evt.target.value)) && parseFloat(evt.target.value) > 0) {
+                            debouncedCalculateReward(parseFloat(evt.target.value));
+                        } else {
+                            message.text('Please enter amount.');
+                            commission_message.text('');
+                            button.addClass('disabled');
+                        }
+                    });
 
                     button.click(() => {
                         if (input.val()) {
