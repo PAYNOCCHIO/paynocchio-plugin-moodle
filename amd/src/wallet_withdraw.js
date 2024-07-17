@@ -81,7 +81,7 @@ export const init = (balance) => {
                         message.text('Operation is not permitted');
                     }
 
-                    input.keyup(evt => debouncedCalculateReward(parseFloat(evt.target.value)));
+                    input.on('keyup change', (evt) => debouncedCalculateReward(parseFloat(evt.target.value)));
 
                     button.click(() => {
                         if(!checkAvailability(input.val(), balance)) {

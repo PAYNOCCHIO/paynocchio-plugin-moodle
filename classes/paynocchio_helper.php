@@ -526,7 +526,7 @@ class paynocchio_helper {
         $conversion_rate_when_payment = $rules['bonus_conversion_rate'] ?: 1;
         $commission = $this->calculateCommissionForAmount($sum);
         $sum_with_commission = $sum + $commission;
-        $sum_without_commission = round($sum - $commission, 2);
+        $sum_without_commission = $sum - $commission;
 
         if($rules['value_type'] === "percentage") {
             $bonuses_to_get = intval($sum_without_commission * $rules['totalValue']);
@@ -538,9 +538,9 @@ class paynocchio_helper {
           'bonuses_to_get' => $bonuses_to_get,
           'bonuses_in_dollar' => round($bonuses_to_get * $conversion_rate_when_payment, 2),
           'commission' => $commission,
-          'sum_without_commission' => $sum_without_commission,
-          'sum_with_commission' => $sum_with_commission,
-          'sum_with_commission_minus_commission' => $sum_with_commission - $commission,
+          'sum_without_commission' => round($sum_without_commission, 2),
+          'sum_with_commission' => round($sum_with_commission, 2),
+          'sum_with_commission_minus_commission' => round($sum_with_commission - $commission, 2),
         ];
 
     }
@@ -553,7 +553,8 @@ class paynocchio_helper {
         $wallet_percentage_commission = $wallet_structure['wallet_percentage_commission'] ?? 0;
         $wallet_fixed_commission = $wallet_structure['wallet_fixed_commission'] ?? 0;
 
-        return round(($amount * ($wallet_percentage_commission / 100) + $wallet_fixed_commission) + 0.01, 2);
+        $commission = ($amount * ($wallet_percentage_commission / 100) + $wallet_fixed_commission);
+        return (floor($commission * 100) / 100) + 0.01;
     }
 
     /**

@@ -113,6 +113,12 @@ if(paynocchio_helper::user_has_payed($itemid, (int) $USER->id)) {
             $wallet_card = false;
         }
 
+        if($max_bonuses_to_spend && $money_bonuses_equivalent < $course_rounded_cost) {
+            $max_bonus = $max_bonuses_to_spend;
+        } else {
+            $max_bonus = $cost;
+        }
+
         $data = [
             'wallet_balance' => $wallet_balance ?? 0,
             'wallet_bonuses' => $max_bonuses_to_spend ?? 0,
@@ -122,7 +128,7 @@ if(paynocchio_helper::user_has_payed($itemid, (int) $USER->id)) {
             'wallet_code' => $wallet_response_code,
             'wallet_uuid' => $wallet_uuid,
             'user_uuid' => $useruuid,
-            'max_bonus' => $max_bonuses_to_spend ?? 0,
+            'max_bonus' => $max_bonus,
             'full_amount' => $course_rounded_cost,
             'can_pay' => $wallet_balance + $money_bonuses_equivalent >= $course_rounded_cost,
             'wallet_active' => $wallet_response_code === "ACTIVE",
