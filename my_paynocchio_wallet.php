@@ -38,7 +38,7 @@ if($user && $user->useruuid && $user->walletuuid) {
         $envStructure = $wallet->getEnvironmentStructure();
         $wallet_balance_response = $wallet->getWalletBalance($user->walletuuid);
         $wallet_balance = $wallet_balance_response['balance'];
-        $balance_minus_commission = $wallet_balance - $wallet->calculateCommissionForAmount($wallet_balance);
+        $maximum_for_withdrawal = $wallet->calculateMaxWithdrawal();
         $wallet_bonuses = $wallet_balance_response['bonuses'];
         $wallet_response_code = $wallet_balance_response['code'];
         $minimum_topup_amount = $envStructure['minimum_topup_amount'];
@@ -54,7 +54,7 @@ if($user && $user->useruuid && $user->walletuuid) {
 
         $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_withdraw', 'init', [
             'balance' => $wallet_balance,
-            'maximum_for_withdrawal' => $balance_minus_commission,
+            'maximum_for_withdrawal' => $maximum_for_withdrawal,
         ]);
         }
 

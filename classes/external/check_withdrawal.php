@@ -79,9 +79,10 @@ class check_withdrawal extends external_api {
 
         $envStructure = $wallet->getEnvironmentStructure();
         $wallet_balance_response = $wallet->getWalletBalance($walletuuid);
-        $wallet_balance = $wallet_balance_response['balance'];
+        $maximum_for_withdrawal = $wallet->calculateMaxWithdrawal();
 
-        if($amount > $wallet_balance) {
+
+        if($amount > $maximum_for_withdrawal) {
             return [
                 'error' => true,
                 'status' => 'Insufficient funds. Please check the wallet balance.',
@@ -91,7 +92,7 @@ class check_withdrawal extends external_api {
         }
 
         $wallet_response_code = $wallet_balance_response['code'];
-        $withdrawalIsAllowed = $wallet_response_code === "ACTIVE" && $envStructure['allow_withdraw'] && $wallet_balance > 0;
+        $withdrawalIsAllowed = $wallet_response_code === "ACTIVE" && $envStructure['allow_withdraw'] && $maximum_for_withdrawal > 0;
 
         if(!$withdrawalIsAllowed) {
             return [
@@ -104,23 +105,13 @@ class check_withdrawal extends external_api {
 
         $amount_with_commission = $amount + $wallet->calculateCommissionForAmount($amount);
 
-        if($amount > $amount_with_commission) {
-            return [
-                'error' => true,
-                'status' => 'Insufficient funds. When withdrawing from your wallet, take into account the commission.',
-                'commission' => 0,
-                'amount_without_commission' => 0,
-            ];
-        }
-
         $commission = round($amount_with_commission - $amount, 2);
-        $amount_without_commission = round($amount - $commission, 2);
 
         return [
             'error' => false,
             'status' => 'OK',
             'commission' => $commission,
-            'amount_without_commission' => $amount_without_commission,
+            'amount_without_commission' => $amount,
         ];
     }
 

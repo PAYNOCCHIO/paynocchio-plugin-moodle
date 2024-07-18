@@ -564,6 +564,27 @@ class paynocchio_helper {
     }
 
     /**
+     * Calculate max withdrawal amount
+     */
+    function calculateMaxWithdrawal(): string
+    {
+        $balance = $this->getWalletBalance($this->walletId)['balance'];
+        $wallet_percentage_commission = $this->envStructure['wallet_percentage_commission'] / 100;
+        $percentage_coefficient = 1 + $wallet_percentage_commission;
+        $wallet_fixed_commission = $this->envStructure['wallet_fixed_commission'];
+        $netAmount = ($balance - $wallet_fixed_commission) / $percentage_coefficient;
+        $maxAmount = floor($netAmount * 100) / 100;
+        $commission = $this->calculateCommissionForAmount($maxAmount);
+
+        // Проверяем, что сумма с комиссией не превышает баланс
+        if ($maxAmount + $commission > $balance) {
+            $maxAmount -= 0.01;
+        }
+
+        return number_format($maxAmount, 2);
+    }
+
+    /**
      * Filter the rewarding groups array to return only active and not expired campaigns
      * @param $groups
      * @return array|null
