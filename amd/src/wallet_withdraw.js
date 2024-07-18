@@ -38,13 +38,13 @@ const checkAvailability = (inputVal, balance) => {
     return true;
 };
 
-export const init = (balance) => {
+export const init = (balance, maximum_for_withdrawal) => {
     const paynocchio_wallet_withdraw_button = document.getElementById('paynocchio_withdraw_button');
 
     if (paynocchio_wallet_withdraw_button) {
 
         paynocchio_wallet_withdraw_button.addEventListener('click', () => {
-            showModalWithWithdraw()
+            showModalWithWithdraw(maximum_for_withdrawal)
                 .then(modal => {
                     modal.setTitle('Withdraw from the Wallet');
                     const input = modal.body.find('#withdraw_amount');

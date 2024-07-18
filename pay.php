@@ -116,7 +116,7 @@ if(paynocchio_helper::user_has_payed($itemid, (int) $USER->id)) {
         if($max_bonuses_to_spend && $money_bonuses_equivalent < $course_rounded_cost) {
             $max_bonus = $max_bonuses_to_spend;
         } else {
-            $max_bonus = $cost;
+            $max_bonus = $course_rounded_cost;
         }
 
         $data = [

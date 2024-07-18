@@ -525,7 +525,10 @@ class paynocchio_helper {
     {
         $rules = $this->getCurrentRewardRule($sum, $operationType);
         $conversion_rate_when_payment = $rules['bonus_conversion_rate'] ?: 1;
-        $commission = $this->calculateCommissionForAmount($sum);
+        $commission = 0;
+        if($operationType === 'payment_operation_add_money') {
+            $commission = $this->calculateCommissionForAmount($sum);
+        }
         $sum_with_commission = $sum + $commission;
         $sum_without_commission = $sum - $commission;
 

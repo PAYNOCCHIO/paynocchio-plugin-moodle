@@ -130,10 +130,11 @@ export const showModalWithTopup = async(minimum_topup_amount, card_balance_limit
 /**
  * Creates and shows a modal that contains a withdrawal form.
  *
+ * @param {number} maximum_for_withdrawal
  * @returns {Promise<Modal>}
  */
-export const showModalWithWithdraw = async() => await Modal.create({
-    body: await Templates.render('paygw_paynocchio/withdraw_modal', {}),
+export const showModalWithWithdraw = async(maximum_for_withdrawal) => await Modal.create({
+    body: await Templates.render('paygw_paynocchio/withdraw_modal', {maximum_for_withdrawal}),
     show: true,
     removeOnClose: true,
 });
