@@ -556,8 +556,8 @@ class paynocchio_helper {
         $wallet_fixed_commission = $wallet_structure['wallet_fixed_commission'] ?? 0;
         $magic_cent = $wallet_structure['magic_cent'] ?? 0;
 
+        // TODO: Magic cent is useless, let's get rid of it!
         return round(($amount * ($wallet_percentage_commission / 100) + $wallet_fixed_commission) + $magic_cent, 2);
-        //return (floor($commission * 100) / 100) + $magic_cent;
     }
 
     /**
