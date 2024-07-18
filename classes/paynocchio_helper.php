@@ -410,6 +410,7 @@ class paynocchio_helper {
                 //'rewarding_group' => end($filtered_rewards),
                 'wallet_percentage_commission' => 2.9,
                 'wallet_fixed_commission' => 0.3,
+                'magic_cent' => 0,
             ];
         }
     }
@@ -546,15 +547,17 @@ class paynocchio_helper {
     }
     /**
      * Calculate commission
+     * @param {float} amount
      */
-    public function calculateCommissionForAmount($amount)
+    public function calculateCommissionForAmount($amount): float
     {
         $wallet_structure = $this->envStructure;
         $wallet_percentage_commission = $wallet_structure['wallet_percentage_commission'] ?? 0;
         $wallet_fixed_commission = $wallet_structure['wallet_fixed_commission'] ?? 0;
+        $magic_cent = $wallet_structure['magic_cent'] ?? 0;
 
-        $commission = ($amount * ($wallet_percentage_commission / 100) + $wallet_fixed_commission);
-        return (floor($commission * 100) / 100) + 0.01;
+        return round(($amount * ($wallet_percentage_commission / 100) + $wallet_fixed_commission) + $magic_cent, 2);
+        //return (floor($commission * 100) / 100) + $magic_cent;
     }
 
     /**
