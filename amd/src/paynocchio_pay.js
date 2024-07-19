@@ -56,7 +56,9 @@ const changePayButtonValues = (fullAmount, bonuses, bonuses_conversion_rate) => 
         old_amount.classList.remove('paynocchio-hidden');
         discount.classList.remove('paynocchio-hidden');
     } else {
-        money_equivalent.innerHTML = '';
+        if(money_equivalent) {
+            money_equivalent.innerHTML = '';
+        }
         current_amount.innerText = old_amount_value;
         old_amount.classList.add('paynocchio-hidden');
         discount.classList.add('paynocchio-hidden');
@@ -99,7 +101,7 @@ export const init = (component,
         const range = document.getElementById('bonuses-range');
         const input = document.getElementById('bonuses-value');
 
-        changePayButtonValues(fullAmount, range.value, bonuses_conversion_rate);
+        changePayButtonValues(fullAmount, range?.value ?? 0, bonuses_conversion_rate);
 
         let bonuses = 0;
 

@@ -91,6 +91,7 @@ class make_payment extends external_api {
              * Check if money + converted bonuses are enough for payment
              */
             $wallet_bonuses_equivalent = $wallet_balance_response['bonuses'] * $bonuses_conversion_rate;
+
             if($fullAmount > floatval($wallet_balance_response['balance']) + $wallet_bonuses_equivalent) {
                 return [
                     'success' => false,
@@ -111,6 +112,18 @@ class make_payment extends external_api {
                 $fullAmount = null;
             } else {
                 $amount = $fullAmount - $bonuses_equivalent ;
+            }
+
+            if($fullAmount < 0) {
+                return [
+                    'success' => false,
+                    'message' => 'Please check the input value. Full amount can not be negative',
+                    'balance' => $wallet_balance_response['balance'],
+                    'bonuses' => $wallet_balance_response['bonuses'],
+                    'card_number' => 0,
+                    'wallet_status' => 'Full amount can not be negative',
+                    'wallet_code' => 'error',
+                ];
             }
 
             $orderuuid = uuid::generate();
