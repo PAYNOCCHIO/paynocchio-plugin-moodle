@@ -94,8 +94,8 @@ if(paynocchio_helper::user_has_payed($itemid, (int) $USER->id)) {
 
         $wallet_balance_response = $wallet->getWalletBalance($wallet_uuid) ?: 0;
         $wallet_balance = $wallet_balance_response['balance'];
-        $max_bonuses_to_spend = $wallet_balance_response['bonuses'];
-        $money_bonuses_equivalent = $max_bonuses_to_spend * $conversion_rate_when_payment;
+        $walet_bonuses = $wallet_balance_response['bonuses'];
+        $money_bonuses_equivalent = $walet_bonuses * $conversion_rate_when_payment;
         $wallet_response_code = $wallet_balance_response['code'];
         $rewarding_rules = $environment_structure['rewarding_group']->rewarding_rules;
 
@@ -113,15 +113,15 @@ if(paynocchio_helper::user_has_payed($itemid, (int) $USER->id)) {
             $wallet_card = false;
         }
 
-        if($max_bonuses_to_spend && $money_bonuses_equivalent < $course_rounded_cost) {
-            $max_bonus = $max_bonuses_to_spend;
+        if($walet_bonuses && $money_bonuses_equivalent < $course_rounded_cost) {
+            $max_bonus = $walet_bonuses;
         } else {
-            $max_bonus = $course_rounded_cost;
+            $max_bonus = $course_rounded_cost / $conversion_rate_when_payment;
         }
 
         $data = [
             'wallet_balance' => $wallet_balance ?? 0,
-            'wallet_bonuses' => $max_bonuses_to_spend ?? 0,
+            'wallet_bonuses' => $walet_bonuses ?? 0,
             'wallet_card' => $wallet_card,
             'wallet_status' => $wallet_balance_response['status'],
             'wallet_status_readable' => $wallet_status_readable,

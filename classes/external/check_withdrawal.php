@@ -103,9 +103,7 @@ class check_withdrawal extends external_api {
             ];
         }
 
-        $amount_with_commission = $amount + $wallet->calculateCommissionForAmount($amount);
-
-        $commission = round($amount_with_commission - $amount, 2);
+        $commission = $wallet->calculateCommissionForAmount($amount);
 
         return [
             'error' => false,
