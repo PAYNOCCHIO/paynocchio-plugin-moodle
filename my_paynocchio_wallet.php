@@ -31,7 +31,7 @@ if($success) {
 if($user && $user->useruuid && $user->walletuuid) {
 
     $wallet = new paynocchio_helper($user->useruuid);
-    $walletIsHealthy = $wallet->checkHealth();
+    $walletIsHealthy = $wallet->isWalletHealthy();
 
     if($walletIsHealthy) {
 
@@ -117,7 +117,7 @@ if($user && $user->useruuid && $user->walletuuid) {
     $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_activation', 'init', ['user_id' => $USER->id]);
     $useruuid = \core\uuid::generate();
     $wallet = new paynocchio_helper($useruuid);
-    if($wallet->checkHealth()) {
+    if($wallet->isWalletHealthy()) {
         $data = [
             'wallet_balance' => 0,
             'wallet_bonuses' => 0,

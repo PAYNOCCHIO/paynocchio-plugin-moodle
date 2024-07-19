@@ -66,7 +66,7 @@ class check_withdrawal extends external_api {
         $walletuuid = $paynocchio_data->walletuuid;
 
         $wallet = new paynocchio_helper($user_uuid);
-        $walletIsHealthy = $wallet->checkHealth();
+        $walletIsHealthy = $wallet->isWalletHealthy();
 
         if(!$walletIsHealthy) {
             return [

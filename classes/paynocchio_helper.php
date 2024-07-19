@@ -233,7 +233,7 @@ class paynocchio_helper {
      * Healh check helper
      * @return bool
      */
-    public function checkHealth()
+    public function isWalletHealthy()
     {
         $wallet_response = $this->healtCheck();
         if($wallet_response['status_code'] === 200) {

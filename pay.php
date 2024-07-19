@@ -81,7 +81,7 @@ if(paynocchio_helper::user_has_payed($itemid, (int) $USER->id)) {
         $wallet_uuid = 0;
     }
 
-    $walletIsHealthy = $wallet->checkHealth();
+    $walletIsHealthy = $wallet->isWalletHealthy();
 
     if($walletIsHealthy) {
         $environment_structure = $wallet->getEnvironmentStructure();

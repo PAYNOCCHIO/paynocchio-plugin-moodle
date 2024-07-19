@@ -35,7 +35,17 @@ if ($ADMIN->fulltree) {
 
     $settings->add(new admin_setting_heading('paygw_paynocchio_settings', '', get_string('pluginname_desc', 'paygw_paynocchio')));
     $settings->add(new admin_setting_configtext('paygw_paynocchio/baseurl', get_string('baseurl', 'paygw_paynocchio'), get_string('baseurl', 'paygw_paynocchio'), 'https://wallet.stage.paynocchio.com', PARAM_TEXT));
-    $settings->add(new admin_setting_configcheckbox('paygw_paynocchio/testmode', get_string('testmode', 'paygw_paynocchio'), get_string('testmode_help', 'paygw_paynocchio'), 0));
+    $test_mode = new admin_setting_configcheckbox('paygw_paynocchio/testmode', get_string('testmode', 'paygw_paynocchio'), get_string('testmode_help', 'paygw_paynocchio'), 0);
+    $settings->add($test_mode);
+    $test_mode->set_updatedcallback(function () {
+        $wallet = new paynocchio_helper(uuid::generate());
+        if($wallet->isWalletHealthy()) {
+            notification::success('Integrated with Paynocchio successfully.');
+            set_config('paynocchiointegrated', 'true', 'paygw_paynocchio');
+        } else {
+            set_config('paynocchiointegrated', 0, 'paygw_paynocchio');
+        }
+    });
     $settings->add(new admin_setting_configtext('paygw_paynocchio/brandname', get_string('brandname', 'paygw_paynocchio'), get_string('brandname_help', 'paygw_paynocchio'), 'Academy.Pay'));
     $settings->add(new admin_setting_configtext('paygw_paynocchio/paynocchiocardbg', get_string('paynocchiocardbg', 'paygw_paynocchio'), get_string('paynocchiocardbg_help', 'paygw_paynocchio'), '#3b82f6', PARAM_TEXT));
 
@@ -64,40 +74,22 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_configtextarea('paygw_paynocchio/privacy', get_string('privacy', 'paygw_paynocchio'), '', get_string('privacy_help', 'paygw_paynocchio')));
 
     $secret->set_updatedcallback(function () {
-        global $USER;
-        if(is_siteadmin($USER->id)){
-            $wallet = new paynocchio_helper(uuid::generate());
-            $wallet_response = $wallet->healtCheck();
-            if($wallet_response['status_code'] === 200) {
-                $json_response = json_decode($wallet_response['response']);
-                if($json_response->status_code === 200) {
-                    notification::success('Secret key is good. Integrated with Paynocchio successfully.');
-                    set_config('paynocchiointegrated', 'true', 'paygw_paynocchio');
-                } else {
-                    set_config('paynocchiointegrated', 0, 'paygw_paynocchio');
-                }
-            } else {
-                set_config('paynocchiointegrated', 0, 'paygw_paynocchio');
-            }
+        $wallet = new paynocchio_helper(uuid::generate());
+        if($wallet->isWalletHealthy()) {
+            notification::success('Secret key is good. Integrated with Paynocchio successfully.');
+            set_config('paynocchiointegrated', 'true', 'paygw_paynocchio');
+        } else {
+            set_config('paynocchiointegrated', 0, 'paygw_paynocchio');
         }
     });
 
     $env->set_updatedcallback(function () {
-        global $USER;
-        if(is_siteadmin($USER->id)){
-            $wallet = new paynocchio_helper(uuid::generate());
-            $wallet_response = $wallet->healtCheck();
-            if($wallet_response['status_code'] === 200) {
-                $json_response = json_decode($wallet_response['response']);
-                if($json_response->status_code === 200) {
-                    notification::success('Environment ID is good. Integrated with Paynocchio successfully.');
-                    set_config('paynocchiointegrated', 'true', 'paygw_paynocchio');
-                } else {
-                    set_config('paynocchiointegrated', 0, 'paygw_paynocchio');
-                }
-            } else {
-                set_config('paynocchiointegrated', 0, 'paygw_paynocchio');
-            }
+        $wallet = new paynocchio_helper(uuid::generate());
+        if($wallet->isWalletHealthy()) {
+            notification::success('Environment ID is good. Integrated with Paynocchio successfully.');
+            set_config('paynocchiointegrated', 'true', 'paygw_paynocchio');
+        } else {
+            set_config('paynocchiointegrated', 0, 'paygw_paynocchio');
         }
     });
 
