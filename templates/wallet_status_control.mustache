@@ -69,6 +69,11 @@
                 <div>This error is probably connected with Environment management and should be fixed by the Site administrator. You can also delete your wallet. </div>
                 <button id="predelete_wallet_button" type="button" class="paynocchio_button btn-danger">Delete wallet</button>
             {{/server_error}}
+            {{# isAdmin }}
+                {{^ server_error }}
+                <button id="predelete_wallet_button" type="button" class="paynocchio_button btn-danger">Delete wallet</button>
+                {{/server_error}}
+            {{/isAdmin}}
         </div>
     </div>
 </div>

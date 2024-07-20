@@ -73,6 +73,7 @@ if($user && $user->useruuid && $user->walletuuid) {
         'logo' => paynocchio_helper::custom_logo(),
         'wallet_activated' => true,
         'username' => $USER->firstname . ' ' . $USER->lastname,
+        'isAdmin' => is_siteadmin($USER->id),
         ];
 
         echo $OUTPUT->render_from_template('paygw_paynocchio/paynocchio_wallet_all_in_one_cabinet', $data);
