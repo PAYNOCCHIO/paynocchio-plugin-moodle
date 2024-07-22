@@ -47,7 +47,7 @@
         <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="paymentid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="type" TYPE="char" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
-        <FIELD NAME="totalamount" TYPE="number" LENGTH="10" NOTNULL="true" SEQUENCE="false" />
+        <FIELD NAME="totalamount" TYPE="number" LENGTH="15" NOTNULL="true" SEQUENCE="false" DECIMALS="2"/>
         <FIELD NAME="bonuses" TYPE="number" LENGTH="10" NOTNULL="false" SEQUENCE="false" />
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
       </FIELDS>

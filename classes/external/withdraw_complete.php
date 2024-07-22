@@ -47,7 +47,7 @@ class withdraw_complete extends external_api {
             'environment_uuid' => new external_value(PARAM_TEXT, 'The created_at coming back from Paynocchio'),
             'user_uuid' => new external_value(PARAM_TEXT, 'The user_uuid coming back from Paynocchio'),
             'wallet_uuid' => new external_value(PARAM_TEXT, 'The wallet_uuid coming back from Paynocchio'),
-            'amount' => new external_value(PARAM_TEXT, 'The amount coming back from Paynocchio'),
+            'amount' => new external_value(PARAM_FLOAT, 'The amount coming back from Paynocchio'),
             'currency' => new external_value(PARAM_TEXT, 'The currency_id coming back from Paynocchio'),
             'type_operation' => new external_value(PARAM_TEXT, 'The company_id coming back from Paynocchio'),
             'status_type' => new external_value(PARAM_TEXT, 'The company_id coming back from Paynocchio'),
@@ -65,7 +65,7 @@ class withdraw_complete extends external_api {
      * @param string $environment_uuid Paynocchio created_at
      * @param string $user_uuid Paynocchio company_id
      * @param string $wallet_uuid Paynocchio payment_method
-     * @param string $amount Paynocchio amount
+     * @param float $amount Paynocchio amount
      * @param string $currency Paynocchio currency_id
      * @param string $type_operation Paynocchio wallet_uuid
      * @param string $status_type Paynocchio wallet_uuid
@@ -86,7 +86,7 @@ class withdraw_complete extends external_api {
         $order_uuid,
         $external_order_uuid
     ): array {
-        global $DB, $USER;
+        global $DB;
 
         self::validate_parameters(self::execute_parameters(), [
             'uuid' => $uuid,
