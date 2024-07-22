@@ -410,7 +410,6 @@ class paynocchio_helper {
                 //'rewarding_group' => end($filtered_rewards),
                 'wallet_percentage_commission' => 2.9,
                 'wallet_fixed_commission' => 0.3,
-                'magic_cent' => 0,
             ];
         }
     }
@@ -557,31 +556,8 @@ class paynocchio_helper {
         $wallet_structure = $this->envStructure;
         $wallet_percentage_commission = $wallet_structure['wallet_percentage_commission'] ?? 0;
         $wallet_fixed_commission = $wallet_structure['wallet_fixed_commission'] ?? 0;
-        $magic_cent = $wallet_structure['magic_cent'] ?? 0;
 
-        // TODO: Magic cent is useless, let's get rid of it!
-        return round(($amount * ($wallet_percentage_commission / 100) + $wallet_fixed_commission) + $magic_cent, 2);
-    }
-
-    /**
-     * Calculate max withdrawal amount
-     */
-    function calculateMaxWithdrawal(): string
-    {
-        $balance = $this->getWalletBalance($this->walletId)['balance'];
-        $wallet_percentage_commission = $this->envStructure['wallet_percentage_commission'] / 100;
-        $percentage_coefficient = 1 + $wallet_percentage_commission;
-        $wallet_fixed_commission = $this->envStructure['wallet_fixed_commission'];
-        $netAmount = ($balance - $wallet_fixed_commission) / $percentage_coefficient;
-        $maxAmount = floor($netAmount * 100) / 100;
-        $commission = $this->calculateCommissionForAmount($maxAmount);
-
-        // Проверяем, что сумма с комиссией не превышает баланс
-        if ($maxAmount + $commission > $balance) {
-            $maxAmount -= 0.01;
-        }
-
-        return number_format($maxAmount, 2);
+        return round(($amount * ($wallet_percentage_commission / 100) + $wallet_fixed_commission), 2);
     }
 
     /**

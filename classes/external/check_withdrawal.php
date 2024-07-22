@@ -79,10 +79,9 @@ class check_withdrawal extends external_api {
 
         $envStructure = $wallet->getEnvironmentStructure();
         $wallet_balance_response = $wallet->getWalletBalance($walletuuid);
-        $maximum_for_withdrawal = $wallet->calculateMaxWithdrawal();
 
 
-        if($amount > $maximum_for_withdrawal) {
+        if($amount > $wallet_balance_response['balance']) {
             return [
                 'error' => true,
                 'status' => 'Insufficient funds. Please check the wallet balance.',
@@ -92,7 +91,7 @@ class check_withdrawal extends external_api {
         }
 
         $wallet_response_code = $wallet_balance_response['code'];
-        $withdrawalIsAllowed = $wallet_response_code === "ACTIVE" && $envStructure['allow_withdraw'] && $maximum_for_withdrawal > 0;
+        $withdrawalIsAllowed = $wallet_response_code === "ACTIVE" && $envStructure['allow_withdraw'] && $wallet_balance_response['balance'] > 0;
 
         if(!$withdrawalIsAllowed) {
             return [
@@ -109,7 +108,7 @@ class check_withdrawal extends external_api {
             'error' => false,
             'status' => 'OK',
             'commission' => $commission,
-            'amount_without_commission' => $amount,
+            'amount_without_commission' => round($amount - $commission, 2),
         ];
     }
 
