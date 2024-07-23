@@ -24,7 +24,7 @@
 import {checkWithdrawal, handleWithdrawClick, showModalWithWithdraw} from "./repository";
 import debounce from "./debounce";
 
-const debounceTime = 500;
+const debounceTime = 300;
 
 const checkAvailability = (inputVal, balance) => {
 
@@ -38,13 +38,13 @@ const checkAvailability = (inputVal, balance) => {
     return true;
 };
 
-export const init = (balance, maximum_for_withdrawal) => {
+export const init = (balance) => {
     const paynocchio_wallet_withdraw_button = document.getElementById('paynocchio_withdraw_button');
 
     if (paynocchio_wallet_withdraw_button) {
 
         paynocchio_wallet_withdraw_button.addEventListener('click', () => {
-            showModalWithWithdraw(maximum_for_withdrawal)
+            showModalWithWithdraw(balance)
                 .then(modal => {
                     modal.setTitle('Withdraw from the Wallet');
                     const input = modal.body.find('#withdraw_amount');
@@ -78,10 +78,10 @@ export const init = (balance, maximum_for_withdrawal) => {
 
                     if(!checkAvailability(input.val(), balance)) {
                         button.addClass('disabled');
-                        message.text('Operation is not permitted');
+                        message.text('Input correct value');
                     }
 
-                    input.on('keyup change', (evt) => debouncedCalculateReward(parseFloat(evt.target.value)));
+                    input.on('keyup paste', (evt) => debouncedCalculateReward(parseFloat(evt.target.value)));
 
                     button.click(() => {
                         if(!checkAvailability(input.val(), balance)) {

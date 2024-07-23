@@ -82,7 +82,7 @@ export const init = (pay, minimum_topup_amount, card_balance_limit, balance, cos
 
                     debouncedCalculateReward(minimum_topup_amount);
 
-                    input.on('keyup change', (evt) => {
+                    input.on('keyup paste', (evt) => {
                         if(!isNaN(parseFloat(evt.target.value)) && parseFloat(evt.target.value) > 0) {
                             debouncedCalculateReward(parseFloat(evt.target.value));
                         } else {
