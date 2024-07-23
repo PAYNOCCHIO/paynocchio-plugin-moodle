@@ -147,6 +147,7 @@ export const init = (component,
             spinner.classList.add('active');
             makePayment(component, paymentArea, description, itemid, fullAmount, bonuses)
                 .then(data => {
+window.console.log(data);
                     if(data.success) {
                         spinner.classList.remove('active');
                         topup_message.innerText = 'Success';
@@ -158,6 +159,8 @@ export const init = (component,
                             .catch((error) => displayException(error));
                     } else {
                         topup_message.innerText = 'There is an Error occurred. Please try again later.';
+                        topup_message.classList.remove('paynocchio-hidden');
+                        spinner.classList.remove('active');
                         paynocchio_pay_button.classList.remove('disabled');
                     }
                 });

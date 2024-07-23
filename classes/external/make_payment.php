@@ -154,7 +154,7 @@ class make_payment extends external_api {
                     'bonuses' => 0,
                     'card_number' => 0,
                     'wallet_status' => 'ERROR',
-                    'wallet_code' => 404,
+                    'wallet_code' => $wallet_response['status_code'],
                 ];
             }
         }
