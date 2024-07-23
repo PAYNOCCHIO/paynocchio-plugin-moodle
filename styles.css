@@ -253,7 +253,6 @@
     margin-right: 2rem;
     opacity: 0.5;
     color: inherit;
-
 }
 
 .paynocchio-mini-block:hover {
@@ -615,6 +614,7 @@ button.disabled {
 
 #congratz .paynocchio-wallet-card .on_card_embleme img {
     max-width: 150px;
+    width: auto;
     height: 50px;
     display: block;
     margin-left: auto;
@@ -951,7 +951,7 @@ button.disabled {
 }
 
 .modal_mini_wrapper img {
-    width: 100%;
+    /*width: 100%;*/
     height: auto;
 }
 

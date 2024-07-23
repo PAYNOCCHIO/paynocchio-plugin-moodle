@@ -30,6 +30,12 @@ export const init = (pay, minimum_topup_amount, card_balance_limit, balance, cos
 
     const paynocchio_wallet_topup_button = document.getElementById('paynocchio_topup_button');
 
+    let url = window.location.href;
+    let regex = new RegExp('[?&](success=)[^&]+');
+    url = url.replace( regex , '');
+    window.history.replaceState({}, document.title, window.location.pathname);
+    window.history.pushState({}, document.title, url);
+
     if (paynocchio_wallet_topup_button) {
 
         paynocchio_wallet_topup_button.addEventListener('click', () => {
