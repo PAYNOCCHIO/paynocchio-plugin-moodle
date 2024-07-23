@@ -145,13 +145,12 @@ export const init = (component,
             paynocchio_pay_button.classList.add('disabled');
 
             spinner.classList.add('active');
-            makePayment(component, paymentArea, description, itemid, fullAmount, bonuses)
+            makePayment(component, paymentArea, description, itemid, fullAmount, parseFloat(bonuses))
                 .then(data => {
-window.console.log(data);
                     if(data.success) {
                         spinner.classList.remove('active');
                         topup_message.innerText = 'Success';
-                        window.location.reload();
+                        //window.location.reload();
                         Templates.renderForPromise('paygw_paynocchio/enrolled_already', [])
                             .then(({html, js}) => {
                                 Templates.replaceNodeContents('.paynocchio-profile-block', html, js);
