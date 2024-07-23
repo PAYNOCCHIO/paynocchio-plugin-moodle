@@ -150,7 +150,7 @@ export const init = (component,
                     if(data.success) {
                         spinner.classList.remove('active');
                         topup_message.innerText = 'Success';
-                        //window.location.reload();
+                        window.location.reload();
                         Templates.renderForPromise('paygw_paynocchio/enrolled_already', [])
                             .then(({html, js}) => {
                                 Templates.replaceNodeContents('.paynocchio-profile-block', html, js);
