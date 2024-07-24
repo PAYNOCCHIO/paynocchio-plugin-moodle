@@ -210,9 +210,13 @@ class paynocchio_helper {
      */
     public function getWalletById(string $walletId): array
     {
-        $url = '/wallet/' . $walletId . '?environment_uuid=' . $this->envId;
+        $data = [
+            self::PAYNOCCHIO_SECRET_KEY => $this->secret,
+        ];
 
-        return $this->sendRequest('GET', $url);
+        $url = '/wallet/' . $walletId . '?environment_uuid=' . $this->envId . '&user_uuid='. $this->userId;
+
+        return $this->sendRequest('GET', $url, json_encode($data, JSON_UNESCAPED_SLASHES));
     }
 
     /**
