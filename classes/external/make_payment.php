@@ -104,13 +104,9 @@ class make_payment extends external_api {
                 ];
             }
 
-            $originalAmount = $fullAmount;
             $amount = $fullAmount;
-            $bonusAmount = $bonuses ?: null;
 
-            if(!$bonusAmount) {
-                $fullAmount = null;
-            } else {
+            if($bonuses) {
                 $amount = $fullAmount - $bonuses_equivalent ;
             }
 
@@ -133,9 +129,9 @@ class make_payment extends external_api {
             if($wallet_response['status_code'] === 200) {
 
                 $paymentid = payment_helper::save_payment($payable->get_account_id(), $component, $paymentarea,
-                    $itemid, $userid, $originalAmount, $currency, 'paynocchio');
+                    $itemid, $userid, $fullAmount, $currency, 'paynocchio');
 
-                paynocchio_helper::registerPayment($paymentid, $component, $paymentarea, $description, $itemid, $orderuuid, $userid, $originalAmount, $amount, $bonusAmount, 'P');
+                paynocchio_helper::registerPayment($paymentid, $component, $paymentarea, $description, $itemid, $orderuuid, $userid, $fullAmount, $amount, $bonuses, 'P');
 
                 if($wallet_balance_response) {
                     return [
