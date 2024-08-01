@@ -419,6 +419,79 @@ class paynocchio_helper {
     }
 
     /**
+     * Calculate bonuses and rewards for amount by API
+     */
+
+    public function getStructureCalculation($amount, $operation_type = ''): array
+    {
+        // If no Operation type sent, get all Operations
+        $wallet_query = '';
+        $operation_query = '';
+
+        if($operation_type) {
+            $wallet_query = '&wallet_uuid=' . $this->walletId; // No wallet uuid needed when no operation type is sent
+            $operation_query = '&operation_type=' . $operation_type;
+        }
+
+        $url = '/wallet/structure_calculation/?';
+        $url .= 'user_uuid=' . $this->userId .
+            '&environment_uuid=' . $this->envId .
+            '&amount=' . $amount .
+            $operation_query .
+            $wallet_query;
+
+        $response = $this->sendRequest('GET', $url);
+        $json_response = json_decode($response['response']);
+        if($response['status_code'] === 200) {
+
+            return [
+                'is_error' => false,
+                'conversion_rate' => $json_response->conversion_rate,
+                'operations_data' => $json_response->operations_data,
+            ];
+        } else {
+            return [
+                'is_error' => true,
+                'conversion_rate' => null,
+                'operations_data' => null,
+            ];
+        }
+    }
+
+    /**
+     * Calculate benefits
+     */
+    public function calculateBenefits($amount)
+    {
+        $calculated_data_for_topup = $this->getStructureCalculation($amount);
+
+        if($calculated_data_for_topup['is_error']) {
+            return null;
+        }
+
+        $operations_data_for_topup = $this->filterOperationTypeByName($calculated_data_for_topup['operations_data'], 'payment_operation_add_money');
+
+        $calculated_data_for_payment = $this->getStructureCalculation($operations_data_for_topup->full_amount);
+        $operations_data_for_payment = $this->filterOperationTypeByName($calculated_data_for_payment['operations_data'], 'payment_operation_for_services');
+
+        $bonus_equivalent = ($operations_data_for_topup->bonuses_amount + $operations_data_for_payment->bonuses_amount) * $calculated_data_for_topup['conversion_rate'];
+        return [
+            'bonuses_equivalent' => $bonus_equivalent,
+            'max_sail_price' => $amount - $bonus_equivalent,
+            'percent' => ($bonus_equivalent * 100) / $amount,
+        ];
+    }
+
+    /**
+     *  Filter operation calculation by operation name
+     */
+    public function filterOperationTypeByName($rules, $operation_type)
+    {
+        $type = array_filter($rules, fn($x) => $x->type_operation === $operation_type);
+        return array_shift($type);
+    }
+
+    /**
      *  Wallet information
      */
     public function getCurrencies(): array
