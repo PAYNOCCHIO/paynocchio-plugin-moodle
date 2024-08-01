@@ -149,4 +149,13 @@ $functions = [
         'ajax'        => true,
         'loginrequired' => false,
     ],
+
+    'paygw_paynocchio_calculate_benefits' => [
+        'classname'   => 'paygw_paynocchio\external\calculate_benefits',
+        'classpath'   => '',
+        'description' => 'Get benefits for amount.',
+        'type'        => 'read',
+        'ajax'        => true,
+        'loginrequired' => false,
+    ],
 ];

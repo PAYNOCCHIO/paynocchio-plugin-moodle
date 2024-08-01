@@ -284,6 +284,24 @@ export const calculateReward = (amount, operationType) => {
 };
 
 /**
+ * Get calculated rules from Server according to sum
+ *
+ * @param {number} amount id of the Payment to check
+ * @param {string} operationType type for Rule
+ * @returns {*}
+ */
+export const calculateBenefits = (amount) => {
+    const request = {
+        methodname: 'paygw_paynocchio_calculate_benefits',
+        args: {
+            amount,
+        },
+    };
+
+    return Ajax.call([request])[0];
+};
+
+/**
  * Check if Withdrawal is OK and calculate Commission
  *
  * @param {number} amount id of the Payment to check
