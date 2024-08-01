@@ -478,7 +478,7 @@ class paynocchio_helper {
         }
 
         $bonus_equivalent = $bonuses * $calculated_data['conversion_rate'];
-        $sale_price = $amount - $bonus_equivalent + $commission;
+        $sale_price = round($amount - $bonus_equivalent + $commission, 2);
 
         return [
             'bonuses_equivalent' => $bonus_equivalent,

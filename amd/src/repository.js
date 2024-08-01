@@ -287,7 +287,6 @@ export const calculateReward = (amount, operationType) => {
  * Get calculated rules from Server according to sum
  *
  * @param {number} amount id of the Payment to check
- * @param {string} operationType type for Rule
  * @returns {*}
  */
 export const calculateBenefits = (amount) => {
