@@ -463,32 +463,28 @@ class paynocchio_helper {
      */
     public function calculateBenefits($amount)
     {
-        $calculated_data_for_topup = $this->getStructureCalculation($amount);
+        $calculated_data = $this->getStructureCalculation($amount);
+        $need_to_topup_sum = ($amount + 0.3) / 0.971;
+        $commission = round($need_to_topup_sum - $amount, 2);
 
-        if($calculated_data_for_topup['is_error']) {
+        if($calculated_data['is_error']) {
             return null;
         }
 
-        $operations_data_for_topup = $this->filterOperationTypeByName($calculated_data_for_topup['operations_data'], 'payment_operation_add_money');
+        $bonuses = 0;
 
-        $calculated_data_for_payment = $this->getStructureCalculation($operations_data_for_topup->full_amount);
-        $operations_data_for_payment = $this->filterOperationTypeByName($calculated_data_for_payment['operations_data'], 'payment_operation_for_services');
+        foreach ($calculated_data['operations_data'] as $data) {
+            $bonuses += $data->bonuses_amount;
+        }
 
-        $bonus_equivalent = ($operations_data_for_topup->bonuses_amount + $operations_data_for_payment->bonuses_amount) * $calculated_data_for_topup['conversion_rate'];
+        $bonus_equivalent = $bonuses * $calculated_data['conversion_rate'];
+        $sale_price = $amount - $bonus_equivalent + $commission;
+
         return [
             'bonuses_equivalent' => $bonus_equivalent,
-            'max_sail_price' => $amount - $bonus_equivalent,
-            'percent' => ($bonus_equivalent * 100) / $amount,
+            'sale_price' => $sale_price,
+            'percent' => ($sale_price * 100) / $amount,
         ];
-    }
-
-    /**
-     *  Filter operation calculation by operation name
-     */
-    public function filterOperationTypeByName($rules, $operation_type)
-    {
-        $type = array_filter($rules, fn($x) => $x->type_operation === $operation_type);
-        return array_shift($type);
     }
 
     /**

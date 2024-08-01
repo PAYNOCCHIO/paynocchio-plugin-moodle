@@ -45,16 +45,16 @@ if($user && $user->useruuid && $user->walletuuid) {
         $card_balance_limit = $envStructure['card_balance_limit'];
 
         if($wallet_response_code === "ACTIVE") {
-        $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_topup', 'init', [
-            'pay' => false,
-            'minimum_topup_amount' => $minimum_topup_amount,
-            'card_balance_limit' => $card_balance_limit,
-            'balance' => $wallet_balance,
-        ]);
+            $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_topup', 'init', [
+                'pay' => false,
+                'minimum_topup_amount' => $minimum_topup_amount,
+                'card_balance_limit' => $card_balance_limit,
+                'balance' => $wallet_balance,
+            ]);
 
-        $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_withdraw', 'init', [
-            'balance' => $wallet_balance,
-        ]);
+            $PAGE->requires->js_call_amd('paygw_paynocchio/wallet_withdraw', 'init', [
+                'balance' => $wallet_balance,
+            ]);
         }
 
         $data = [
