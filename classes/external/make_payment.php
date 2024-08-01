@@ -125,8 +125,10 @@ class make_payment extends external_api {
             $orderuuid = uuid::generate();
 
             $wallet_response = $wallet->makePayment($wallet_uuid, $fullAmount, $amount, $orderuuid, $bonuses);
+            $json_response = json_decode($wallet_response['response']);
 
-            if($wallet_response['status_code'] === 200) {
+            if ($wallet_response['status_code'] === 200 &&
+                $json_response->type_interactions === 'success.interaction') {
 
                 $paymentid = payment_helper::save_payment($payable->get_account_id(), $component, $paymentarea,
                     $itemid, $userid, $fullAmount, $currency, 'paynocchio');
@@ -149,7 +151,7 @@ class make_payment extends external_api {
                     'balance' => 0,
                     'bonuses' => 0,
                     'card_number' => 0,
-                    'wallet_status' => 'ERROR',
+                    'wallet_status' => $json_response->schemas->message,
                     'wallet_code' => $wallet_response['status_code'],
                 ];
             }
