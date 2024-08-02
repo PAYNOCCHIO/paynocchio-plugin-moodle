@@ -98,7 +98,7 @@ class topup_wallet extends external_api {
                 return [
                     'success' => false,
                     'is_error' => $wallet_response['status_code'],
-                    'message' => $wallet_response['response'],
+                    'message' => '🤔 Something went wrong. Please try again!',
                     'url' => '',
                     'type_interactions' => $json_response->type_interactions,
                     'interaction' => $json_response->interaction,
