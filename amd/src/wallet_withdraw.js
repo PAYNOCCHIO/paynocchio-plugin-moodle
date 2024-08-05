@@ -42,7 +42,7 @@ export const init = (balance) => {
     const paynocchio_wallet_withdraw_button = document.getElementById('paynocchio_withdraw_button');
 
     if (paynocchio_wallet_withdraw_button) {
-
+        balance = parseFloat(balance).toFixed(2);
         paynocchio_wallet_withdraw_button.addEventListener('click', () => {
             showModalWithWithdraw(balance)
                 .then(modal => {
@@ -78,7 +78,7 @@ export const init = (balance) => {
 
                     if(!checkAvailability(input.val(), balance)) {
                         button.addClass('disabled');
-                        message.text('Input correct value');
+                        message.text('Please enter the amount to withdraw.');
                     }
 
                     input.on('keyup paste', (evt) => debouncedCalculateReward(parseFloat(evt.target.value)));
