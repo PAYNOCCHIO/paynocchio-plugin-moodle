@@ -872,7 +872,7 @@ class paynocchio_helper {
         $supportuser = core_user::get_support_user();
 
         try{
-            email_to_user($paymentuser, $supportuser, get_string('paynocchio_transaction_subject', 'paygw_paynocchio'), get_string('paynocchio_transaction_message', 'paygw_paynocchio', ['username' => $paymentuser->firstname . ' ' . $paymentuser->lastname, 'sum' => $amount ]));
+            email_to_user($paymentuser, $supportuser, get_string('paynocchio_transaction_subject', 'paygw_paynocchio'), get_string('paynocchio_transaction_message', 'paygw_paynocchio', ['username' => $paymentuser->firstname . ' ' . $paymentuser->lastname, 'sum' => $order->totalamount ]));
             email_to_user($paymentuser, $supportuser, get_string('paynocchio_confirmation_subject', 'paygw_paynocchio'), get_string('paynocchio_confirmation_message', 'paygw_paynocchio', ['username' => $paymentuser->firstname . ' ' . $paymentuser->lastname ]));
         } catch (\Exception $e) {
             // On localhost email sending fails
