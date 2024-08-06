@@ -464,7 +464,7 @@ class paynocchio_helper {
     public function calculateBenefits($amount)
     {
         $calculated_data = $this->getStructureCalculation($amount);
-        $need_to_topup_sum = ($amount + 0.3) / 0.971;
+        $need_to_topup_sum = round(($amount + 0.3) / 0.971, 2);
         $commission = round($need_to_topup_sum - $amount, 2);
 
         if($calculated_data['is_error']) {
