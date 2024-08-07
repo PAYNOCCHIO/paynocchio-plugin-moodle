@@ -29,6 +29,8 @@ if($success) {
     
 }
 
+echo get_config('paygw_paynocchio', 'baseurl');
+
 if($user && $user->useruuid && $user->walletuuid) {
 
     $wallet = new paynocchio_helper($user->useruuid);
