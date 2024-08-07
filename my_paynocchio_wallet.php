@@ -29,10 +29,6 @@ if($success) {
     
 }
 
-echo get_config('paygw_paynocchio', 'baseurl');
-$wallet = new paynocchio_helper(\core\uuid::generate());
-print_r($wallet->healtCheck());
-
 if($user && $user->useruuid && $user->walletuuid) {
 
     $wallet = new paynocchio_helper($user->useruuid);
