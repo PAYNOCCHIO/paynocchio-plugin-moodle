@@ -422,7 +422,7 @@ class paynocchio_helper {
      * Calculate bonuses and rewards for amount by API
      */
 
-    public function getStructureCalculation($amount, $operation_type = ''): array
+    public function getStructureCalculation($amount, $operation_type = '', $wallet_balance_check): array
     {
         // If no Operation type sent, get all Operations
         $wallet_query = '';
@@ -433,12 +433,14 @@ class paynocchio_helper {
             $operation_query = '&operation_type=' . $operation_type;
         }
 
+        if ($wallet_balance_check == 'false') {
+            $wallet_balance_check_query = '&wallet_balance_check=false';
+        } else {
+            $wallet_balance_check_query = '';
+        }
+
         $url = '/wallet/structure_calculation/?';
-        $url .= 'user_uuid=' . $this->userId .
-            '&environment_uuid=' . $this->envId .
-            '&amount=' . $amount .
-            $operation_query .
-            $wallet_query;
+        $url .= 'user_uuid=' . $this->userId . '&environment_uuid=' . $this->envId . '&amount=' . $amount . $operation_query . $wallet_query . $wallet_balance_check_query;
 
         $response = $this->sendRequest('GET', $url);
         $json_response = json_decode($response['response']);
@@ -464,7 +466,12 @@ class paynocchio_helper {
     public function calculateBenefits($amount)
     {
         $calculated_data = $this->getStructureCalculation($amount);
-        $need_to_topup_sum = round(($amount + 0.3) / 0.971, 2);
+
+        $envStructure = $this->getEnvironmentStructure();
+        $wallet_percentage_commission = 1 - $envStructure['wallet_percentage_commission'];
+        $wallet_fixed_commission = $envStructure['wallet_fixed_commission'];
+
+        $need_to_topup_sum = round(($amount + $wallet_fixed_commission) / $wallet_percentage_commission, 2);
         $commission = round($need_to_topup_sum - $amount, 2);
 
         if($calculated_data['is_error']) {
