@@ -465,7 +465,7 @@ class paynocchio_helper {
      */
     public function calculateBenefits($amount)
     {
-        $calculated_data = $this->getStructureCalculation($amount);
+        $calculated_data = $this->getStructureCalculation($amount, null, 'false');
 
         $envStructure = $this->getEnvironmentStructure();
         $wallet_percentage_commission = 1 - $envStructure['wallet_percentage_commission'];
