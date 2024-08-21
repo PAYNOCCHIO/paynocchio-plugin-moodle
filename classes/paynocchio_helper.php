@@ -438,7 +438,8 @@ class paynocchio_helper {
             '&environment_uuid=' . $this->envId .
             '&amount=' . $amount .
             $operation_query .
-            $wallet_query;
+            $wallet_query .
+            '&wallet_balance_check=false';
 
         $response = $this->sendRequest('GET', $url);
         $json_response = json_decode($response['response']);
