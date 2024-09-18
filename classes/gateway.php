@@ -37,6 +37,9 @@ class gateway extends \core_payment\gateway {
         return [
             'USD',
             'SGD',
+            'EUR',
+            'GBP',
+            'CAD',
         ];
     }
 

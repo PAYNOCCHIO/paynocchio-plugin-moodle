@@ -58,18 +58,6 @@ if ($ADMIN->fulltree) {
 
     $wallet = new paynocchio_helper(uuid::generate());
 
-    $wallet_response = $wallet->getCurrencies();
-    $json_response = json_decode($wallet_response['response']);
-    $currencies = [];
-    if($wallet_response['status_code'] === 200) {
-        foreach ($json_response->currencies as $obj) {
-            $currencies[$obj->alphabetic_code] = $obj->alphabetic_code;
-        }
-    } else {
-        $currencies = ['USD' => 'USD', 'SGD' => 'SGD'];
-    }
-    $settings->add(new admin_setting_configselect('paygw_paynocchio/currency', 'Currency', '', 'USD', $currencies));
-
     $settings->add(new admin_setting_configtextarea('paygw_paynocchio/terms', get_string('terms', 'paygw_paynocchio'), '', get_string('terms_help', 'paygw_paynocchio')));
     $settings->add(new admin_setting_configtextarea('paygw_paynocchio/privacy', get_string('privacy', 'paygw_paynocchio'), '', get_string('privacy_help', 'paygw_paynocchio')));
 

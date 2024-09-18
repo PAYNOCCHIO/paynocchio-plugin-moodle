@@ -66,7 +66,6 @@ class topup_complete extends external_api {
      * @param string $user_uuid Paynocchio user_uuid
      * @param string $wallet_uuid Paynocchio wallet_uuid
      * @param float $amount Paynocchio amount
-     * @param string $currency Paynocchio currency
      * @param string $type_operation Paynocchio type_operation
      * @param string $status_type Paynocchio status type
      * @return array
@@ -78,13 +77,12 @@ class topup_complete extends external_api {
          $user_uuid,
          $wallet_uuid,
          $amount,
-         $currency,
          $type_operation,
          $status_type,
         $order_uuid,
         $external_order_uuid,
     ): array {
-        global $DB, $USER;
+        global $DB;
 
         self::validate_parameters(self::execute_parameters(), [
             'uuid' => $uuid,
@@ -93,7 +91,6 @@ class topup_complete extends external_api {
             'user_uuid' => $user_uuid,
             'wallet_uuid' => $wallet_uuid,
             'amount' => $amount,
-            'currency' => $currency,
             'type_operation' => $type_operation,
             'status_type' => $status_type,
             'order_uuid' => $order_uuid,
