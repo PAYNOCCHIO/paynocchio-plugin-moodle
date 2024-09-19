@@ -369,7 +369,7 @@ class paynocchio_helper {
             self::PAYNOCCHIO_STATUS_KEY => $status,
         ];
 
-        return $this->sendRequest('PATCH', '/wallet/', json_encode($data), true);
+        return $this->sendRequest('PATCH', '/wallet/', json_encode($data));
     }
 
     /**
