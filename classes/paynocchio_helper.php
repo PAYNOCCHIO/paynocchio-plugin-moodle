@@ -364,8 +364,9 @@ class paynocchio_helper {
     public function updateWalletStatus(string $wallet_id, string $status)
     {
         $data = [
-            self::PAYNOCCHIO_ENV_KEY => $this->envId,
             'uuid' => $wallet_id,
+            self::PAYNOCCHIO_ENV_KEY => $this->envId,
+            'user_uuid' => $this->userId,
             self::PAYNOCCHIO_STATUS_KEY => $status,
         ];
 
